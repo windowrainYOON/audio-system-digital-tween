@@ -2,15 +2,16 @@
 // 간략 보기·전체 배선도·상세 화면이 모두 이 컴포넌트와 같은 상태를 쓴다.
 import { memo } from 'react';
 import type { BoardState, Profile } from '../data/types';
+import type { FlowDraw } from '../lib/flow';
 import { Button, Fader, Knob } from './Controls';
 
 const Art = memo(function Art({ html }: { html: string }) {
   return <g dangerouslySetInnerHTML={{ __html: html }} />;
 });
 
-interface Props { profile: Profile; state: BoardState; selected?: string; onPick?: (id: string) => void; showUnsynced?: boolean }
+interface Props { profile: Profile; state: BoardState; selected?: string; onPick?: (id: string) => void; showUnsynced?: boolean; flow?: FlowDraw | null }
 
-export function PanelLayer({ profile, state, selected, onPick, showUnsynced = true }: Props) {
+export function PanelLayer({ profile, state, selected, onPick, showUnsynced = true, flow }: Props) {
   const ph = profile.phantom;
   return (
     <g>
@@ -28,6 +29,13 @@ export function PanelLayer({ profile, state, selected, onPick, showUnsynced = tr
         if (c.type === 'fader') return <Fader key={c.id} d={c} {...p} />;
         return <Button key={c.id} d={c} {...p} />;
       })}
+      {flow && (
+        <g pointerEvents="none" aria-hidden="true">
+          <path d={flow.d} fill="none" stroke="#14B8A6" strokeWidth={5} strokeLinecap="round" strokeDasharray="2 9" />
+          {flow.dots.map((o, i) => <circle key={i} cx={o.x} cy={o.y} r={o.r} fill="none" stroke="#14B8A6" strokeWidth={4} />)}
+          <polygon points={flow.arrow} fill="#14B8A6" stroke="#FFFFFF" strokeWidth={1.5} />
+        </g>
+      )}
     </g>
   );
 }

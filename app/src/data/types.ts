@@ -1,23 +1,25 @@
 // 장비 프로필 타입. 값은 tools/extract-profiles.cjs 가 시안에서 뽑아 JSON으로 만든다.
 export type BoardId = 'ag06' | 'dfx12' | 'l4';
 
-export interface KnobDef {
+interface Base { desc?: string; src?: string }
+export interface KnobDef extends Base {
   id: string; type: 'knob'; name: string; kind: string; def: number;
   x: number; y: number; r: number; rr: number; cap: string; ptr: string; l1: number; l2: number; stroke: string;
 }
-export interface FaderDef {
+export interface FaderDef extends Base {
   id: string; type: 'fader'; name: string; kind: string; def: number;
   track: { x: number; y: number; w: number; h: number };
   handle: { x: number; w: number; h: number; rx: number; fill: string; sw: number };
   ya: number; yb: number; ring: string;
 }
-export interface ButtonDef {
+export interface ButtonDef extends Base {
   id: string; type: 'button'; name: string; kind: string; def: number;
   x: number; y: number; w: number; h: number; cx: number; ty: number; fs: number; on: string; rx: number;
 }
 export type ControlDef = KnobDef | FaderDef | ButtonDef;
 
-export interface Flow { ids: string[]; txt: string }
+/** 신호 흐름: 입력 단자 → 컨트롤 → 출력 단자. x/y0/y1은 점선, jacks/outs는 [x, y, r] 원 */
+export interface Flow { ids: string[]; txt: string; x: number; y0: number; y1: number; jacks?: [number, number, number][]; outs?: [number, number, number][] }
 
 export interface Profile {
   id: BoardId; title: string; source: string;

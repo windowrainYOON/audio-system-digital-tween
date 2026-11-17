@@ -77,6 +77,13 @@ function profile(file, id, title, opts) {
   const drawn = new Set(controls.map((x) => x.id));
   const extra = defs.filter((d) => !drawn.has(d.id)).map((d) => ({ id: d.id, name: d.name, type: d.type, kind: d.kind, def: d.def }));
   const flows = typeof c.flows === 'function' ? c.flows() : [];
+  // 인스펙터 설명: 시안의 selInfo(desc·src)를 컨트롤마다 뽑는다 (값에 따라 바뀌는 eff 문구는 앱에서 계산)
+  for (const ctl of controls) {
+    c.state.sel = ctl.id;
+    const si = c.renderVals().selInfo || {};
+    ctl.desc = si.desc || '';
+    ctl.src = si.src || '';
+  }
   const p = {
     id, title, source: 'design/' + file,
     formula: { knob: 'rotate(-135 + 270*v)', fader: 'y = ya + yb*v', button: 'on = v === 1' },
