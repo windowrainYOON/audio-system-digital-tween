@@ -53,9 +53,9 @@ function BigFader({ v, set, label, cap }: { v: number; set: (v: number) => void;
   );
 }
 
-interface Props { d: ControlDef; v: number; unsynced: boolean; info: Inspect; onChange: (v: number) => void; onSynced: () => void; onHide: () => void }
+interface Props { d: ControlDef; v: number; unsynced: boolean; info: Inspect; onChange: (v: number) => void; onSynced: () => void; onHide?: () => void; docked?: boolean }
 
-export function Inspector({ d, v, unsynced, info, onChange, onSynced, onHide }: Props) {
+export function Inspector({ d, v, unsynced, info, onChange, onSynced, onHide, docked }: Props) {
   const [more, setMore] = useState(false);
   const [text, setText] = useState('');
   const set = (nv: number) => {
@@ -67,15 +67,15 @@ export function Inspector({ d, v, unsynced, info, onChange, onSynced, onHide }: 
   const commit = () => { const n = Number(text.replace(',', '.')); if (Number.isFinite(n)) set(n / 10); else setText((v * 10).toFixed(1)); };
 
   return (
-    <section className="sheet insp" aria-label="선택한 컨트롤">
+    <section className={docked ? 'sheet insp docked' : 'sheet insp'} aria-label="선택한 컨트롤">
       <div className="row">
         <div className="ttl">{info.name}</div>
         <span className="badge" style={unsynced ? { background: '#fff3d6', color: '#7a4b00' } : { background: '#DDF5EE', color: '#0B4F47' }}>
           {unsynced ? '실물 확인 필요' : '실물과 일치'}
         </span>
-        <button className="hide" aria-label="인스펙터 숨기기" onClick={onHide}>
+        {onHide && <button className="hide" aria-label="인스펙터 숨기기" onClick={onHide}>
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M2 5l5 5 5-5" /></svg>
-        </button>
+        </button>}
       </div>
       {info.flowText && <div className="flowbox"><b>신호 흐름</b> · {info.flowText}</div>}
       <div className="body">
