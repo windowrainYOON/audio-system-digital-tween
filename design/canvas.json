@@ -21,7 +21,7 @@
     "MobL4.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M2. 패널 · L4 (스테퍼 · 확대/이동)",
+      "title": "M2. 패널 · L4 (믹서·구역 드롭다운 · 확대/이동)",
       "w": 390,
       "x": 470,
       "y": 0
@@ -44,7 +44,7 @@
     },
     "Mobile.dc.html": {
       "h": 844,
-      "title": "M6. 운영 (시작·끝내기·소스별 소리 조정)",
+      "title": "M6. 운영 (시작·끝내기·소스별 소리 조정 · 소스 드롭다운)",
       "w": 390,
       "x": 2350,
       "y": 0,
@@ -79,7 +79,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T2. 패널 · L4 · 태블릿 세로",
+      "title": "T2. 패널 · L4 · 태블릿 세로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabL4L.dc.html": {
@@ -87,7 +87,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T2. 패널 · L4 · 태블릿 가로",
+      "title": "T2. 패널 · L4 · 태블릿 가로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabDfxP.dc.html": {
@@ -95,7 +95,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T3. 패널 · DFX-12 · 태블릿 세로",
+      "title": "T3. 패널 · DFX-12 · 태블릿 세로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabDfxL.dc.html": {
@@ -103,7 +103,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T3. 패널 · DFX-12 · 태블릿 가로",
+      "title": "T3. 패널 · DFX-12 · 태블릿 가로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabAg06P.dc.html": {
@@ -111,7 +111,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T4. 패널 · AG06 · 태블릿 세로",
+      "title": "T4. 패널 · AG06 · 태블릿 세로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabAg06L.dc.html": {
@@ -119,7 +119,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T4. 패널 · AG06 · 태블릿 가로",
+      "title": "T4. 패널 · AG06 · 태블릿 가로 (오른쪽 고정 인스펙터)",
       "is_interactive": true
     },
     "TabWiringP.dc.html": {
