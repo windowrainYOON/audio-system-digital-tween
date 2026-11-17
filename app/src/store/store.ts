@@ -56,6 +56,9 @@ export function setValue(b: BoardId, id: string, v: number) {
 export function markSynced(b: BoardId, id: string) {
   patchBoard(b, (s) => ({ ...s, synced: { ...s.synced, [id]: true }, t: Date.now() }));
 }
+export function setPower(b: BoardId, on: boolean) {
+  patchBoard(b, (s) => ({ ...s, power: on, t: Date.now() }));
+}
 export function setPhantom(b: BoardId, on: boolean) {
   patchBoard(b, (s) => ({ ...s, phantom: on, t: Date.now() }));
 }

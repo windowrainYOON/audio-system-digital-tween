@@ -24,6 +24,10 @@ export interface Flow { ids: string[]; txt: string; x: number; y0: number; y1: n
 export interface Profile {
   id: BoardId; title: string; source: string;
   viewBox: [number, number, number, number];
+  /** 상세 화면에서 그리는 픽셀 크기(시안 그대로, 스크롤) */
+  size: [number, number];
+  /** 구역 이동 칩 [이름, x, y] */
+  chips: [string, number, number][];
   controls: ControlDef[];
   flows: Flow[];
   art: string;
@@ -38,5 +42,6 @@ export interface BoardState {
   vals: Record<string, number>;
   synced: Record<string, boolean>;
   phantom?: boolean;
+  power?: boolean;
   t: number;
 }
