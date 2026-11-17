@@ -5,6 +5,8 @@
 ## 1. 한 줄 요약
 교회 음향 시스템(DFX-12, AG06, L4, 매립/무선 마이크, QSC·MPS 앰프, 스피커·모니터)의 모바일 웹 디지털 트윈. Apple HIG 스타일, 실제 믹서 도면이 메인 화면, 유지비 0원.
 
+> **UI를 만들 때는 반드시 `docs/UI_GUIDE.md`를 먼저 읽으세요.** 시안과 사용자 요구가 정리돼 있습니다.
+
 ## 2. 링크
 | 항목 | 주소 |
 |---|---|
@@ -69,6 +71,6 @@ M1 MobOverview · M2 MobL4 · M3 MobDfx · M4 MobAg06 · M5 MobWiring · M6 Mobi
 ## 9. 새 세션 첫 메시지 (복사해서 사용)
 ```
 중명교회 음향 디지털 트윈 프로젝트를 이어서 진행해요.
-먼저 저장소 windowrainYOON/audio-system-digital-tween 의 docs/HANDOFF.md 를 읽고,
+먼저 저장소 windowrainYOON/audio-system-digital-tween 의 docs/HANDOFF.md 와 docs/UI_GUIDE.md 를 읽고,
 거기 적힌 명세서·전략 문서·캔버스 링크를 확인한 뒤 "7. 다음 할 일(M0)"부터 시작해 주세요.
 ```

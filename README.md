@@ -4,6 +4,7 @@
 아날로그 장비라 값은 사람이 입력하고, 서버 비용은 0원 (GitHub Pages + Google Sheets + Apps Script).
 
 - 인수인계 문서: [docs/HANDOFF.md](docs/HANDOFF.md) ← 새 작업은 여기서 시작
+- UI 가이드(색·크기·화면별 상세·하지 말 것): [docs/UI_GUIDE.md](docs/UI_GUIDE.md) ← 화면을 만들 때 반드시 먼저 읽기
 - 시안(디자인 컴포넌트): `design/*.dc.html`, 캔버스 `design/canvas.json`
 - 시안 생성 도구: `tools/`
 - 서버(Apps Script): `apps-script/Code.gs`
