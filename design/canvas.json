@@ -150,6 +150,13 @@
       "w": 1194,
       "h": 834,
       "title": "T6. 운영자 세팅 안내 · 태블릿 가로"
+    },
+    "Icons.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 1240,
+      "h": 800,
+      "title": "I1. 앱 아이콘 · 탭바 아이콘 시안"
     }
   },
   "createdOnFiles": {
@@ -204,7 +211,8 @@
     "TabDfxL.dc.html",
     "TabAg06L.dc.html",
     "TabWiringL.dc.html",
-    "TabOperatorL.dc.html"
+    "TabOperatorL.dc.html",
+    "Icons.dc.html"
   ],
   "pages": [],
   "title": "음향 디지털 트윈 시안"
