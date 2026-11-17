@@ -54,6 +54,11 @@ M1 MobOverview · M2 MobL4 · M3 MobDfx · M4 MobAg06 · M5 MobWiring · M6 Mobi
 - 배포: `.github/workflows/deploy.yml` (main push 시 빌드·테스트 → Pages). **Settings → Pages → Source를 "GitHub Actions"로 바꿔야 배포된다.** 주소: https://windowrainyoon.github.io/audio-system-digital-tween/
 - 이 클라우드 환경은 script.google.com 접속이 막혀 있어 Apps Script 시험은 배포된 앱의 "연결" 탭에서 한다.
 
+## 6.2 M0 완료 · M1 진행 (2026-11-17)
+- PR #1 머지, Pages 배포됨. 사용자가 폰에서 연결 시험(ping·쓰기·읽기) 모두 통과 확인.
+- 결정: 구글 시트는 지금처럼 링크 있는 누구나 편집 유지.
+- M1 상세: 컨트롤을 누르면 패널에 신호 흐름 점선(`lib/flow.ts`), 아래 인스펙터(`components/Inspector.tsx`)에 같은 모양 큰 노브(돌리기)·페이더(끌기), −/+ 0.05 단계, 눈금 숫자 직접 입력, 설명(desc·연결, 기본 접힘). 설명 문구는 추출기가 시안 selInfo에서 가져온다. 값에 따라 바뀌는 "조작하면 어떻게 되나" 문구(eff)는 아직 안 옮김.
+
 ## 7. 다음 할 일 (M0)
 1. Apps Script ping/읽기/쓰기 시험 (state 탭에 시험 키 기록 → 읽기).
 2. 시트 편집자 제한 여부 결정.
