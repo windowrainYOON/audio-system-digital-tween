@@ -72,11 +72,18 @@
 
 ---
 
+## 1.6 앱 아이콘
+- 확정안 **A · 노브**(2026-11-17): `#26282c` 바탕, 흰 노브 캡 + 검정 지시선, 청록 `#2DD4BF` 눈금 링(회색 `#3f4248` 트랙).
+- 파일: `design/icons/` — `app-icon.svg`, `icon-1024/512/192.png`, `apple-touch-icon.png`(180), `icon-maskable-512.png`(안전 영역 80%), `favicon-32/16.png`.
+
+---
+
 ## 2. 공통 화면 골격
 
 ### 2.1 하단 탭바 (M5, M6 등)
 - 5개: **홈 · 배선 · 패널 · 점검 · 운영**.
 - `position:absolute; left:12px; right:12px; bottom:12px; height:56px; border-radius:28px`, 배경 `rgba(255,255,255,0.78)` + blur(20px), 외곽선 `0 0 0 0.5px var(--sep)`.
+- 각 탭은 **아이콘(24px, 선 1.8, `currentColor`) + 글자** 세로 배치, 간격 2px. 아이콘 원본 `design/icons/tab-{home,wiring,panel,checks,operate}.svg` (2026-11-17 확정).
 - 글자 11/13. 선택된 탭은 `background:var(--fill3); color:var(--accent); font-weight:600; border-radius:24px`.
 - 본문은 탭바에 가리지 않게 아래 패딩 100px.
 
