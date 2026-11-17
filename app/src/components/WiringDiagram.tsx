@@ -1,6 +1,7 @@
 // 믹서 3대 + 소스·앰프·스피커 + 케이블. 간략 보기(M1)와 전체 배선도(M7)가 같은 그림·같은 배치를 쓴다.
 import { DEV_BOARD, OVERVIEW as OV, PROFILES } from '../data';
 import { PanelLayer } from './Panel';
+import { flowAt, SOURCE_FLOWS } from '../lib/flow';
 import { useStore } from '../store/store';
 
 const BADGE = { warn: '#ff9500', info: '#0a84ff', error: '#ff3b30' } as const;
@@ -33,7 +34,8 @@ export function WiringDiagram({ src = '', sel = '', labels = false, onSource, on
         return (
           <g key={b.key} opacity={op(b.key)} {...btn(PROFILES[b.board].title, onDevice && (() => onDevice(b.key)))}>
             <svg x={b.x} y={b.y} width={cw * b.scale} height={ch * b.scale} viewBox={`${cx} ${cy} ${cw} ${ch}`} overflow="hidden">
-              <PanelLayer profile={PROFILES[b.board]} state={boards[b.board]} />
+              <PanelLayer profile={PROFILES[b.board]} state={boards[b.board]} flowWidth={2.4}
+                flows={(SOURCE_FLOWS[src]?.[b.board] || []).map((i) => flowAt(PROFILES[b.board], i)!).filter(Boolean)} />
             </svg>
             <rect x={b.x - 3} y={b.y - 3} width={cw * b.scale + 6} height={ch * b.scale + 6} rx={8} fill="none"
               stroke="#0066cc" strokeWidth={2.5} opacity={!src && sel === b.key ? 1 : 0} />

@@ -6,7 +6,7 @@ import { LABEL } from '../screens/Connection';
 export function TopHeader({ full }: { full: boolean }) {
   const net = useStore((s) => s.net);
   return (
-    <header className="hdr">
+    <header className="hdr top">
       <div className="seg">
         <button aria-pressed={!full} onClick={() => go('home')}>간략 보기</button>
         <button aria-pressed={full} onClick={() => go('full')}>상세 보기</button>

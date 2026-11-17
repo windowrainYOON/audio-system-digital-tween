@@ -103,7 +103,7 @@ ptr: d.cap === '#1a1a1a' ? '#ffffff' : '#111111', l1: -3, l2: -16,
 tf: 'translate(' + d.x + ',' + d.y + ') rotate(' + ang + ')',
 ring: d.id === s.sel ? '#2DD4BF' : 'transparent',
 dx: d.x + d.r * Math.cos(rad), dy: d.y + d.r * Math.sin(rad), dotOp: dot(d.id),
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const buttons = defs.filter((d) => d.type === 'button').map((d) => {
@@ -114,7 +114,7 @@ return { id: d.id,
 x: d.x - d.w / 2, y: d.y - d.h / 2, w: d.w, h: d.h, dx: d.x + d.w / 2, name: d.name, cx: d.x, ty: d.y + 3.6, fs: 10,
 fill: on ? col : '#5E6166', ring: d.id === s.sel ? '#2DD4BF' : (on ? '#1B1F23' : '#3A3C40'), glow: col, glowOp: on ? 1 : 0,
 onOp: on ? 1 : 0, offOp: on ? 0 : 1, tcol: red ? '#FFFFFF' : '#05302A', dotOp: dot(d.id),
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const texts = [];
@@ -217,6 +217,7 @@ sy0[self.state.sel] = false;
 self.setState({ vals: vs, synced: sy0 });
 };
 return {
+inspOpen: !!this.state.open, inspClosed: !this.state.open, hideInsp: () => this.setState({ open: false }), showInsp: () => this.setState({ open: true }),
 chips: chips, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', aPh: s.vals.ph === 1 ? 1 : 0,
 flowD: fv.d, flowDots: fv.dots, flowArrow: fv.arrow, flowText: fv.text, hasFlow: !!fv.text, knobs: knobs, buttons: buttons, texts: [], lamps: lamps, jacks: jacks, pins: pins, textsBake: texts,
 sel: { isKnob: sel.type === 'knob', isFad: sel.type === 'fader', capc: sel.cap || '#f5f5f7', ptrc: (sel.cap === '#1a1a1a' || sel.cap === '#111' || sel.cap === '#222') ? '#ffffff' : '#111111', dialTf: 'rotate(' + (-135 + 270 * v) + ' 66 66)', fy: 10 + (1 - v) * 136 - 11, fyc: 10 + (1 - v) * 136, name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db,

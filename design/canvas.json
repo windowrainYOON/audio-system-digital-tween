@@ -56,6 +56,107 @@
       "w": 1500,
       "x": 0,
       "y": 1000
+    },
+    "TabOverviewP.dc.html": {
+      "x": 0,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T1. 간략 보기 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabOverviewL.dc.html": {
+      "x": 0,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T1. 간략 보기 · 태블릿 가로",
+      "is_interactive": true
+    },
+    "TabL4P.dc.html": {
+      "x": 914,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T2. 상세 · L4 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabL4L.dc.html": {
+      "x": 1274,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T2. 상세 · L4 · 태블릿 가로",
+      "is_interactive": true
+    },
+    "TabDfxP.dc.html": {
+      "x": 1828,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T3. 상세 · DFX-12 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabDfxL.dc.html": {
+      "x": 2548,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T3. 상세 · DFX-12 · 태블릿 가로",
+      "is_interactive": true
+    },
+    "TabAg06P.dc.html": {
+      "x": 2742,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T4. 상세 · AG06 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabAg06L.dc.html": {
+      "x": 3822,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T4. 상세 · AG06 · 태블릿 가로",
+      "is_interactive": true
+    },
+    "TabWiringP.dc.html": {
+      "x": 3656,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T5. 배선·케이블 편집 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabWiringL.dc.html": {
+      "x": 5096,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T5. 배선·케이블 편집 · 태블릿 가로",
+      "is_interactive": true
+    },
+    "TabOperatorP.dc.html": {
+      "x": 4570,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T6. 운영자 세팅 안내 · 태블릿 세로"
+    },
+    "TabOperatorL.dc.html": {
+      "x": 6370,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T6. 운영자 세팅 안내 · 태블릿 가로"
+    },
+    "Icons.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 1240,
+      "h": 800,
+      "title": "I1. 앱 아이콘 · 탭바 아이콘 시안"
     }
   },
   "createdOnFiles": {
@@ -82,6 +183,13 @@
       "w": 240,
       "x": 0,
       "y": -260
+    },
+    "t2": {
+      "kind": "title1",
+      "x": 0,
+      "y": 2520,
+      "maxW": 7564,
+      "text": "태블릿 시안 (같은 화면을 넓힘 · 세로 834×1194 / 가로 1194×834)"
     }
   },
   "order": [
@@ -91,7 +199,20 @@
     "MobAg06.dc.html",
     "MobWiring.dc.html",
     "Mobile.dc.html",
-    "System.dc.html"
+    "System.dc.html",
+    "TabOverviewP.dc.html",
+    "TabL4P.dc.html",
+    "TabDfxP.dc.html",
+    "TabAg06P.dc.html",
+    "TabWiringP.dc.html",
+    "TabOperatorP.dc.html",
+    "TabOverviewL.dc.html",
+    "TabL4L.dc.html",
+    "TabDfxL.dc.html",
+    "TabAg06L.dc.html",
+    "TabWiringL.dc.html",
+    "TabOperatorL.dc.html",
+    "Icons.dc.html"
   ],
   "pages": [],
   "title": "음향 디지털 트윈 시안"

@@ -16,13 +16,14 @@ export function Overview() {
   return (
     <>
       <TopHeader full={false} />
-      <main className="main" style={{ padding: '8px 16px 300px' }}>
+      <div className="ov-body">
+      <main className="main ov-draw">
         <svg viewBox={`0 0 ${OV.width} ${OV.height}`} width="100%" role="group" aria-label="전체 장비 간략 보기"
           style={{ display: 'block', fontFamily: 'Noto Sans KR, sans-serif' }}>
           <WiringDiagram src={src} sel={sel} onSource={setSrc} onDevice={(k) => { setSel(k); setSrc(''); }} />
         </svg>
       </main>
-      <section className="sheet" aria-label="선택한 장비">
+      <section className="sheet ov-info" aria-label="선택한 장비">
         <div className="row">
           <div className="ttl">{info.title}</div>
           <span className="badge" style={{ background: info.bg }}>{info.badge}</span>
@@ -37,6 +38,7 @@ export function Overview() {
         <p className="txt">{info.l1}</p><p className="txt">{info.l2}</p><p className="txt">{info.l3}</p>
         <button className="btn-primary" onClick={() => (sel === 'Mps' && !sv ? go('wiring') : go('panel', target))}>{info.go}</button>
       </section>
+      </div>
     </>
   );
 }

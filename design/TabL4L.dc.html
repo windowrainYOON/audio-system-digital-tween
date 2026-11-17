@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>상세 · L4 · 태블릿 가로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="--bg:#f5f5f7;--label:#1d1d1f;--label2:#1d1d1fcc;--sep:#3c3c434a;--fill3:#7676801f;--accent:#0066cc;position:relative;width:1194px;height:834px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,'Noto Sans KR',sans-serif;font-size:17px;line-height:22px;word-break:keep-all">
+  <header style="flex:none;padding:12px 20px;display:flex;align-items:center;gap:16px;background:var(--bg);z-index:2">
+    <div style="flex:none;display:flex;gap:8px;align-items:center">
+      <button style="flex:none;min-height:44px;padding:0 12px 0 4px;border:0;background:transparent;color:var(--accent);font-size:17px;display:flex;align-items:center;gap:2px"><svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="#0066cc" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2L3 9l6 7"/></svg>간략</button>
+      <button aria-current="true" style="flex:none;width:104px;min-height:44px;border:0;border-radius:22px;background:#0066cc;color:#fff;font-size:15px;font-weight:600">L4</button><button style="flex:none;width:104px;min-height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:15px">DFX-12</button><button style="flex:none;width:104px;min-height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:15px">AG06</button>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto">
+      <button onClick="{{togglePower}}" style="flex:none;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:{{powerBg}};color:{{powerFg}};font-size:15px;font-weight:600">{{powerLabel}}</button><button onClick="{{togglePhantom}}" style="flex:none;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:15px;font-weight:600">{{phantomShort}}</button>
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+        <button onClick="{{c.go}}" style="flex:none;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:var(--fill3);color:var(--label);font-size:15px">{{c.label}}</button>
+      </sc-for>
+    </div>
+  </header>
+
+  <div style="flex:1;min-height:0;display:flex;gap:16px;padding:0 16px 16px">
+  <main id="pan" aria-label="L4 믹서 패널" style="flex:1;min-width:0;min-height:0;overflow:auto;background:#e5e5ea;border-radius:18px;-webkit-overflow-scrolling:touch">
+    <svg id="pansvg" viewBox="100 150 660 700" width="774" height="821" role="group" aria-label="L4 믹서 패널 그림" font-family="Noto Sans KR, sans-serif">
+        <rect x="112" y="290" width="604" height="545" rx="6" fill="#2E2E2E"/>
+        <rect x="112" y="290" width="30" height="545" rx="6" fill="#C8281E"/>
+        <rect x="686" y="290" width="30" height="545" rx="6" fill="#C8281E"/>
+        <g fill="#8A8A8A">
+          <rect x="170" y="304" width="86" height="16"/><rect x="258" y="304" width="86" height="16"/><rect x="346" y="304" width="86" height="16"/><rect x="434" y="304" width="86" height="16"/><rect x="522" y="304" width="168" height="16"/>
+        </g>
+        <g font-size="11" fill="#111" text-anchor="middle" font-weight="700">
+          <text x="213" y="316">1</text><text x="301" y="316">2</text><text x="389" y="316">3/4</text><text x="477" y="316">MAIN OUT</text><text x="606" y="316">USB</text>
+        </g>
+        <g fill="#111" stroke="#9A9A9A" stroke-width="2">
+          <circle cx="210" cy="372" r="30"/><circle cx="298" cy="372" r="30"/>
+        </g>
+        <g fill="#444" stroke="#BBB"><circle cx="198" cy="366" r="4"/><circle cx="222" cy="366" r="4"/><circle cx="210" cy="386" r="4"/><circle cx="286" cy="366" r="4"/><circle cx="310" cy="366" r="4"/><circle cx="298" cy="386" r="4"/></g>
+        <g fill="#111" stroke="#BDBDBD" stroke-width="3"><circle cx="214" cy="458" r="17"/><circle cx="300" cy="458" r="17"/></g>
+        <g fill="#2E2E2E"><circle cx="214" cy="458" r="7"/><circle cx="300" cy="458" r="7"/></g>
+        <g font-size="9" fill="#E5E5E5" text-anchor="middle"><text x="214" y="436" fill="#7DE0D0">LINE ← CD L</text><text x="300" y="436" fill="#7DE0D0">LINE ← CD R</text><text x="210" y="332">MIC</text><text x="298" y="332">MIC</text></g>
+        <g stroke-width="3"><circle cx="385" cy="358" r="14" fill="#E0332B" stroke="#CCC"/><circle cx="385" cy="402" r="14" fill="#F5F5F5" stroke="#CCC"/></g>
+        <g fill="#2E2E2E"><circle cx="385" cy="358" r="5"/><circle cx="385" cy="402" r="5"/></g>
+        <g font-size="9" fill="#E5E5E5"><text x="358" y="362">L</text><text x="358" y="406">R</text><text x="385" y="338" text-anchor="middle" fill="#7DE0D0">TAPE ← PC</text></g>
+        <circle data-r="ph1" cx="385" cy="436" r="4" fill="{{phantomFill}}"/>
+        <rect x="372" y="446" width="34" height="20" rx="3" fill="#7A1F2B" stroke="#BBB"/>
+        <rect data-r="ph2" x="{{phantomKnobX}}" y="448" width="15" height="16" rx="2" fill="#E8E8E8"/>
+        <g font-size="9" fill="#E5E5E5"><text x="410" y="460">+48V</text><text x="358" y="440">PHANTOM</text></g>
+        <g fill="#111" stroke="#BDBDBD" stroke-width="3"><circle cx="465" cy="362" r="19"/><circle cx="465" cy="410" r="19"/><circle cx="465" cy="460" r="19"/></g>
+        <g fill="#2E2E2E"><circle cx="465" cy="362" r="8"/><circle cx="465" cy="410" r="8"/><circle cx="465" cy="460" r="8"/></g>
+        <g font-size="10" fill="#E5E5E5"><text x="492" y="366">L</text><text x="492" y="414">R</text><text x="488" y="476">PHONE</text></g>
+        <text x="477" y="500" font-size="9" fill="#2DD4BF" text-anchor="middle">L·R → DFX-12</text><text x="477" y="512" font-size="9" fill="#2DD4BF" text-anchor="middle">TAPE IN (스테레오)</text>
+        <rect x="545" y="402" width="148" height="36" fill="#111" stroke="#666"/>
+        <rect x="578" y="372" width="48" height="24" fill="#C7C7C7"/><text x="606" y="366" font-size="9" fill="#E5E5E5" text-anchor="middle">USB</text>
+        <g fill="#C8281E" stroke="#EEE" stroke-width="2"><circle cx="560" cy="470" r="9"/><circle cx="590" cy="470" r="9"/><circle cx="622" cy="470" r="9"/><circle cx="654" cy="470" r="9"/></g>
+        <g font-size="10" fill="#E5E5E5" text-anchor="middle"><text x="560" y="492">⏮</text><text x="590" y="492">⏯</text><text x="622" y="492">⏹</text><text x="654" y="492">⏭</text></g>
+        <rect x="445" y="540" width="236" height="152" fill="#3A3A3A" stroke="#777"/>
+        <text x="563" y="556" font-size="9" fill="#E5E5E5" text-anchor="middle">STEREO GRAPHIC EQUALIZER</text>
+        <rect x="598" y="696" width="92" height="98" fill="#222" stroke="#777"/>
+        <g fill="#2FBF4A"><circle cx="618" cy="742" r="4"/><circle cx="618" cy="758" r="4"/><circle cx="618" cy="774" r="4"/><circle cx="666" cy="742" r="4"/><circle cx="666" cy="758" r="4"/><circle cx="666" cy="774" r="4"/></g>
+        <circle cx="618" cy="710" r="4" fill="#C8281E"/><circle cx="666" cy="710" r="4" fill="#C8281E"/>
+        <g font-size="9" fill="#E5E5E5"><text x="632" y="714">CLIP</text><text x="636" y="746">6</text><text x="636" y="762">0</text><text x="636" y="778">24</text></g>
+
+        <g fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M160 214 V458 H195" stroke="#B0B0B0"/>
+          <path d="M254 214 V458 H281" stroke="#B0B0B0"/>
+          <path d="M358 214 V358 H368" stroke="#E0332B"/>
+          <path d="M334 214 V402 H368" stroke="#F5F5F5"/>
+        </g>
+        <rect x="120" y="170" width="170" height="44" rx="8" fill="#DDF5EE" stroke="#0F766E" stroke-width="2"/>
+        <text x="132" y="190" font-size="13" font-weight="700" fill="#1B1F23">CD 플레이어</text><text x="132" y="206" font-size="10" fill="#4B5259">RCA↔RCA 2줄 + TS 어댑터 각각</text>
+        <rect x="320" y="170" width="170" height="44" rx="8" fill="#DDF5EE" stroke="#0F766E" stroke-width="2"/>
+        <text x="332" y="190" font-size="13" font-weight="700" fill="#1B1F23">PC</text><text x="332" y="206" font-size="10" fill="#4B5259">AUX(3.5mm) → RCA 적·백</text>
+        <text x="204" y="236" font-size="10" fill="#4B5259">CH1</text><text x="262" y="236" font-size="10" fill="#4B5259">CH2</text>
+
+        <g id="ch-groups"><rect x="182" y="296" width="56" height="525" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="210.0" y="290" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" pointer-events="none">CH1</text><rect x="270" y="296" width="56" height="525" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="298.0" y="290" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" pointer-events="none">CH2</text><rect x="360" y="296" width="56" height="525" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="388.0" y="290" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" pointer-events="none">CH3/4</text><rect x="438" y="531" width="250" height="166" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="563.0" y="525" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" pointer-events="none">GRAPHIC EQ</text><rect x="452" y="757" width="144" height="64" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-dasharray="6 4"/><text x="524.0" y="752" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" pointer-events="none">MAIN</text></g>
+        <sc-for list="{{knobs}}" as="k" hint-placeholder-count="14">
+          <g data-cid="{{k.id}}" onClick="{{k.pick}}" role="button" tabindex="0" aria-label="{{k.name}}" style="cursor:pointer">
+            <circle cx="{{k.x}}" cy="{{k.y}}" r="22" fill="transparent" stroke="{{k.ring}}" stroke-width="3"/>
+            <circle cx="{{k.x}}" cy="{{k.y}}" r="17" fill="{{k.cap}}" stroke="#777" stroke-width="1.5"/>
+            <line data-r="kl" data-x="{{k.x}}" data-y="{{k.y}}" x1="0" y1="-3" x2="0" y2="-16" stroke="{{k.ptr}}" stroke-width="3" stroke-linecap="round" transform="{{k.tf}}"/>
+            <circle cx="{{k.dx}}" cy="{{k.dy}}" r="5" fill="#F59E0B" stroke="#1B1F23" stroke-width="1" opacity="{{k.dotOp}}"/>
+          </g>
+        </sc-for>
+
+        <sc-for list="{{faders}}" as="f" hint-placeholder-count="7">
+          <g data-cid="{{f.id}}" onClick="{{f.pick}}" role="button" tabindex="0" aria-label="{{f.name}}" style="cursor:pointer">
+            <rect x="{{f.tx}}" y="566" width="4" height="110" fill="#111"/>
+            <rect data-r="fc" data-ya="666" data-yb="-100" x="{{f.hx}}" y="{{f.hy}}" width="20" height="10" rx="2" fill="#E8E8E8" stroke="{{f.ring}}" stroke-width="2"/>
+          </g>
+        </sc-for>
+      <g opacity="{{aPh}}"><rect x="446" y="433" width="90" height="22" rx="11" fill="#fff" stroke="#ff9500" stroke-width="2"/><text x="454" y="448" font-size="12" font-weight="700" fill="#1d1d1f">+48V 켜짐</text><circle cx="430" cy="444" r="12" fill="#ff9500" stroke="#fff" stroke-width="2"/><text x="430" y="450" font-size="15" font-weight="700" text-anchor="middle" fill="#1d1d1f">!</text></g><g><circle cx="592.0" cy="768" r="10" fill="#ff9500" stroke="#fff" stroke-width="2"/><text x="592.0" y="773" font-size="13" font-weight="700" text-anchor="middle" fill="#1d1d1f">!</text></g><path d="{{flowD}}" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" opacity="0.75"/>
+        <path d="{{flowD}}" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 9"/>
+        <sc-for list="{{flowDots}}" as="fd" hint-placeholder-count="14">
+          <circle cx="{{fd.x}}" cy="{{fd.y}}" r="{{fd.r}}" fill="none" stroke="#14B8A6" stroke-width="4"/>
+        </sc-for>
+        <polygon points="{{flowArrow}}" fill="#14B8A6" stroke="#FFFFFF" stroke-width="1.5"/>
+        <g id="baked-names" font-family="-apple-system,'Noto Sans KR',sans-serif" style="paint-order:stroke"><text x="210" y="568" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">GAIN</text><text x="298" y="568" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">GAIN</text><text x="210" y="630" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">HIGH</text><text x="298" y="630" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">HIGH</text><text x="210" y="690" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">LOW</text><text x="298" y="690" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">LOW</text><text x="210" y="750" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">EFF</text><text x="298" y="750" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">EFF</text><text x="210" y="815" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">LEVEL 1</text><text x="298" y="815" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">LEVEL 2</text><text x="388" y="568" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">3/4 LEVEL</text><text x="388" y="630" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">USB VOL</text><text x="388" y="690" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">RETURN</text><text x="388" y="750" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">ECHO</text><text x="388" y="815" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">EFFECT VOL</text><text x="480" y="815" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">MAIN L</text><text x="568" y="815" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">MAIN R</text><text x="457" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">63</text><text x="490.5" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">160</text><text x="524" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">400</text><text x="557.5" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">1K</text><text x="591" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">2.5K</text><text x="624.5" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">6.3K</text><text x="658" y="28" font-size="11" font-weight="700" fill="#1d1d1f" stroke="#ffffff" stroke-width="3" paint-order="stroke" text-anchor="middle" pointer-events="none">16K</text></g><!--/baked--></svg>
+    
+  </main>
+
+  <section aria-label="선택한 컨트롤" style="flex:none;width:380px;box-sizing:border-box;border-radius:28px;background:#fff;box-shadow:0 0 0 0.5px var(--sep);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px">
+    <div style="flex:none;display:flex;align-items:center;gap:8px">
+      <div style="flex:1;font-size:17px;line-height:22px;font-weight:600">{{sel.name}}</div>
+      <span style="padding:2px 10px;border-radius:12px;background:{{sel.badgeBg}};color:{{sel.badgeFg}};font-size:12px;line-height:18px;font-weight:600">{{sel.badge}}</span>
+    </div>
+    <sc-if value="{{hasFlow}}" hint-placeholder-val="{{ false }}">
+      <div style="flex:none;padding:8px 12px;border-radius:12px;background:#d9f5f0;font-size:13px;line-height:18px;color:#134e4a"><b>신호 흐름</b> · {{flowText}}</div>
+    </sc-if>
+    <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+      <sc-if value="{{sel.isKnob}}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;display:flex;align-items:center;justify-content:center;gap:12px">
+          <button onClick="{{stepDn}}" aria-label="조금 줄이기" style="width:44px;height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:24px;line-height:24px">−</button>
+          <svg width="172" height="172" viewBox="0 0 132 132" onPointerDown="{{onDial}}" onPointerMove="{{onDial}}" aria-label="{{sel.name}} 노브. 돌려서 조절" style="touch-action:none;cursor:grab;display:block">
+            <line x1="28.5" y1="103.5" x2="24.3" y2="107.7" stroke="#8e8e93" stroke-width="2" stroke-linecap="round"/><line x1="15.6" y1="82.4" x2="9.9" y2="84.2" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="13.7" y1="57.7" x2="7.7" y2="56.8" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="23.1" y1="34.8" x2="18.3" y2="31.3" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="41.9" y1="18.8" x2="39.2" y2="13.4" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="66.0" y1="13.0" x2="66.0" y2="7.0" stroke="#8e8e93" stroke-width="2" stroke-linecap="round"/><line x1="90.1" y1="18.8" x2="92.8" y2="13.4" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="108.9" y1="34.8" x2="113.7" y2="31.3" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="118.3" y1="57.7" x2="124.3" y2="56.8" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="116.4" y1="82.4" x2="122.1" y2="84.2" stroke="#8e8e93" stroke-width="1" stroke-linecap="round"/><line x1="103.5" y1="103.5" x2="107.7" y2="107.7" stroke="#8e8e93" stroke-width="2" stroke-linecap="round"/><text x="30.1" y="115.9" font-size="11" fill="#6e6e73" text-anchor="middle">0</text><text x="101.9" y="115.9" font-size="11" fill="#6e6e73" text-anchor="middle">10</text>
+            <circle cx="66" cy="66" r="42" fill="{{sel.capc}}" stroke="#48484a" stroke-width="2"/>
+            <line x1="66" y1="30" x2="66" y2="50" stroke="{{sel.ptrc}}" stroke-width="5" stroke-linecap="round" transform="{{sel.dialTf}}"/>
+          </svg>
+          <button onClick="{{stepUp}}" aria-label="조금 올리기" style="width:44px;height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:24px;line-height:24px">+</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{sel.isFad}}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;display:flex;align-items:center;justify-content:center;gap:16px">
+          <button onClick="{{stepDn}}" aria-label="조금 내리기" style="width:44px;height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:24px;line-height:24px">−</button>
+          <svg width="80" height="195" viewBox="0 0 64 156" onPointerDown="{{onFad}}" onPointerMove="{{onFad}}" aria-label="{{sel.name}} 페이더. 끌어서 조절" style="touch-action:none;cursor:grab;display:block">
+            <rect x="28" y="10" width="8" height="136" rx="4" fill="#1d1d1f"/>
+            <line x1="16" y1="10" x2="22" y2="10" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="23" x2="22" y2="23" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="37" x2="22" y2="37" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="50" x2="22" y2="50" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="64" x2="22" y2="64" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="78" x2="22" y2="78" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="91" x2="22" y2="91" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="105" x2="22" y2="105" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="118" x2="22" y2="118" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="132" x2="22" y2="132" stroke="#8e8e93" stroke-width="1.5"/><line x1="16" y1="146" x2="22" y2="146" stroke="#8e8e93" stroke-width="1.5"/>
+            <text x="46" y="14" font-size="11" fill="#6e6e73">10</text><text x="46" y="150" font-size="11" fill="#6e6e73">0</text>
+            <rect x="12" y="{{sel.fy}}" width="40" height="22" rx="6" fill="#f5f5f7" stroke="#48484a" stroke-width="1.5"/>
+            <line x1="16" y1="{{sel.fyc}}" x2="48" y2="{{sel.fyc}}" stroke="#1d1d1f" stroke-width="2"/>
+          </svg>
+          <button onClick="{{stepUp}}" aria-label="조금 올리기" style="width:44px;height:44px;border:0;border-radius:22px;background:#7676801f;color:#1d1d1f;font-size:24px;line-height:24px">+</button>
+        </div>
+      </sc-if>
+      <div style="background:var(--fill3);border-radius:14px;padding:8px 12px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;gap:16px;font-size:15px;line-height:20px"><span><span style="color:var(--label2)">눈금 </span><b>{{sel.scale}}</b></span></div>
+        <div style="font-size:15px;line-height:20px"><span style="color:var(--label2)">아날로그 </span><b>{{sel.db}}</b></div>
+      </div>
+      <button onClick="{{toggleMore}}" aria-expanded="{{more}}" style="flex:none;min-height:44px;border:0;background:transparent;color:var(--accent);font-size:15px;font-weight:600;text-align:left;padding:0 4px">{{moreLabel}}</button>
+      <sc-if value="{{more}}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--fill3);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px"><div><div style="font-size:12px;line-height:16px;font-weight:600;color:var(--label2)">이 컨트롤은</div><div style="font-size:15px;line-height:21px">{{selInfo.desc}}</div></div><div><div style="font-size:12px;line-height:16px;font-weight:600;color:var(--label2)">연결된 소스</div><div style="font-size:15px;line-height:21px">{{selInfo.src}}</div></div><div><div style="font-size:12px;line-height:16px;font-weight:600;color:var(--label2)">조작하면</div><div style="font-size:15px;line-height:21px">{{selInfo.eff}}</div></div><div style="font-size:12px;line-height:16px;color:var(--label2)">일반적인 믹서 동작 설명이에요. 실물 사양과 다르면 알려 주세요.</div></div>
+      </sc-if>
+    </div>
+    <button onClick="{{markSynced}}" style="flex:none;min-height:44px;border:0;border-radius:22px;background:var(--accent);color:#fff;font-size:17px;font-weight:600">실물에 맞췄어요</button>
+  </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1194,"height":834}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+const defs = this.defs();
+const vals = {};
+defs.forEach((d) => { vals[d.id] = d.def; });
+this.state = { more: false, sel: 'g1', vals: vals, synced: {}, phantom: false, power: true };
+const __raw = this.setState.bind(this); this.__raw = __raw; this.__cur = { vals: this.state.vals, synced: this.state.synced, phantom: this.state.phantom };
+this.setState = (o, cb) => { __raw(o, cb); if (o && typeof o === 'object' && (o.vals || o.synced || o.phantom !== undefined)) { this.__cur = { vals: o.vals || this.__cur.vals, synced: o.synced || this.__cur.synced, phantom: o.phantom !== undefined ? o.phantom : this.__cur.phantom }; if (this.__save) this.__save(); } };
+}
+defs() {
+const K = '#1a1a1a', W = '#f5f5f5', Y = '#f2c200', R = '#e0332b';
+const k = (id, name, label, x, y, cap, kind, def) => ({ id: id, name: name, label: label, x: x, y: y, cap: cap, kind: kind, def: def, type: 'knob' });
+const eqf = ['63', '160', '400', '1K', '2.5K', '6.3K', '16K'];
+const out = [
+k('g1', 'CH1 GAIN', 'GAIN', 210, 540, K, 'gain', 0.4), k('g2', 'CH2 GAIN', 'GAIN', 298, 540, K, 'gain', 0.4),
+k('h1', 'CH1 HIGH', 'HIGH', 210, 602, W, 'tone', 0.5), k('h2', 'CH2 HIGH', 'HIGH', 298, 602, W, 'tone', 0.5),
+k('l1', 'CH1 LOW', 'LOW', 210, 662, W, 'tone', 0.5), k('l2', 'CH2 LOW', 'LOW', 298, 662, W, 'tone', 0.5),
+k('e1', 'CH1 EFF', 'EFF', 210, 722, Y, 'level', 0), k('e2', 'CH2 EFF', 'EFF', 298, 722, Y, 'level', 0),
+k('v1', 'CH1 LEVEL', 'LEVEL 1', 210, 787, R, 'level', 0.6), k('v2', 'CH2 LEVEL', 'LEVEL 2', 298, 787, R, 'level', 0.6),
+k('v34', 'CH3/4 LEVEL', '3/4', 388, 540, R, 'level', 0.6), k('usb', 'USB VOL', 'USB VOL', 388, 602, R, 'level', 0.5),
+k('ret', 'RETURN', 'RETURN', 388, 662, Y, 'level', 0), k('echo', 'ECHO', 'ECHO', 388, 722, Y, 'level', 0),
+k('efx', 'EFFECT VOL', 'EFFECT VOL', 388, 787, Y, 'level', 0.5),
+k('ml', 'MAIN L', 'L', 480, 787, R, 'level', 0.7), k('mr', 'MAIN R', 'R', 568, 787, R, 'level', 0.7)
+];
+eqf.forEach((f, i) => { out.push({ id: 'q' + i, name: 'EQ ' + f + ' Hz', label: f, x: 457 + 33.5 * i, y: 0, def: 0.5, kind: 'eq', type: 'fader' }); });
+return out;
+}
+fmt(d, v) {
+const ang = -135 + 270 * v;
+const h = (12 + ang / 30) % 12;
+const hh = Math.floor(h) || 12;
+const mm = Math.round((h - Math.floor(h)) * 60);
+const hour = d.kind === 'eq' ? '-' : (hh + '시' + (mm ? ' ' + mm + '분' : ''));
+const scale = d.kind === 'eq' ? '-' : (v * 10).toFixed(1);
+let db = '';
+if (d.kind === 'gain') db = '라인 ' + (-6 + 44 * v).toFixed(0) + ' dB / 마이크 ' + (20 + 44 * v).toFixed(0) + ' dB';
+else if (d.kind === 'tone') db = (-15 + 30 * v).toFixed(0) + ' dB';
+else if (d.kind === 'eq') db = (-12 + 24 * v).toFixed(0) + ' dB';
+else db = v < 0.03 ? '-∞ (뮤트와 같음)' : '약 ' + ((v * 10 - 7) * 4).toFixed(0) + ' dB (눈금 7이 0 dB 근처)';
+return { hour: hour, scale: scale, db: db };
+}
+nameOf(d) {
+const m = { ml: 'MAIN L', mr: 'MAIN R', v34: '3/4 LEVEL', usb: 'USB VOL', efx: 'EFFECT VOL' };
+return { x: d.x, y: d.y + 28, t: m[d.id] || d.label, fs: 11 };
+}
+flowOf(sel, defs) {
+const FL = this.flows();
+const f = FL.filter((x) => x.ids.indexOf(sel) >= 0)[0];
+if (!f) return { d: '', dots: [], arrow: '', text: '' };
+const dots = [];
+f.ids.forEach((id) => { const d = defs.filter((q) => q.id === id)[0]; if (d && d.type !== 'fader') dots.push({ x: d.x, y: d.y, r: d.type === 'knob' ? (d.r || 14) + 9 : (d.w ? d.w / 2 + 3 : 18) }); if (d && d.type === 'fader') dots.push({ x: d.x, y: d.fb - 14, r: 16 }); });
+(f.jacks || []).concat(f.outs || []).forEach((j) => dots.push({ x: j[0], y: j[1], r: j[2] }));
+const x = f.x, y1 = f.y1;
+return { d: 'M' + x + ' ' + f.y0 + ' V' + y1, dots: dots, arrow: (x - 9) + ',' + (y1 - 4) + ' ' + (x + 9) + ',' + (y1 - 4) + ' ' + x + ',' + (y1 + 10), text: f.txt };
+}
+flows() {
+const O = [[465, 362, 25], [465, 410, 25]];
+const T = ' → MAIN OUT L·R → DFX-12 CD/TAPE IN';
+return [
+{ ids: ['g1', 'h1', 'l1', 'e1', 'v1'], x: 212, y0: 458, y1: 825, jacks: [[214, 458, 24]], outs: O, txt: 'CD L → CH1 LINE 단자 → GAIN → HIGH·LOW → EFF → LEVEL 1' + T },
+{ ids: ['g2', 'h2', 'l2', 'e2', 'v2'], x: 298, y0: 458, y1: 825, jacks: [[300, 458, 24]], outs: O, txt: 'CD R → CH2 LINE 단자 → GAIN → HIGH·LOW → EFF → LEVEL 2' + T },
+{ ids: ['v34'], x: 388, y0: 358, y1: 568, jacks: [[385, 358, 19], [385, 402, 19]], outs: O, txt: 'PC AUX→RCA → CH3/4 TAPE L·R 단자 → 3/4 LEVEL' + T },
+{ ids: ['usb'], x: 388, y0: 584, y1: 622, outs: O, txt: 'USB 플레이어 → USB VOL' + T },
+{ ids: ['ret', 'echo', 'efx'], x: 388, y0: 640, y1: 812, outs: O, txt: '내장 이펙트: CH1·2 EFF 보내기 → RETURN·ECHO → EFFECT VOL' + T },
+{ ids: ['ml'], x: 480, y0: 770, y1: 825, outs: [[465, 362, 25]], txt: '왼쪽 믹스 → MAIN L → MAIN OUT L 단자 → DFX-12 CD/TAPE IN L' },
+{ ids: ['mr'], x: 568, y0: 770, y1: 825, outs: [[465, 410, 25]], txt: '오른쪽 믹스 → MAIN R → MAIN OUT R 단자 → DFX-12 CD/TAPE IN R' }
+];
+}
+// SYNC-BEGIN
+componentDidMount() {
+const self = this; const KEY = 'mixsync:l4'; let seen = 0; let timer = null;
+const apply = (p) => { if (!p || !p.t || p.t <= seen) return; seen = p.t; const o = { vals: Object.assign({}, self.state.vals, p.vals || {}), synced: Object.assign({}, self.state.synced, p.synced || {}) }; if (p.phantom !== undefined && p.phantom !== null) o.phantom = !!p.phantom; self.__cur = { vals: o.vals, synced: o.synced, phantom: o.phantom !== undefined ? o.phantom : self.state.phantom }; self.__raw(o); };
+const rd = () => { try { apply(JSON.parse(window.localStorage.getItem(KEY))); } catch (e) {} };
+rd(); window.addEventListener('storage', rd); this.__iv = setInterval(rd, 1500);
+this.__save = () => { const c = self.__cur || {}; const t = Date.now(); seen = t; const pay = { vals: c.vals || self.state.vals, synced: c.synced || self.state.synced, t: t }; if (c.phantom !== undefined) pay.phantom = !!c.phantom; try { window.localStorage.setItem(KEY, JSON.stringify(pay)); } catch (e) {} clearTimeout(timer); timer = setTimeout(() => { try { if (window.claude && window.claude.use) window.claude.use('db').then((db) => { if (db) db.doc('mixer/l4').set(pay).catch(() => {}); }).catch(() => {}); } catch (e) {} }, 500); };
+try { if (window.claude && window.claude.use) window.claude.use('db').then((db) => { if (db) db.doc('mixer/l4').onSnapshot((s) => { if (s.exists) apply(s.data()); }, () => {}); }).catch(() => {}); } catch (e) {}
+}
+componentWillUnmount() { clearInterval(this.__iv); }
+// SYNC-END
+renderVals() {
+const s = this.state;
+const defs = this.defs();
+const self = this;
+const sel = defs.filter((d) => d.id === s.sel)[0];
+const fv = this.flowOf(s.sel, defs);
+const v = s.vals[s.sel];
+const f = this.fmt(sel, v);
+const synced = s.synced[s.sel] !== false;
+const knobs = defs.filter((d) => d.type === 'knob').map((d) => {
+const val = s.vals[d.id];
+const ang = -135 + 270 * val;
+const rad = (ang - 90) * Math.PI / 180;
+return { id: d.id,
+x: d.x, y: d.y, cap: d.cap, label: d.label, name: d.name,
+ptr: d.cap === '#1a1a1a' ? '#ffffff' : '#111111',
+tf: 'translate(' + d.x + ',' + d.y + ') rotate(' + ang + ')',
+ring: d.id === s.sel ? '#2DD4BF' : 'transparent',
+ly: d.y - 24,
+dx: d.x + 17 * Math.cos(rad), dy: d.y + 17 * Math.sin(rad),
+dotOp: s.synced[d.id] === false ? 1 : 0,
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+};
+});
+const faders = defs.filter((d) => d.type === 'fader').map((d) => {
+const val = s.vals[d.id];
+return { id: d.id,
+tx: d.x - 2, hx: d.x - 10, cx: d.x, hy: 566 + (1 - val) * 100, label: d.label, name: d.name,
+ring: d.id === s.sel ? '#2DD4BF' : '#777',
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+};
+});
+const jumpTo = (x, y) => () => { const el = document.getElementById('pan'); if (el) el.scrollTo({ left: Math.max(0, (x - 100.0) * 1.1727 - 12), top: Math.max(0, (y - 150.0) * 1.1727 - 12), behavior: 'smooth' }); };
+const chips = [["CH1·2 입력", 100, 150], ["CH1·2 노브", 100, 500], ["3/4·팬텀", 330, 320], ["MAIN OUT", 440, 320], ["EQ·미터", 440, 520]].map((c) => ({ label: c[0], go: jumpTo(c[1], c[2]) }));
+
+const fmtDb = (db) => db;
+const effOf = (d, v, f, src, extra) => {
+  let e = '';
+  const db = f.db;
+  if (d.type === 'button') {
+    return v === 1 ? (extra && extra.on) || '켜짐' : (extra && extra.off) || '꺼짐';
+  }
+  if (d.kind === 'gain') e = '지금 ' + db + ' 만큼 키우는 위치예요. 시계 방향으로 올리면 ' + src + '의 소리가 커지고, 너무 올리면 찌그러져요(PEAK). 반시계로 내리면 소리가 작아지고 잡음이 상대적으로 커져요.';
+  else if (d.kind === 'tone') e = v > 0.55 ? ('지금 ' + db + ' 만큼 올린 상태예요. ' + src + '의 ' + ((extra && extra.hi) ? extra.hi : '해당 음역') + '이 더 강해져요.') : (v < 0.45 ? ('지금 ' + db + ' 만큼 줄인 상태예요. ' + src + '의 ' + ((extra && extra.hi) ? extra.hi : '해당 음역') + '이 약해져요.') : '가운데(12시)라서 ' + src + '의 소리를 바꾸지 않아요. 시계 방향은 강하게, 반시계 방향은 약하게 만들어요.');
+  else if (d.kind === 'eq') e = '지금 ' + db + ' 위치예요. 위로 올리면 ' + src + ' 중 이 주파수 대역이 커지고, 아래로 내리면 줄어요.';
+  else if (d.kind === 'pan') e = v < 0.45 ? '왼쪽으로 치우친 상태예요. ' + src + '의 소리가 왼쪽 스피커에서 더 크게 나와요.' : (v > 0.55 ? '오른쪽으로 치우친 상태예요. ' + src + '의 소리가 오른쪽 스피커에서 더 크게 나와요.' : '가운데예요. ' + src + '의 소리가 왼쪽·오른쪽에 똑같이 나가요.');
+  else e = (v < 0.03 ? '지금 맨 아래(꺼짐)라서 ' + src + '의 소리가 나지 않아요. ' : '지금 ' + db + ' 위치예요. ') + '올리면 ' + src + '의 소리가 커지고 내리면 작아져요.' + ((extra && extra.lv) ? ' ' + extra.lv : '');
+  return e;
+};
+
+const L4K = (id) => (id.charAt(0) === 'q' ? 'q' : (/^[ghlev][12]$/.test(id) ? id.charAt(0) : id));
+const L4S = (id) => (/2$/.test(id) && id !== 'v34' ? 'CD 오른쪽' : 'CD 왼쪽');
+const L4I = {
+  g: ['입력 감도(GAIN)', '잭으로 들어온 소리를 믹서가 다루기 좋은 크기로 키우는 첫 단계'],
+  h: ['고음(HIGH) 조절', '음색에서 밝고 또렷한 고음 부분을 키우거나 줄임'],
+  l: ['저음(LOW) 조절', '음색에서 묵직한 저음 부분을 키우거나 줄임'],
+  e: ['이펙트 보내기(EFF)', '이 채널 소리를 내장 이펙트로 얼마나 보낼지 정함'],
+  v: ['채널 음량(LEVEL)', '이 채널 소리가 L4 믹스에서 차지하는 크기'],
+  v34: ['3/4 채널 음량', '3/4 스테레오 입력(PC) 소리의 크기'],
+  usb: ['USB 재생 음량', 'L4 자체 USB 플레이어로 재생하는 음악의 크기'],
+  ret: ['이펙트 리턴(RETURN)', '이펙트가 만든 소리를 믹스로 되돌리는 양'],
+  echo: ['에코(ECHO) 양', '에코(메아리) 효과의 양'],
+  efx: ['이펙트 음량(EFFECT VOL)', '내장 이펙트 소리 전체의 크기'],
+  ml: ['메인 출력 왼쪽(MAIN L)', 'L4가 내보내는 최종 왼쪽 소리의 크기'],
+  mr: ['메인 출력 오른쪽(MAIN R)', 'L4가 내보내는 최종 오른쪽 소리의 크기'],
+  q: ['그래픽 EQ 대역', '특정 주파수 대역의 소리만 키우거나 줄임']
+};
+const L4SRC = (id) => {
+  const k = L4K(id);
+  if (k === 'v34') return 'PC (AUX→RCA, 스테레오)';
+  if (k === 'usb') return 'L4 USB 플레이어 (지금은 연결 안 됨)';
+  if (k === 'ret' || k === 'echo' || k === 'efx') return 'CD·PC에서 이펙트로 보낸 소리';
+  if (k === 'ml') return 'CD·PC 전체의 왼쪽 → DFX-12 CD/TAPE IN L';
+  if (k === 'mr') return 'CD·PC 전체의 오른쪽 → DFX-12 CD/TAPE IN R';
+  if (k === 'q') return 'CD·PC 전체 출력 (MAIN OUT에 적용)';
+  return L4S(id) + ' (CH' + id.charAt(1) + ', RCA→TS 어댑터)';
+};
+const explain = (d, v, f) => {
+  const k = L4K(d.id);
+  const i = L4I[k];
+  const src = k === 'q' ? 'CD·PC 소리' : (k === 'ml' || k === 'mr' ? 'CD·PC 소리' : (k === 'v34' ? 'PC 소리' : (k === 'usb' ? 'USB 음악' : (k === 'ret' || k === 'echo' || k === 'efx' ? '이펙트 소리' : L4S(d.id) + ' 소리'))));
+  let eff = effOf(d, v, f, src, { hi: k === 'h' ? '고음' : '저음' });
+  if (k === 'e') eff = (v < 0.03 ? '지금 0이라서 이펙트로 보내지 않아요. ' : '지금 ' + (v * 10).toFixed(1) + ' 위치예요. ') + '올리면 ' + src + '에 이펙트(잔향 등)가 더 많이 섞여요. 이펙트 소리는 RETURN·EFFECT VOL로 되돌아와요.';
+  return { title: i[0], desc: i[0] + '. ' + i[1] + '.', src: L4SRC(d.id), eff: eff };
+};
+const infoOf = (d, v, f) => explain(d, v, f);
+const shortOf = (d) => ({ ml: 'MAIN L', mr: 'MAIN R', v34: '3/4 LEVEL', usb: 'USB VOL', efx: 'EFFECT VOL' }[d.id] || d.label);
+const nameList = defs.filter((d) => d.type === 'knob').map((d) => ({ x: d.x, y: d.y + 28, t: shortOf(d), fs: 11 }));
+const info = infoOf(sel, v, f);
+const setV = (nv) => {
+nv = Math.max(0, Math.min(1, nv));
+const dd0 = defs.filter((d) => d.id === self.state.sel)[0];
+if (dd0 && dd0.kind === 'fx') nv = Math.round(nv * 15) / 15;
+const vs = Object.assign({}, self.state.vals);
+vs[self.state.sel] = nv;
+const sy0 = Object.assign({}, self.state.synced);
+sy0[self.state.sel] = false;
+self.setState({ vals: vs, synced: sy0 });
+};
+return {
+chips: chips, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', phantomShort: s.phantom ? '+48V ON' : '+48V OFF', aPh: s.phantom ? 1 : 0,
+flowD: fv.d, flowDots: fv.dots, flowArrow: fv.arrow, flowText: fv.text, hasFlow: !!fv.text, knobs: knobs, faders: faders,
+sel: { isKnob: sel.type === 'knob', isFad: sel.type === 'fader', capc: sel.cap || '#f5f5f7', ptrc: (sel.cap === '#1a1a1a' || sel.cap === '#111' || sel.cap === '#222') ? '#ffffff' : '#111111', dialTf: 'rotate(' + (-135 + 270 * v) + ' 66 66)', fy: 10 + (1 - v) * 136 - 11, fyc: 10 + (1 - v) * 136, name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db,
+badge: synced ? '실물과 일치' : '실물 확인 필요', badgeBg: synced ? '#DDF5EE' : '#FDE7C8', badgeFg: synced ? '#0B4F47' : '#7A3E00' },
+onDial: (e) => {
+if (e.type === 'pointermove' && !(e.buttons & 1)) return;
+if (e.type === 'pointerdown' && e.currentTarget.setPointerCapture) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} }
+const r = e.currentTarget.getBoundingClientRect();
+let a = Math.atan2(e.clientX - (r.left + r.width / 2), -(e.clientY - (r.top + r.height / 2))) * 180 / Math.PI;
+a = Math.max(-135, Math.min(135, a));
+setV((a + 135) / 270);
+},
+onFad: (e) => {
+if (e.type === 'pointermove' && !(e.buttons & 1)) return;
+if (e.type === 'pointerdown' && e.currentTarget.setPointerCapture) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} }
+const r = e.currentTarget.getBoundingClientRect();
+const yv = (e.clientY - r.top) * 156 / r.height;
+setV(1 - (yv - 10) / 136);
+},
+stepUp: () => setV(v + 0.05),
+stepDn: () => setV(v - 0.05),
+onSlide: (e) => {
+const nv = Number(e.target.value) / 100;
+const vals = Object.assign({}, self.state.vals);
+vals[self.state.sel] = nv;
+const sy = Object.assign({}, self.state.synced);
+sy[self.state.sel] = false;
+self.setState({ vals: vals, synced: sy });
+},
+markSynced: () => {
+const sy = Object.assign({}, self.state.synced);
+sy[self.state.sel] = true;
+self.setState({ synced: sy });
+},
+togglePhantom: () => self.setState({ phantom: !self.state.phantom }),
+phantomLabel: s.phantom ? '+48V ON (눌러서 끄기)' : '+48V OFF (눌러서 켜기)',
+phantomFill: s.phantom ? '#E0332B' : '#5A2A2A',
+phantomKnobX: s.phantom ? 389 : 374,
+togglePower: () => self.setState({ power: !self.state.power }),
+powerLabel: s.power ? '전원 ON' : '전원 OFF',
+powerBg: s.power ? '#2DD4BF' : '#5B6168',
+powerFg: s.power ? '#0B1F1D' : '#F4F3EE'
+};
+}
+}
+</script>
+</body>
+</html>
