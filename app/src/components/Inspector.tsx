@@ -1,4 +1,4 @@
-// 둥근 인스펙터 (시안 M2~M4 그대로): 이름+배지 → 신호 흐름 → 큰 노브/페이더(−/+) 또는 ON/OFF 토글
+// 둥근 인스펙터 (시안 M2~M4). 화면 아래에 고정되고, 컨트롤을 누르면 뜨고, 숨기면 우측 하단 버튼으로 접힌다.: 이름+배지 → 신호 흐름 → 큰 노브/페이더(−/+) 또는 ON/OFF 토글
 // → 값 박스(눈금·아날로그·시계) → "이 컨트롤이 하는 일" (접힘) → "실물에 맞췄어요".
 import { useEffect, useState } from 'react';
 import type { ControlDef } from '../data/types';
@@ -53,9 +53,9 @@ function BigFader({ v, set, label, cap }: { v: number; set: (v: number) => void;
   );
 }
 
-interface Props { d: ControlDef; v: number; unsynced: boolean; info: Inspect; onChange: (v: number) => void; onSynced: () => void }
+interface Props { d: ControlDef; v: number; unsynced: boolean; info: Inspect; onChange: (v: number) => void; onSynced: () => void; onHide: () => void }
 
-export function Inspector({ d, v, unsynced, info, onChange, onSynced }: Props) {
+export function Inspector({ d, v, unsynced, info, onChange, onSynced, onHide }: Props) {
   const [more, setMore] = useState(false);
   const [text, setText] = useState('');
   const set = (nv: number) => {
@@ -73,6 +73,9 @@ export function Inspector({ d, v, unsynced, info, onChange, onSynced }: Props) {
         <span className="badge" style={unsynced ? { background: '#fff3d6', color: '#7a4b00' } : { background: '#DDF5EE', color: '#0B4F47' }}>
           {unsynced ? '실물 확인 필요' : '실물과 일치'}
         </span>
+        <button className="hide" aria-label="인스펙터 숨기기" onClick={onHide}>
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M2 5l5 5 5-5" /></svg>
+        </button>
       </div>
       {info.flowText && <div className="flowbox"><b>신호 흐름</b> · {info.flowText}</div>}
       <div className="body">
@@ -114,5 +117,19 @@ export function Inspector({ d, v, unsynced, info, onChange, onSynced }: Props) {
       </div>
       <button className="btn-primary" onClick={onSynced} disabled={!unsynced}>실물에 맞췄어요</button>
     </section>
+  );
+}
+
+/** 숨긴 인스펙터: 우측 하단의 둥근 버튼. 누르면 다시 뜬다. */
+export function InspectorHandle({ name, unsynced, onOpen }: { name: string; unsynced: boolean; onOpen: () => void }) {
+  return (
+    <button className="insp-handle" onClick={onOpen} aria-label={name + ' 인스펙터 열기'}>
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+        <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
+        <line x1="11" y1="11" x2="11" y2="4.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" transform="rotate(-40 11 11)" />
+      </svg>
+      <span>{name}</span>
+      {unsynced && <i className="amber" aria-hidden="true" />}
+    </button>
   );
 }

@@ -3,8 +3,8 @@ import { useRef, useState } from 'react';
 import { PROFILES } from '../data';
 import type { BoardId } from '../data/types';
 import { Panel } from '../components/Panel';
-import { Inspector } from '../components/Inspector';
-import { flowFor } from '../lib/flow';
+import { Inspector, InspectorHandle } from '../components/Inspector';
+import { flowFor, pickForJack } from '../lib/flow';
 import { inspect } from '../lib/inspect';
 import { go } from '../nav';
 import { markSynced, setPower, setValue, useStore } from '../store/store';
@@ -16,6 +16,8 @@ export function DeviceDetail({ board }: { board: BoardId }) {
   const st = useStore((s) => s.boards[board]);
   const [selBy, setSelBy] = useState<Partial<Record<BoardId, string>>>({});
   const pan = useRef<HTMLElement>(null);
+  // 평소에는 숨겨 두고(우측 하단 버튼), 컨트롤을 누르면 뜬다
+  const [open, setOpen] = useState(false);
   const d = p.controls.find((c) => c.id === selBy[board]) ?? p.controls[0];
   const v = st.vals[d.id] ?? d.def;
   const info = inspect(board, d.id, st);
@@ -43,11 +45,16 @@ export function DeviceDetail({ board }: { board: BoardId }) {
       </header>
       <main ref={pan} className="pan" aria-label={p.title + ' 믹서 패널'}>
         <Panel profile={p} state={st} selected={d.id} flow={flowFor(p, d.id)} label={p.title + ' 믹서 패널 그림'} width={p.size[0]}
-          onPick={(id) => setSelBy({ ...selBy, [board]: id })} />
-        <div style={{ height: 520 }} aria-hidden="true" />
+          onPick={(id) => { setSelBy({ ...selBy, [board]: id }); setOpen(true); }}
+          onJack={(i) => setSelBy({ ...selBy, [board]: pickForJack(p, i) })} />
+        <div style={{ height: open ? 520 : 88 }} aria-hidden="true" />
       </main>
-      <Inspector key={board + d.id} d={d} v={v} info={info} unsynced={st.synced[d.id] === false}
-        onChange={(nv) => setValue(board, d.id, nv)} onSynced={() => markSynced(board, d.id)} />
+      {open ? (
+        <Inspector key={board + d.id} d={d} v={v} info={info} unsynced={st.synced[d.id] === false} onHide={() => setOpen(false)}
+          onChange={(nv) => setValue(board, d.id, nv)} onSynced={() => markSynced(board, d.id)} />
+      ) : (
+        <InspectorHandle name={info.name} unsynced={st.synced[d.id] === false} onOpen={() => setOpen(true)} />
+      )}
     </>
   );
 }

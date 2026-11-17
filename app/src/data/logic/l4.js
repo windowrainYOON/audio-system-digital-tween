@@ -94,7 +94,7 @@ ring: d.id === s.sel ? '#2DD4BF' : 'transparent',
 ly: d.y - 24,
 dx: d.x + 17 * Math.cos(rad), dy: d.y + 17 * Math.sin(rad),
 dotOp: s.synced[d.id] === false ? 1 : 0,
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const faders = defs.filter((d) => d.type === 'fader').map((d) => {
@@ -102,7 +102,7 @@ const val = s.vals[d.id];
 return { id: d.id,
 tx: d.x - 2, hx: d.x - 10, cx: d.x, hy: 566 + (1 - val) * 100, label: d.label, name: d.name,
 ring: d.id === s.sel ? '#2DD4BF' : '#777',
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const jumpTo = (x, y) => () => { const el = document.getElementById('pan'); if (el) el.scrollTo({ left: Math.max(0, (x - 100.0) * 0.8 - 12), top: Math.max(0, (y - 150.0) * 0.8 - 12), behavior: 'smooth' }); };
@@ -173,6 +173,7 @@ sy0[self.state.sel] = false;
 self.setState({ vals: vs, synced: sy0 });
 };
 return {
+inspOpen: !!this.state.open, inspClosed: !this.state.open, hideInsp: () => this.setState({ open: false }), showInsp: () => this.setState({ open: true }),
 chips: chips, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', phantomShort: s.phantom ? '+48V ON' : '+48V OFF', aPh: s.phantom ? 1 : 0,
 flowD: fv.d, flowDots: fv.dots, flowArrow: fv.arrow, flowText: fv.text, hasFlow: !!fv.text, knobs: knobs, faders: faders,
 sel: { isKnob: sel.type === 'knob', isFad: sel.type === 'fader', capc: sel.cap || '#f5f5f7', ptrc: (sel.cap === '#1a1a1a' || sel.cap === '#111' || sel.cap === '#222') ? '#ffffff' : '#111111', dialTf: 'rotate(' + (-135 + 270 * v) + ' 66 66)', fy: 10 + (1 - v) * 136 - 11, fyc: 10 + (1 - v) * 136, name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db,

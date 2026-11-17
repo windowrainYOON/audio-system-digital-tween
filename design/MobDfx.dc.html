@@ -122,10 +122,12 @@ button{font-family:inherit}
     <div style="height:520px" aria-hidden="true"></div>
   </main>
 
+  <sc-if value="{{inspOpen}}" hint-placeholder-val="{{ true }}">
   <section aria-label="선택한 컨트롤" style="position:absolute;left:12px;right:12px;bottom:12px;max-height:540px;border-radius:28px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 8px 30px rgba(0,0,0,0.18),0 0 0 0.5px var(--sep);padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;z-index:3">
     <div style="flex:none;display:flex;align-items:center;gap:8px">
       <div style="flex:1;font-size:17px;line-height:22px;font-weight:600">{{sel.name}}</div>
       <span style="padding:2px 10px;border-radius:12px;background:{{sel.badgeBg}};color:{{sel.badgeFg}};font-size:12px;line-height:18px;font-weight:600">{{sel.badge}}</span>
+      <button onClick="{{hideInsp}}" aria-label="인스펙터 숨기기" style="flex:none;width:44px;height:44px;margin:-10px -8px -10px 0;border:0;border-radius:22px;background:transparent;color:var(--label2);display:inline-flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 5l5 5 5-5"/></svg></button>
     </div>
     <sc-if value="{{hasFlow}}" hint-placeholder-val="{{ false }}">
       <div style="flex:none;padding:8px 12px;border-radius:12px;background:#d9f5f0;font-size:13px;line-height:18px;color:#134e4a"><b>신호 흐름</b> · {{flowText}}</div>
@@ -171,6 +173,10 @@ button{font-family:inherit}
     </div>
     <button onClick="{{markSynced}}" style="flex:none;min-height:44px;border:0;border-radius:22px;background:var(--accent);color:#fff;font-size:17px;font-weight:600">실물에 맞췄어요</button>
   </section>
+  </sc-if>
+  <sc-if value="{{inspClosed}}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{showInsp}}" aria-label="인스펙터 열기" style="position:absolute;right:16px;bottom:16px;z-index:3;min-height:52px;max-width:240px;padding:0 18px 0 14px;border:0;border-radius:26px;background:var(--accent);color:#fff;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,0.18),0 0 0 0.5px var(--sep)"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="11" y1="11" x2="11" y2="4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" transform="rotate(-40 11 11)"/></svg><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{sel.name}}</span></button>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
@@ -327,7 +333,7 @@ l1: -d.r * 0.2, l2: -d.r * 0.95,
 tf: 'translate(' + d.x + ',' + d.y + ') rotate(' + ang + ')',
 ring: ring(d.id),
 dx: d.x + d.r * Math.cos(rad), dy: d.y + d.r * Math.sin(rad), dotOp: dot(d.id),
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const faders = defs.filter((d) => d.type === 'fader').map((d) => {
@@ -337,7 +343,7 @@ const cy = d.fb - 26 - val * (d.fb - d.ft - 26);
 return { id: d.id,
 ya: d.fb - 26, yb: -(d.fb - d.ft - 26), sx: d.x - 2.5, ft: d.ft, fh: d.fb - d.ft, cx: d.x - wide / 2, cy: cy, cw: wide, cap: d.cap, name: d.name,
 ring: d.id === s.sel ? '#2DD4BF' : '#555', dx: d.x + wide / 2, dotOp: dot(d.id),
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const buttons = defs.filter((d) => d.type === 'button').map((d) => {
@@ -348,7 +354,7 @@ return { id: d.id,
 x: d.x - 14, y: d.y - 8, w: 28, h: 16, dx: d.x + 14, name: d.name, cx: d.x, ty: d.y + 3, fs: 8,
 fill: on ? col : '#5E6166', ring: d.id === s.sel ? '#2DD4BF' : (on ? '#1B1F23' : '#3A3C40'), glow: col, glowOp: on ? 1 : 0,
 onOp: on ? 1 : 0, offOp: on ? 0 : 1, tcol: red ? '#FFFFFF' : '#05302A', dotOp: dot(d.id),
-nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ sel: d.id })
+nmx: self.nameOf(d).x, nmy: self.nameOf(d).y, nmf: self.nameOf(d).fs, nm: self.nameOf(d).t, pick: () => self.setState({ open: true, sel: d.id })
 };
 });
 const cx = this.cols();
@@ -481,6 +487,7 @@ sy0[self.state.sel] = false;
 self.setState({ vals: vs, synced: sy0 });
 };
 return {
+inspOpen: !!this.state.open, inspClosed: !this.state.open, hideInsp: () => this.setState({ open: false }), showInsp: () => this.setState({ open: true }),
 chips: chips, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', aPh: 0,
 flowD: fv.d, flowDots: fv.dots, flowArrow: fv.arrow, flowText: fv.text, hasFlow: !!fv.text, knobs: knobs, faders: faders, buttons: buttons, texts: [], textsBake: texts, lamps: lamps, jacks: jacks, pins: pins,
 sel: { isKnob: sel.type === 'knob', isFad: sel.type === 'fader', capc: sel.cap || '#f5f5f7', ptrc: (sel.cap === '#1a1a1a' || sel.cap === '#111' || sel.cap === '#222') ? '#ffffff' : '#111111', dialTf: 'rotate(' + (-135 + 270 * v) + ' 66 66)', fy: 10 + (1 - v) * 136 - 11, fyc: 10 + (1 - v) * 136, name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db,
