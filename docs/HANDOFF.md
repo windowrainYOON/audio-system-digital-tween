@@ -43,6 +43,15 @@ M1 MobOverview · M2 MobL4 · M3 MobDfx · M4 MobAg06 · M5 MobWiring · M6 Mobi
 - 저장소: 공개, 초기 커밋만 있음. GitHub Pages는 아직 설정 안 됨(Settings → Pages 확인 필요).
 - 이 세션 샌드박스는 script.google.com / github.io에 직접 접속이 막혀 있어 WebFetch/브라우저로만 확인했다.
 
+## 6.1 M0 진행 (2026-11-17, 두 번째 세션)
+- 앱 골격: `app/` (Vite 6 + React 18 + TS). `npm run dev | build | test` (app 폴더에서).
+- 프로파일: `node tools/extract-profiles.cjs` 가 시안(MobAg06/MobDfx/MobL4/MobOverview)을 실행해 `app/src/data/profiles/{ag06,dfx12,l4}.json`, `app/src/data/overview.json` 을 만든다. 손으로 고치지 말고 시안을 고친 뒤 다시 돌린다.
+  - `art` = 값과 무관한 정적 도면(SVG 조각), `controls` = 노브·페이더·버튼 좌표·모양·기본값, `flows` = 신호 흐름 문구.
+- 화면: 홈(M1 간략 보기, 소스 탭 → 경로 강조), 패널(상세 최소판: 탭 → 슬라이더/토글, "실물에 맞췄어요"), 연결(Apps Script ping → test/ping 쓰기 → 읽기 시험, JSON 내려받기).
+- 공유 상태: `app/src/store/store.ts`. 시트 키 `mixer/<ag06|dfx12|l4>` = `{vals, synced, phantom, t}`, 300ms 디바운스 저장, 4초 폴링(화면 켜져 있을 때만), 브라우저에 마지막 값 캐시 → 끊겨도 마지막 화면 유지. 시트 접근은 `store/api.ts` 한 파일. `?api=<웹앱 URL>` 로 주소 바꿀 수 있음.
+- 배포: `.github/workflows/deploy.yml` (main push 시 빌드·테스트 → Pages). **Settings → Pages → Source를 "GitHub Actions"로 바꿔야 배포된다.** 주소: https://windowrainyoon.github.io/audio-system-digital-tween/
+- 이 클라우드 환경은 script.google.com 접속이 막혀 있어 Apps Script 시험은 배포된 앱의 "연결" 탭에서 한다.
+
 ## 7. 다음 할 일 (M0)
 1. Apps Script ping/읽기/쓰기 시험 (state 탭에 시험 키 기록 → 읽기).
 2. 시트 편집자 제한 여부 결정.
