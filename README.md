@@ -7,3 +7,5 @@
 - 시안(디자인 컴포넌트): `design/*.dc.html`, 캔버스 `design/canvas.json`
 - 시안 생성 도구: `tools/`
 - 서버(Apps Script): `apps-script/Code.gs`
+- 앱: `app/` (Vite + React + TS), 데이터는 `node tools/extract-profiles.cjs` 로 시안에서 생성
+- 배포 주소: https://windowrainyoon.github.io/audio-system-digital-tween/

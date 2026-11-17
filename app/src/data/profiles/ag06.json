@@ -1,0 +1,551 @@
+{
+ "id": "ag06",
+ "title": "Yamaha AG06",
+ "source": "design/MobAg06.dc.html",
+ "formula": {
+  "knob": "rotate(-135 + 270*v)",
+  "fader": "y = ya + yb*v",
+  "button": "on = v === 1"
+ },
+ "viewBox": [
+  -10,
+  -130,
+  622,
+  910
+ ],
+ "controls": [
+  {
+   "id": "gn1",
+   "type": "knob",
+   "name": "CH1 GAIN",
+   "kind": "gain",
+   "def": 0.4,
+   "x": 110,
+   "y": 444,
+   "r": 17,
+   "rr": 22,
+   "cap": "#1a1a1a",
+   "ptr": "#ffffff",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "gn2",
+   "type": "knob",
+   "name": "CH2 GAIN",
+   "kind": "gain",
+   "def": 0.4,
+   "x": 206,
+   "y": 444,
+   "r": 17,
+   "rr": 22,
+   "cap": "#1a1a1a",
+   "ptr": "#ffffff",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "lv1",
+   "type": "knob",
+   "name": "CH1 MIC 레벨",
+   "kind": "level",
+   "def": 0.6,
+   "x": 110,
+   "y": 654,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "lv2",
+   "type": "knob",
+   "name": "CH2 MIC/GTR 레벨",
+   "kind": "level",
+   "def": 0.6,
+   "x": 206,
+   "y": 654,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "lv34",
+   "type": "knob",
+   "name": "3/4 키보드 레벨",
+   "kind": "level",
+   "def": 0.6,
+   "x": 305,
+   "y": 654,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "lv56",
+   "type": "knob",
+   "name": "5/6 드럼 레벨",
+   "kind": "level",
+   "def": 0.6,
+   "x": 402,
+   "y": 553,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "lvu",
+   "type": "knob",
+   "name": "USB 레벨",
+   "kind": "level",
+   "def": 0,
+   "x": 402,
+   "y": 654,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "msp",
+   "type": "knob",
+   "name": "MONITOR SPEAKER 레벨",
+   "kind": "level",
+   "def": 0.5,
+   "x": 524,
+   "y": 573,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "mph",
+   "type": "knob",
+   "name": "MONITOR PHONES 레벨",
+   "kind": "level",
+   "def": 0.3,
+   "x": 524,
+   "y": 654,
+   "r": 17,
+   "rr": 22,
+   "cap": "#d9d9d9",
+   "ptr": "#111111",
+   "l1": -3,
+   "l2": -16,
+   "stroke": "#555"
+  },
+  {
+   "id": "ph",
+   "type": "button",
+   "name": "CH1 +48V",
+   "kind": "phantom",
+   "def": 1,
+   "x": 68,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 88,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#E0332B",
+   "rx": 4
+  },
+  {
+   "id": "pad1",
+   "type": "button",
+   "name": "CH1 PAD",
+   "kind": "sw",
+   "def": 0,
+   "x": 112,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 132,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "gtr",
+   "type": "button",
+   "name": "CH2 GUITAR",
+   "kind": "sw",
+   "def": 0,
+   "x": 164,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 184,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "pad2",
+   "type": "button",
+   "name": "CH2 PAD",
+   "kind": "sw",
+   "def": 0,
+   "x": 208,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 228,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "gh34",
+   "type": "button",
+   "name": "3/4 GAIN HIGH/LOW",
+   "kind": "sw",
+   "def": 0,
+   "x": 285,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 305,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "gh56",
+   "type": "button",
+   "name": "5/6 GAIN HIGH/LOW",
+   "kind": "sw",
+   "def": 0,
+   "x": 382,
+   "y": 218,
+   "w": 40,
+   "h": 22,
+   "cx": 402,
+   "ty": 232.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "ce1",
+   "type": "button",
+   "name": "CH1 COMP/EQ",
+   "kind": "sw",
+   "def": 0,
+   "x": 90,
+   "y": 483,
+   "w": 40,
+   "h": 22,
+   "cx": 110,
+   "ty": 497.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "am2",
+   "type": "button",
+   "name": "CH2 AMP SIM",
+   "kind": "sw",
+   "def": 0,
+   "x": 186,
+   "y": 483,
+   "w": 40,
+   "h": 22,
+   "cx": 206,
+   "ty": 497.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "ef1",
+   "type": "button",
+   "name": "CH1 EFFECT",
+   "kind": "sw",
+   "def": 0,
+   "x": 90,
+   "y": 539,
+   "w": 40,
+   "h": 22,
+   "cx": 110,
+   "ty": 553.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "ef2",
+   "type": "button",
+   "name": "CH2 EFFECT",
+   "kind": "sw",
+   "def": 0,
+   "x": 186,
+   "y": 539,
+   "w": 40,
+   "h": 22,
+   "cx": 206,
+   "ty": 553.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "lb",
+   "type": "button",
+   "name": "LOOPBACK",
+   "kind": "sw",
+   "def": 0,
+   "x": 382,
+   "y": 487,
+   "w": 40,
+   "h": 22,
+   "cx": 402,
+   "ty": 501.6,
+   "fs": 10,
+   "on": "#2DD4BF",
+   "rx": 4
+  },
+  {
+   "id": "mm",
+   "type": "button",
+   "name": "MONITOR MUTE",
+   "kind": "mute",
+   "def": 0,
+   "x": 504,
+   "y": 483,
+   "w": 40,
+   "h": 22,
+   "cx": 524,
+   "ty": 497.6,
+   "fs": 10,
+   "on": "#E0332B",
+   "rx": 4
+  }
+ ],
+ "extra": [],
+ "flows": [
+  {
+   "ids": [
+    "ph",
+    "pad1",
+    "gn1",
+    "ce1",
+    "ef1",
+    "lv1"
+   ],
+   "x": 110,
+   "y0": 104,
+   "y1": 700,
+   "jacks": [
+    [
+     110,
+     104,
+     28
+    ]
+   ],
+   "outs": [
+    [
+     494,
+     108,
+     21
+    ],
+    [
+     554,
+     108,
+     21
+    ]
+   ],
+   "txt": "베이스 → DI BOX 1 → CH1 XLR 단자 → +48V·PAD → GAIN → COMP/EQ → EFFECT → CH1 MIC 레벨 → STEREO OUT L·R → DFX-12 9/10"
+  },
+  {
+   "ids": [
+    "gtr",
+    "pad2",
+    "gn2",
+    "am2",
+    "ef2",
+    "lv2"
+   ],
+   "x": 206,
+   "y0": 104,
+   "y1": 700,
+   "jacks": [
+    [
+     206,
+     104,
+     28
+    ]
+   ],
+   "outs": [
+    [
+     494,
+     108,
+     21
+    ],
+    [
+     554,
+     108,
+     21
+    ]
+   ],
+   "txt": "기타 → DI BOX 2 → CH2 XLR 단자 → GUITAR·PAD → GAIN → AMP SIM → EFFECT → CH2 MIC/GTR 레벨 → STEREO OUT L·R → DFX-12 9/10"
+  },
+  {
+   "ids": [
+    "gh34",
+    "lv34"
+   ],
+   "x": 305,
+   "y0": 98,
+   "y1": 700,
+   "jacks": [
+    [
+     305,
+     98,
+     20
+    ],
+    [
+     305,
+     160,
+     20
+    ]
+   ],
+   "outs": [
+    [
+     494,
+     108,
+     21
+    ],
+    [
+     554,
+     108,
+     21
+    ]
+   ],
+   "txt": "키보드 TRS → TS ×2 → 3/4 L/MONO·R 단자 → GAIN H/L → 3/4 레벨 → STEREO OUT L·R → DFX-12 9/10"
+  },
+  {
+   "ids": [
+    "gh56",
+    "lv56"
+   ],
+   "x": 402,
+   "y0": 98,
+   "y1": 590,
+   "jacks": [
+    [
+     402,
+     98,
+     19
+    ],
+    [
+     402,
+     160,
+     19
+    ]
+   ],
+   "outs": [
+    [
+     494,
+     108,
+     21
+    ],
+    [
+     554,
+     108,
+     21
+    ]
+   ],
+   "txt": "드럼 TS 모노 ×2 → RCA → 5/6 L·R 단자 → GAIN H/L → 5/6 레벨 → STEREO OUT L·R → DFX-12 9/10"
+  },
+  {
+   "ids": [
+    "lvu"
+   ],
+   "x": 402,
+   "y0": 625,
+   "y1": 695,
+   "outs": [
+    [
+     494,
+     108,
+     21
+    ],
+    [
+     554,
+     108,
+     21
+    ]
+   ],
+   "txt": "PC USB 재생음 → USB 레벨 → STEREO OUT L·R → DFX-12 9/10"
+  },
+  {
+   "ids": [
+    "mm",
+    "msp"
+   ],
+   "x": 524,
+   "y0": 484,
+   "y1": 600,
+   "outs": [
+    [
+     494,
+     172,
+     21
+    ],
+    [
+     554,
+     172,
+     21
+    ]
+   ],
+   "txt": "믹스 → MONITOR MUTE → MONITOR SPEAKER 레벨 → MON OUT L·R 단자"
+  },
+  {
+   "ids": [
+    "mph"
+   ],
+   "x": 524,
+   "y0": 630,
+   "y1": 695,
+   "outs": [
+    [
+     494,
+     236,
+     21
+    ]
+   ],
+   "txt": "믹스 → MONITOR PHONES 레벨 → PHONES 단자"
+  }
+ ],
+ "art": "<rect x=\"0\" y=\"0\" width=\"602\" height=\"770\" rx=\"10\" fill=\"#F3F3F0\" stroke=\"#B9BBBE\" stroke-width=\"2\"/>\n<rect x=\"0\" y=\"0\" width=\"602\" height=\"270\" rx=\"10\" fill=\"#E6E6E2\"/>\n<g fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"5\">\n<path d=\"M110 -84 V82\" stroke=\"#444\"/>\n<path d=\"M206 -84 V82\" stroke=\"#444\"/>\n<path d=\"M305 -84 V83\" stroke=\"#6B7280\"/>\n<path d=\"M338 -84 V160 H320\" stroke=\"#6B7280\"/>\n<path d=\"M402 -84 V86\" stroke=\"#0F766E\"/>\n<path d=\"M430 -84 V160 H414\" stroke=\"#0F766E\"/>\n<path d=\"M494 -84 V93\" stroke=\"#B45309\"/>\n<path d=\"M554 -84 V93\" stroke=\"#B45309\"/>\n</g>\n<g font-size=\"12\" font-weight=\"700\" fill=\"#1B1F23\">\n<rect x=\"64\" y=\"-124\" width=\"188\" height=\"40\" rx=\"8\" fill=\"#F4F3EE\" stroke=\"#9AA0A6\"/><text x=\"74\" y=\"-107\">DI BOX ×2</text><text x=\"74\" y=\"-93\" font-size=\"10\" font-weight=\"400\" fill=\"#4B5259\">베이스 → CH1 · 기타 → CH2</text>\n<rect x=\"262\" y=\"-124\" width=\"86\" height=\"40\" rx=\"8\" fill=\"#F4F3EE\" stroke=\"#9AA0A6\"/><text x=\"270\" y=\"-107\">키보드</text><text x=\"270\" y=\"-93\" font-size=\"9\" font-weight=\"400\" fill=\"#4B5259\">TRS→TS×2 → 3/4</text>\n<rect x=\"356\" y=\"-124\" width=\"92\" height=\"40\" rx=\"8\" fill=\"#DDF5EE\" stroke=\"#0F766E\"/><text x=\"364\" y=\"-107\">Alesis 드럼</text><text x=\"364\" y=\"-93\" font-size=\"9\" font-weight=\"400\" fill=\"#4B5259\">TS×2 → RCA</text>\n<rect x=\"462\" y=\"-124\" width=\"124\" height=\"40\" rx=\"8\" fill=\"#FDF3E3\" stroke=\"#B45309\"/><text x=\"470\" y=\"-107\">Mackie DFX-12</text><text x=\"470\" y=\"-93\" font-size=\"9\" font-weight=\"400\" fill=\"#4B5259\">9/10 L·R (5.5 TS ×2)</text>\n</g>\n<g id=\"ch-groups\"><rect x=\"64\" y=\"60\" width=\"92\" height=\"650\" rx=\"14\" fill=\"rgba(10,132,255,0.07)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"110.0\" y=\"74\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">CH1</text><rect x=\"160\" y=\"60\" width=\"92\" height=\"650\" rx=\"14\" fill=\"rgba(255,149,0,0.08)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"206.0\" y=\"74\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">CH2</text><rect x=\"262\" y=\"60\" width=\"86\" height=\"650\" rx=\"14\" fill=\"rgba(10,132,255,0.07)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"305.0\" y=\"74\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">CH3/4</text><rect x=\"356\" y=\"60\" width=\"92\" height=\"530\" rx=\"14\" fill=\"rgba(10,132,255,0.07)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"402.0\" y=\"74\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">CH5/6 · AUX</text><rect x=\"356\" y=\"600\" width=\"92\" height=\"110\" rx=\"14\" fill=\"rgba(10,132,255,0.07)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"402.0\" y=\"614\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">USB</text><rect x=\"462\" y=\"60\" width=\"124\" height=\"214\" rx=\"14\" fill=\"rgba(45,212,191,0.10)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"524.0\" y=\"74\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">OUTPUT</text><rect x=\"462\" y=\"290\" width=\"124\" height=\"420\" rx=\"14\" fill=\"rgba(255,149,0,0.08)\" stroke=\"rgba(60,60,67,0.45)\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/><text x=\"524.0\" y=\"304\" font-size=\"12\" font-weight=\"700\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">MONITOR</text></g>\n<g>\n<circle cx=\"110\" cy=\"104\" r=\"22\" fill=\"#111111\" stroke=\"#9A9A9A\" stroke-width=\"2\"/>\n<circle cx=\"110\" cy=\"104\" r=\"0\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"206\" cy=\"104\" r=\"22\" fill=\"#111111\" stroke=\"#9A9A9A\" stroke-width=\"2\"/>\n<circle cx=\"206\" cy=\"104\" r=\"0\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"305\" cy=\"98\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"305\" cy=\"98\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"305\" cy=\"160\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"305\" cy=\"160\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"402\" cy=\"98\" r=\"12\" fill=\"#F5F5F5\" stroke=\"#CCCCCC\" stroke-width=\"3\"/>\n<circle cx=\"402\" cy=\"98\" r=\"4.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"402\" cy=\"160\" r=\"12\" fill=\"#E0332B\" stroke=\"#CCCCCC\" stroke-width=\"3\"/>\n<circle cx=\"402\" cy=\"160\" r=\"4.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"494\" cy=\"108\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"494\" cy=\"108\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"554\" cy=\"108\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"554\" cy=\"108\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"494\" cy=\"172\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"494\" cy=\"172\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"554\" cy=\"172\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"554\" cy=\"172\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"494\" cy=\"236\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"494\" cy=\"236\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"554\" cy=\"236\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"554\" cy=\"236\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"378\" cy=\"372\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"378\" cy=\"372\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"426\" cy=\"372\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"426\" cy=\"372\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<g>\n<circle cx=\"402\" cy=\"440\" r=\"15\" fill=\"#111111\" stroke=\"#BDBDBD\" stroke-width=\"3\"/>\n<circle cx=\"402\" cy=\"440\" r=\"6.5\" fill=\"#2E2E2E\"/>\n</g>\n<circle cx=\"101\" cy=\"99\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"119\" cy=\"99\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"110\" cy=\"116\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"197\" cy=\"99\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"215\" cy=\"99\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"206\" cy=\"116\" r=\"3.2\" fill=\"#444444\" stroke=\"#BBBBBB\" stroke-width=\"1\"/>\n<circle cx=\"110\" cy=\"361\" r=\"6\" fill=\"#E0332B\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"110\" cy=\"602\" r=\"6\" fill=\"#4A1A18\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"206\" cy=\"602\" r=\"6\" fill=\"#4A1A18\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"494\" cy=\"390\" r=\"6\" fill=\"#4A1A18\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"554\" cy=\"390\" r=\"6\" fill=\"#4A1A18\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"494\" cy=\"432\" r=\"6\" fill=\"#2FBF4A\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"554\" cy=\"432\" r=\"6\" fill=\"#2FBF4A\" stroke=\"#111\" stroke-width=\"1\"/>\n<circle cx=\"524\" cy=\"342\" r=\"6\" fill=\"#2DD4BF\" stroke=\"#111\" stroke-width=\"1\"/>\n<g id=\"baked-names\" font-family=\"-apple-system,'Noto Sans KR',sans-serif\" style=\"paint-order:stroke\"><text x=\"110\" y=\"138\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 베이스(DI)</text><text x=\"206\" y=\"138\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 기타(DI)</text><text x=\"305\" y=\"124\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 키보드 L</text><text x=\"305\" y=\"186\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 키보드 R</text><text x=\"402\" y=\"123\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 드럼 (L)</text><text x=\"402\" y=\"185\" font-size=\"9\" fill=\"#0F766E\" text-anchor=\"middle\" pointer-events=\"none\">IN 드럼 (R)</text><text x=\"494\" y=\"133\" font-size=\"9\" fill=\"#B45309\" text-anchor=\"middle\" pointer-events=\"none\">OUT→9/10 L</text><text x=\"554\" y=\"133\" font-size=\"9\" fill=\"#B45309\" text-anchor=\"middle\" pointer-events=\"none\">OUT→9/10 R</text><text x=\"494\" y=\"197\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">MON OUT L</text><text x=\"554\" y=\"197\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">MON OUT R</text><text x=\"494\" y=\"261\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PHONES</text><text x=\"554\" y=\"261\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">FOOT SW</text><text x=\"110\" y=\"296\" font-size=\"14\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">1</text><text x=\"206\" y=\"296\" font-size=\"14\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">2</text><text x=\"305\" y=\"296\" font-size=\"14\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">3/4</text><text x=\"402\" y=\"296\" font-size=\"14\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">5/6</text><text x=\"110\" y=\"338\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">+48V</text><text x=\"110\" y=\"628\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PEAK</text><text x=\"206\" y=\"628\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PEAK</text><text x=\"402\" y=\"340\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">HEADSET</text><text x=\"378\" y=\"396\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">MIC</text><text x=\"426\" y=\"396\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PHONES</text><text x=\"402\" y=\"464\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">AUX</text><text x=\"524\" y=\"326\" font-size=\"9\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">POWER</text><text x=\"494\" y=\"376\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PEAK L</text><text x=\"554\" y=\"376\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">PEAK R</text><text x=\"494\" y=\"418\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">SIG L</text><text x=\"554\" y=\"418\" font-size=\"8\" fill=\"#26282B\" text-anchor=\"middle\" pointer-events=\"none\">SIG R</text><text x=\"110\" y=\"473\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">GAIN</text><text x=\"206\" y=\"473\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">GAIN</text><text x=\"110\" y=\"683\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">CH1 MIC</text><text x=\"206\" y=\"683\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">CH2 MIC/GTR</text><text x=\"305\" y=\"683\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">3/4 KEYBD</text><text x=\"402\" y=\"582\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">5/6 DRUM</text><text x=\"402\" y=\"683\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">USB</text><text x=\"524\" y=\"602\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">MONITOR SPKR</text><text x=\"524\" y=\"683\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">MONITOR PHONES</text><text x=\"88\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">+48V</text><text x=\"132\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">PAD</text><text x=\"184\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">GUITAR</text><text x=\"228\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">PAD</text><text x=\"305\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">GAIN H/L</text><text x=\"402\" y=\"253\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">GAIN H/L</text><text x=\"110\" y=\"518\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">COMP/EQ</text><text x=\"206\" y=\"518\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">AMP SIM</text><text x=\"110\" y=\"574\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">EFFECT</text><text x=\"206\" y=\"574\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">EFFECT</text><text x=\"402\" y=\"522\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">LOOPBACK</text><text x=\"524\" y=\"518\" font-size=\"11\" font-weight=\"700\" fill=\"#1d1d1f\" stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\" text-anchor=\"middle\" pointer-events=\"none\">MONITOR MUTE</text></g><!--/baked-->"
+}
