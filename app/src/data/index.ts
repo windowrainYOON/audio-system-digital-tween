@@ -17,7 +17,7 @@ export interface SourceInfo { title: string; badge: string; bg: string; steps: S
 export interface Overview {
   width: number; height: number;
   boards: { key: string; board: BoardId; x: number; y: number; scale: number; crop: [number, number, number, number] }[];
-  cables: { key: string; d: string; color: string; dash: string; label: string }[];
+  cables: { key: string; d: string; color: string; dash: string; label: string; lx?: number; ly?: number }[];
   boxes: { key: string; x: number; y: number; w: number; h: number; title: string; sub: string; sub2: string; fill: string; stroke: string }[];
   badges: { x: number; y: number; level: 'warn' | 'info' | 'error'; t: string }[];
   names: { x: number; y: number; t: string }[];

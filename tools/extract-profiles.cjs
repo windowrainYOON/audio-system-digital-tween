@@ -28,6 +28,7 @@ function staticArt(t, v) {
   let svg = t.match(/<svg id="pansvg"[\s\S]*?<\/svg>\s*(?=<div style="height)/)[0];
   const open = svg.match(/^<svg[^>]*>/)[0];
   const viewBox = open.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
+  const size = [Number(open.match(/ width="(\d+)"/)[1]), Number(open.match(/ height="(\d+)"/)[1])];
   svg = svg.slice(open.length).replace(/<\/svg>\s*$/, '');
   svg = svg.replace(/<sc-for list="\{\{(knobs|faders|buttons|flowDots)\}\}"[\s\S]*?<\/sc-for>/g, '');
   svg = svg.split('\n').filter((l) => !/\{\{(flowD|flowArrow|aPh|phantomFill|phantomKnobX)\}\}/.test(l)).join('\n');
@@ -38,7 +39,23 @@ function staticArt(t, v) {
   if (left) throw new Error('채워지지 않은 값: ' + left.join(', '));
   svg = svg.replace(/ onClick="[^"]*"/g, '').replace(/^\s*<rect x="-?\d+" y="-?\d+" width="\d+" height="\d+" fill="#FFFFFF"\/>/, '');
   svg = svg.replace(/\n\s+/g, '\n').trim();
-  return { viewBox, art: svg };
+  return { viewBox, size, art: svg };
+}
+
+// 시안의 값 표기·설명 로직(fmt, selInfo, 신호 흐름 문구)을 그대로 실행하려고 컴포넌트 코드를 모듈로 옮긴다.
+// 앱은 이 모듈로 시안과 똑같은 "시계·눈금·아날로그 값"과 "이 컨트롤이 하는 일" 문구를 얻는다.
+function writeLogic(id, t) {
+  let src = t.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1];
+  src = src.replace(/\/\/ SYNC-BEGIN[\s\S]*?\/\/ SYNC-END/, '');
+  const out = `// 자동 생성: tools/extract-profiles.cjs (원본 design/ 시안). 손으로 고치지 마세요.
+/* eslint-disable */
+// @ts-nocheck
+class DCLogic { constructor(p) { this.props = p || {}; this.state = {}; } setState(o) { Object.assign(this.state, o); } }
+${src}
+export function create() { return new Component({}); }
+`;
+  fs.mkdirSync(path.join(OUT, 'logic'), { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'logic', id + '.js'), out);
 }
 
 function profile(file, id, title, opts) {
@@ -46,7 +63,11 @@ function profile(file, id, title, opts) {
   const defs = c.defs();
   const v = c.renderVals();
   const byId = Object.fromEntries(defs.map((d) => [d.id, d]));
-  const { viewBox, art } = staticArt(t, v);
+  const { viewBox, size, art } = staticArt(t, v);
+  // 구역 이동 칩: [이름, x, y] (시안 jumpTo와 같은 좌표)
+  const cm = t.match(/chips = (\[\[[\s\S]*?\]\])\.map/);
+  const chips = cm ? JSON.parse(cm[1].replace(/'/g, '"')) : [];
+  writeLogic(id, t);
   const controls = [];
   for (const k of v.knobs || []) {
     const d = byId[k.id] || {};
@@ -87,7 +108,7 @@ function profile(file, id, title, opts) {
   const p = {
     id, title, source: 'design/' + file,
     formula: { knob: 'rotate(-135 + 270*v)', fader: 'y = ya + yb*v', button: 'on = v === 1' },
-    viewBox, controls, extra, flows, art,
+    viewBox, size, chips, controls, extra, flows, art,
   };
   if (opts.phantom) p.phantom = opts.phantom;
   fs.writeFileSync(path.join(OUT, 'profiles', id + '.json'), JSON.stringify(p, null, 1));

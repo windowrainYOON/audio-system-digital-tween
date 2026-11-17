@@ -40,10 +40,10 @@ export function PanelLayer({ profile, state, selected, onPick, showUnsynced = tr
   );
 }
 
-export function Panel(props: Props & { label: string }) {
+export function Panel(props: Props & { label: string; width?: number }) {
   const [x, y, w, h] = props.profile.viewBox;
   return (
-    <svg viewBox={`${x} ${y} ${w} ${h}`} width="100%" role="group" aria-label={props.label}
+    <svg viewBox={`${x} ${y} ${w} ${h}`} width={props.width ?? '100%'} height={props.width ? (props.width * h) / w : undefined} role="group" aria-label={props.label}
       style={{ display: 'block', fontFamily: 'Noto Sans KR, sans-serif' }}>
       <PanelLayer {...props} />
     </svg>

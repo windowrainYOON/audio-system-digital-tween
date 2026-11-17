@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import * as api from '../store/api';
 import { exportJson, useStore } from '../store/store';
+import { TabBar } from '../components/TabBar';
 
 type Line = { ok: boolean | null; t: string };
 
@@ -43,26 +44,32 @@ export function Connection() {
   }
 
   return (
-    <div className="screen pad">
-      <h1>연결</h1>
-      <section className="card">
-        <div className="row"><div className="title">구글 시트 (Apps Script)</div><span className={'pill net-' + net}>{LABEL[net]}</span></div>
-        <p className="muted">마지막 동기화: {last ? new Date(last).toLocaleTimeString('ko-KR') : '없음'}</p>
-        {err && <p className="err">{err}</p>}
-        <p className="muted small break">{api.apiUrl()}</p>
-      </section>
-      <section className="card">
-        <div className="title">연결 시험</div>
-        <p className="muted">ping → state 탭에 시험 키(test/ping) 쓰기 → 다시 읽어 같은 값인지 확인해요.</p>
-        <button className="primary" onClick={run} disabled={busy}>{busy ? '시험 중…' : '시험 시작'}</button>
-        <ul className="log">{lines.map((l, i) => <li key={i} className={l.ok ? 'ok' : 'bad'}>{l.ok ? '✓' : '✗'} {l.t}</li>)}</ul>
-      </section>
-      <section className="card">
-        <div className="title">데이터 내려받기</div>
-        <p className="muted">지금 값 전체를 JSON 파일로 저장해요.</p>
-        <button className="secondary" onClick={download}>JSON 내려받기</button>
-      </section>
-    </div>
+    <>
+      <div className="bigtitle"><h1>운영</h1></div>
+      <main className="main list">
+        <section className="card">
+          <p className="txt">주일 세팅 안내(M6)는 다음 단계에서 만들어요.</p>
+        </section>
+        <section className="card">
+          <div className="row"><h2 className="ttl">구글 시트 연결</h2><span className={'badge'} style={{ background: net === 'offline' ? 'var(--warn)' : net === 'online' ? 'var(--ok)' : 'var(--neutral)' }}>{LABEL[net]}</span></div>
+          <p className="txt">마지막 동기화: {last ? new Date(last).toLocaleTimeString('ko-KR') : '없음'}</p>
+          {err && <p className="txt" style={{ color: '#c4221a' }}>{err}</p>}
+          <p className="break">{api.apiUrl()}</p>
+        </section>
+        <section className="card">
+          <h2>연결 시험</h2>
+          <p className="txt">ping → state 탭에 시험 키(test/ping) 쓰기 → 다시 읽어 같은 값인지 확인해요.</p>
+          <button className="btn-primary" onClick={run} disabled={busy}>{busy ? '시험 중…' : '시험 시작'}</button>
+          <ul className="log">{lines.map((l, i) => <li key={i} className={l.ok ? 'ok' : 'bad'}>{l.ok ? '✓' : '✗'} {l.t}</li>)}</ul>
+        </section>
+        <section className="card">
+          <h2>데이터 내려받기</h2>
+          <p className="txt">지금 값 전체를 JSON 파일로 저장해요.</p>
+          <button className="btn-fill" onClick={download}>JSON 내려받기</button>
+        </section>
+      </main>
+      <TabBar current="ops" />
+    </>
   );
 }
 
