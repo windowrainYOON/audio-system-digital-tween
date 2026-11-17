@@ -6,9 +6,13 @@ import type { BoardId, BoardState } from '../data/types';
 import * as api from './api';
 
 export type Net = 'connecting' | 'online' | 'offline' | 'saving';
-export interface State { boards: Record<BoardId, BoardState>; net: Net; lastSync: number; error: string }
+/** 배선(M5): 케이블 id → 꽂힌 단자 id. 시안 MobWiring의 state.cur 그대로. */
+export interface WiringDoc { cur: Record<string, string>; at: string; t: number }
+export interface State { boards: Record<BoardId, BoardState>; wiring: WiringDoc | null; net: Net; lastSync: number; error: string }
 
 const LS = 'twin:state:v1';
+const LS_W = 'twin:wiring:v1';
+const WKEY = 'wiring';
 const keyOf = (b: BoardId) => 'mixer/' + b;
 
 function defaults(): Record<BoardId, BoardState> {
@@ -30,16 +34,39 @@ function loadCache(): State['boards'] {
   return d;
 }
 
-let state: State = { boards: loadCache(), net: 'connecting', lastSync: 0, error: '' };
+function loadWiring(): WiringDoc | null {
+  try { return JSON.parse(localStorage.getItem(LS_W) || 'null'); } catch { return null; }
+}
+
+let state: State = { boards: loadCache(), wiring: loadWiring(), net: 'connecting', lastSync: 0, error: '' };
 const subs = new Set<() => void>();
 function set(p: Partial<State>) {
   state = { ...state, ...p };
-  try { localStorage.setItem(LS, JSON.stringify(state.boards)); } catch { /* 무시 */ }
+  try { localStorage.setItem(LS, JSON.stringify(state.boards)); if (p.wiring) localStorage.setItem(LS_W, JSON.stringify(p.wiring)); } catch { /* 무시 */ }
   subs.forEach((f) => f());
 }
 export const getState = () => state;
 export function useStore<T>(sel: (s: State) => T): T {
   return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, () => sel(state));
+}
+
+// ── 배선 쓰기 ──
+let wPending = 0, wInflight = false;
+export function setWiring(cur: Record<string, string>, at: string) {
+  set({ wiring: { cur, at, t: Date.now() } });
+  clearTimeout(wPending);
+  wPending = window.setTimeout(() => { wPending = 0; void flushWiring(); }, 300);
+}
+async function flushWiring() {
+  wInflight = true;
+  set({ net: 'saving' });
+  try {
+    await api.put(WKEY, state.wiring);
+    set({ net: 'online', lastSync: Date.now(), error: '' });
+  } catch (e) {
+    set({ net: 'offline', error: String((e as Error).message || e) });
+    wPending = window.setTimeout(() => { wPending = 0; void flushWiring(); }, 5000);
+  } finally { wInflight = false; }
 }
 
 // ── 쓰기 ──
@@ -92,7 +119,9 @@ export async function pull() {
       if (pending.has(b) || inflight.has(b)) continue; // 내 변경이 먼저
       if ((v.t || 0) > (next[b].t || 0)) { next[b] = { ...next[b], ...v, vals: { ...next[b].vals, ...v.vals } }; changed = true; }
     }
-    set({ ...(changed ? { boards: next } : {}), net: state.net === 'saving' ? 'saving' : 'online', lastSync: Date.now(), error: '' });
+    const w = r.data[WKEY]?.v as WiringDoc | null | undefined;
+    const wNew = w && w.cur && !wPending && !wInflight && (w.t || 0) > (state.wiring?.t || 0) ? { wiring: w } : {};
+    set({ ...wNew, ...(changed ? { boards: next } : {}), net: state.net === 'saving' ? 'saving' : 'online', lastSync: Date.now(), error: '' });
   } catch (e) {
     set({ net: 'offline', error: String((e as Error).message || e) });
   }
@@ -111,5 +140,5 @@ export function startSync(intervalMs = 4000) {
 
 /** 데이터 내보내기 (전략 문서 5장: 처음부터 JSON 내려받기) */
 export function exportJson(): string {
-  return JSON.stringify({ exportedAt: new Date().toISOString(), boards: state.boards }, null, 2);
+  return JSON.stringify({ exportedAt: new Date().toISOString(), boards: state.boards, wiring: state.wiring }, null, 2);
 }

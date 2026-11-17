@@ -13,7 +13,7 @@ button { font-family: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 /* 화면 골격: 390 폭 기준, 태블릿은 같은 화면을 넓혀 씀 */
-.app { position: relative; height: 100dvh; max-width: 820px; margin: 0 auto; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); }
+.app { position: relative; height: 100dvh; max-width: 1194px; margin: 0 auto; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); }
 .hdr { flex: none; padding: calc(8px + env(safe-area-inset-top)) 16px 0; display: flex; flex-direction: column; gap: 8px; background: var(--bg); z-index: 2; }
 .main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
@@ -96,3 +96,94 @@ button { font-family: inherit; cursor: pointer; }
 .zbtn { width: 44px; height: 44px; border: 0; border-radius: 22px; background: #fff; font-size: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
 .zbtn.reset { width: auto; padding: 0 14px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; }
 @media (max-width: 480px) { .zoombar .hint { display: none; } }
+
+/* ── M5 배선·케이블 편집 (시안 MobWiring, 태블릿 TabWiringP·L) ── */
+.wiring { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.w-head { padding: calc(12px + env(safe-area-inset-top)) 16px 0; display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.w-head h1 { flex: 1; margin: 0; font-size: 34px; line-height: 41px; font-weight: 700; }
+.w-add { width: 44px; height: 44px; border-radius: 22px; border: 0; background: var(--fill3); color: var(--accent); display: flex; align-items: center; justify-content: center; flex: none; }
+.w-save { padding: 4px 16px 0; display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-save span { flex: 1; }
+.w-undo { min-height: 32px; padding: 0 12px; border: 0; border-radius: 16px; background: var(--fill3); color: var(--accent); font-size: 13px; font-weight: 600; }
+.w-seg { margin: 8px 16px 0; padding: 2px; border-radius: 9px; background: var(--fill3); display: grid; grid-template-columns: 1fr 1fr; }
+.w-seg button { min-height: 32px; border: 0; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 600; color: var(--label); }
+.w-seg button[aria-selected="true"] { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.w-warn { margin: 8px 16px 0; padding: 12px 16px; border-radius: 18px; background: #ff8d2829; display: flex; gap: 12px; align-items: center; }
+.w-warn svg { flex: none; }
+.w-warn div { flex: 1; font-size: 15px; line-height: 20px; }
+.w-note { margin: 8px 16px 0; padding: 8px 8px 8px 16px; border-radius: 18px; background: var(--info); display: flex; gap: 8px; align-items: center; font-size: 15px; line-height: 20px; }
+.w-note span { flex: 1; }
+.w-note button { min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: var(--accent); font-size: 15px; font-weight: 600; }
+.w-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px calc(100px + env(safe-area-inset-bottom)); }
+.w-intro { margin: 0; font-size: 13px; line-height: 18px; color: var(--label2); padding: 0 16px 12px; }
+.w-group { margin-bottom: 24px; break-inside: avoid; }
+.w-group h2, .w-group-h { margin: 0; font-size: 13px; line-height: 18px; font-weight: 400; color: var(--label2); padding: 0 16px 6px; text-transform: uppercase; }
+.w-rows { background: var(--row); border-radius: 18px; overflow: hidden; isolation: isolate; }
+.w-row { width: 100%; border: 0; background: transparent; display: flex; align-items: center; gap: 12px; text-align: left; color: var(--label); font-size: 17px; line-height: 22px; }
+.w-row + .w-row { border-top: 0.5px solid rgba(60,60,67,0.29); }
+.w-row.cable { min-height: 60px; padding: 8px 16px; }
+.w-row.jack, .w-row.opt { min-height: 52px; padding: 6px 16px; }
+.w-row[aria-disabled="true"] { cursor: not-allowed; }
+.w-row > svg { flex: none; }
+.w-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.w-txt .sub, .w-txt .to { font-size: 15px; line-height: 20px; color: var(--label2); }
+.w-txt .from { font-weight: 600; }
+.w-txt .spec, .w-txt .sub13, .w-txt .cap { font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-txt .conn { font-weight: 600; }
+.w-txt .sig { font-size: 15px; line-height: 20px; }
+.w-dot { width: 10px; height: 10px; border-radius: 5px; flex: none; }
+.w-chip { flex: none; font-size: 13px; line-height: 18px; padding: 1px 8px; border-radius: 10px; white-space: nowrap; }
+.w-rectag { flex: none; font-size: 12px; line-height: 18px; padding: 1px 8px; border-radius: 10px; background: #0066cc22; color: #0050a0; }
+
+.w-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10; }
+.w-sheet { position: fixed; z-index: 11; left: 0; right: 0; bottom: 0; top: calc(56px + env(safe-area-inset-top)); background: var(--bg); border-radius: 18px 18px 0 0; display: flex; flex-direction: column; overflow: hidden; animation: wsheet .22s ease-out; }
+@keyframes wsheet { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .w-sheet { animation: none; } }
+.w-sheet-top { padding: 8px 16px 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.w-sheet-top .grab { width: 36px; height: 5px; border-radius: 3px; background: var(--fill); }
+.w-sheet-top .bar { display: flex; align-items: center; width: 100%; }
+.w-sheet-top .auto { min-width: 64px; font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-sheet-top h2 { flex: 1; margin: 0; text-align: center; font-size: 17px; line-height: 22px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w-sheet-top .done { min-width: 64px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--accent); font-size: 17px; font-weight: 600; text-align: right; }
+.w-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 16px calc(24px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 16px; }
+.w-card { background: var(--row); border-radius: 18px; padding: 16px; }
+.w-card.ends { display: flex; flex-direction: column; gap: 14px; }
+.w-was { margin-top: 8px; font-size: 15px; line-height: 20px; color: var(--label2); }
+.w-cap { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--label2); }
+.w-card > .w-cap:first-child + .w-now { margin-top: 2px; }
+.w-end { display: flex; gap: 12px; align-items: center; }
+.w-g { flex: none; font-size: 13px; line-height: 18px; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
+.w-cap2 { font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-hint { font-size: 15px; line-height: 20px; padding: 10px 12px; border-radius: 12px; background: var(--fill3); }
+.w-rec { background: #0066cc14; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.w-rec .t { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--accent); }
+.w-rec .d { font-size: 15px; line-height: 20px; }
+.w-rec button { min-height: 44px; border: 0; border-radius: 22px; background: var(--accent); color: #fff; font-size: 17px; font-weight: 600; }
+.w-opt { margin-bottom: 12px; background: var(--row); border-radius: 18px; overflow: hidden; isolation: isolate; }
+.w-opt .dev { padding: 10px 16px 4px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--label2); }
+.w-opt .w-row { border-top: 0.5px solid rgba(60,60,67,0.29); }
+.w-warnbox { padding: 12px 16px; border-radius: 18px; background: #ff8d2829; font-size: 15px; line-height: 20px; }
+.w-revert { min-height: 44px; border: 0; background: transparent; color: var(--accent); font-size: 17px; }
+.w-del { min-height: 44px; padding: 0 16px; border: 0; border-radius: 22px; background: var(--row); color: #d70015; font-size: 17px; align-self: center; margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+.w-now { font-size: 20px; line-height: 25px; font-weight: 600; margin-top: 2px; }
+.w-kind { font-size: 15px; line-height: 20px; color: var(--label2); margin-top: 2px; }
+.w-card > .w-cap:first-child { font-weight: 400; }
+.w-card.ends > .w-cap:first-child { font-weight: 600; }
+
+/* 태블릿 세로 (TabWiringP 834×1194): 여백 24, 분할 컨트롤 360 고정, 가운데 모달 620 */
+@media (min-width: 768px) {
+  .w-head { padding: calc(16px + env(safe-area-inset-top)) 24px 0; }
+  .w-save { padding: 4px 24px 0; }
+  .w-seg { margin: 8px 24px 0; width: 360px; }
+  .w-warn, .w-note { margin: 8px 24px 0; }
+  .w-main { padding: 16px 24px calc(100px + env(safe-area-inset-bottom)); }
+  .w-sheet { left: 50%; right: auto; width: 620px; margin-left: -310px; top: 120px; bottom: 120px; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .w-sheet-top .grab { display: none; }
+}
+/* 태블릿 가로 (TabWiringL 1194×834): 그룹을 두 단으로, 모달 600 */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .w-cols { columns: 2; column-gap: 24px; }
+  .w-sheet { width: 600px; margin-left: -300px; top: 40px; bottom: 40px; }
+}
+/* 태블릿 하단 탭바: 가운데 480 (시안 Tab*) */
+@media (min-width: 768px) { .tabbar { left: 50%; right: auto; width: 480px; margin-left: -240px; bottom: calc(16px + env(safe-area-inset-bottom)); } }

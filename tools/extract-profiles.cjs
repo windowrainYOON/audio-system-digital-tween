@@ -193,3 +193,6 @@ function overview() {
   console.log('overview cables', cables.length, 'boxes', boxes.length, 'sources', Object.keys(data.S).length);
 }
 overview();
+// M5 배선 편집: 케이블·단자 목록과 편집 규칙(짝 선 추천, 어댑터 안내, 자리 교체)을 시안 코드 그대로 쓴다.
+writeLogic('wiring', fs.readFileSync(path.join(DESIGN, 'MobWiring.dc.html'), 'utf8'));
+console.log('wiring logic');

@@ -1,0 +1,213 @@
+// 자동 생성: tools/extract-profiles.cjs (원본 design/ 시안). 손으로 고치지 마세요.
+/* eslint-disable */
+// @ts-nocheck
+class DCLogic { constructor(p) { this.props = p || {}; this.state = {}; } setState(o) { Object.assign(this.state, o); } }
+
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+const C = (id, grp, from, fromDev, to, type, cls, note) => ({ id: id, grp: grp, from: from, fromDev: fromDev, to: to, type: type, cls: cls, orig: to, note: note || '' });
+this.cables = [
+C('c1', '강대상 → DFX-12', '강대상1 구즈넥 L (CH1)', '강대상1', 'dxm1', 'XLR', 'xlr'),
+C('c2', '강대상 → DFX-12', '강대상1 구즈넥 R (CH2)', '강대상1', 'dxm2', 'XLR', 'xlr'),
+C('c5', '강대상 → DFX-12', '무선 마이크 수신기', '무선', 'dxm6', 'XLR', 'xlr'),
+C('c3', '매립형 → DFX-12', '매립형 XLR 라인 1 (기도석 추정)', '매립형 패널', 'dxm3', 'XLR', 'xlr', '배선도에 어느 라인이 기도석인지 없어요. 확인 필요'),
+C('c4', '매립형 → DFX-12', '매립형 XLR 라인 2 (아래강대상 추정)', '매립형 패널', 'dxm4', 'XLR', 'xlr', '배선도에 어느 라인이 아래강대상인지 없어요. 확인 필요'),
+C('c22', '매립형 → DFX-12', '매립형 XLR 라인 3 (소스 없음)', '매립형 패널', 'dxm5', 'XLR', 'xlr', '배선도에는 CH5/6에도 매립형 라인이 이어져 있어요. 확인 필요'),
+C('c23', '마이크 → 매립형', '기도석 마이크', '기도석', 'wmi1', 'XLR', 'xlr'),
+C('c24', '마이크 → 매립형', '아래강대상 마이크', '아래강대상', 'wmi2', 'XLR', 'xlr'),
+C('c25', '악기 → DI BOX', '베이스 (HEX B100) → DI BOX CH1', '베이스', 'dii1', '5.5 TS', 'ts'),
+C('c26', '악기 → DI BOX', '통기타 → DI BOX CH2', '통기타', 'dii2', '5.5 TS', 'ts'),
+C('c6', 'DI BOX·키보드·드럼 → AG06', 'DI BOX 출력 1 (베이스)', 'DI BOX', 'agx1', 'XLR', 'xlr'),
+C('c7', 'DI BOX·키보드·드럼 → AG06', 'DI BOX 출력 2 (통기타)', 'DI BOX', 'agx2', 'XLR', 'xlr'),
+C('c8', 'DI BOX·키보드·드럼 → AG06', '키보드 L (TRS→TS 갈래)', '키보드', 'ag3l', '5.5 TS', 'ts'),
+C('c9', 'DI BOX·키보드·드럼 → AG06', '키보드 R (TRS→TS 갈래)', '키보드', 'ag3r', '5.5 TS', 'ts'),
+C('c10', 'DI BOX·키보드·드럼 → AG06', '전자 드럼 L (TS 모노→RCA)', '전자 드럼', 'ag5l', 'RCA', 'rca'),
+C('c27', 'DI BOX·키보드·드럼 → AG06', '전자 드럼 R (TS 모노→RCA)', '전자 드럼', 'ag5r', 'RCA', 'rca'),
+C('c11', 'AG06 → DFX-12', 'AG06 STEREO OUT L', 'AG06', 'dx9l', '5.5 TS', 'ts'),
+C('c12', 'AG06 → DFX-12', 'AG06 STEREO OUT R', 'AG06', 'dx9r', '5.5 TS', 'ts'),
+C('c13', 'CD·PC → L4', 'CD 왼쪽', 'CD', 'l4c1', '5.5 TS', 'ts', 'RCA↔RCA + TS 어댑터'),
+C('c14', 'CD·PC → L4', 'CD 오른쪽', 'CD', 'l4c2', '5.5 TS', 'ts', 'RCA↔RCA + TS 어댑터'),
+C('c15', 'CD·PC → L4', 'PC(OBS) 왼쪽', 'PC (OBS)', 'l4tl', 'RCA', 'rca', 'AUX→RCA'),
+C('c16', 'CD·PC → L4', 'PC(OBS) 오른쪽', 'PC (OBS)', 'l4tr', 'RCA', 'rca', 'AUX→RCA'),
+C('c17', 'L4 → DFX-12', 'L4 MAIN OUT L', 'L4', 'dxtl', 'RCA', 'rca', '5.5 TS→RCA'),
+C('c18', 'L4 → DFX-12', 'L4 MAIN OUT R', 'L4', 'dxtr', 'RCA', 'rca', '5.5 TS→RCA'),
+C('c19', '앰프', 'DFX-12 MAIN OUT L → QSC', 'DFX-12', 'qsl', 'XLR', 'xlr'),
+C('c20', '앰프', 'DFX-12 MAIN OUT R → QSC', 'DFX-12', 'qsr', 'XLR', 'xlr'),
+C('c21', '앰프', 'DFX-12 PHONES → MPS1200', 'DFX-12', 'mps', '5.5 TS', 'ts')
+];
+const Jk = (id, dev, name, cls) => ({ id: id, dev: dev, name: name, cls: cls });
+this.jacks = [
+Jk('dxm1', 'Mackie DFX-12', 'CH1 MIC', 'xlr'), Jk('dxm2', 'Mackie DFX-12', 'CH2 MIC', 'xlr'), Jk('dxm3', 'Mackie DFX-12', 'CH3 MIC', 'xlr'), Jk('dxm4', 'Mackie DFX-12', 'CH4 MIC', 'xlr'), Jk('dxm5', 'Mackie DFX-12', 'CH5/6 MIC', 'xlr'), Jk('dxm6', 'Mackie DFX-12', 'CH7/8 MIC', 'xlr'),
+Jk('wmi1', '매립형 XLR 패널', '입력 1', 'xlr'), Jk('wmi2', '매립형 XLR 패널', '입력 2', 'xlr'), Jk('wmi3', '매립형 XLR 패널', '입력 3', 'xlr'),
+Jk('dii1', 'DI BOX (2ch)', '입력 1 (베이스)', 'ts'), Jk('dii2', 'DI BOX (2ch)', '입력 2 (통기타)', 'ts'),
+Jk('agx1', 'Yamaha AG06', 'CH1 XLR', 'xlr'), Jk('agx2', 'Yamaha AG06', 'CH2 XLR', 'xlr'),
+Jk('l4x1', 'MiCWL L4', 'CH1 XLR', 'xlr'), Jk('l4x2', 'MiCWL L4', 'CH2 XLR', 'xlr'),
+Jk('qsl', 'QSC 앰프', '입력 L (XLR)', 'xlr'), Jk('qsr', 'QSC 앰프', '입력 R (XLR)', 'xlr'),
+Jk('dx9l', 'Mackie DFX-12', 'CH9/10 L(MONO)', 'ts'), Jk('dx9r', 'Mackie DFX-12', 'CH9/10 R', 'ts'), Jk('dx11l', 'Mackie DFX-12', 'CH11/12 L(MONO)', 'ts'), Jk('dx11r', 'Mackie DFX-12', 'CH11/12 R', 'ts'),
+Jk('ag3l', 'Yamaha AG06', '3/4 L/MONO', 'ts'), Jk('ag3r', 'Yamaha AG06', '3/4 R', 'ts'),
+Jk('l4c1', 'MiCWL L4', 'CH1 LINE', 'ts'), Jk('l4c2', 'MiCWL L4', 'CH2 LINE', 'ts'),
+Jk('mps', 'MPS1200 앰프', '입력 (5.5)', 'ts'),
+Jk('ag5l', 'Yamaha AG06', '5/6 L', 'rca'), Jk('ag5r', 'Yamaha AG06', '5/6 R', 'rca'),
+Jk('l4tl', 'MiCWL L4', 'TAPE L', 'rca'), Jk('l4tr', 'MiCWL L4', 'TAPE R', 'rca'),
+Jk('dxtl', 'Mackie DFX-12', 'CD/TAPE IN L', 'rca'), Jk('dxtr', 'Mackie DFX-12', 'CD/TAPE IN R', 'rca')
+];
+const S = (conn, g, sig, note) => ({ conn: conn, g: g, sig: sig, note: note || '' });
+const XM = S('XLR', '수', '밸런스 모노'), XF = S('XLR', '암', '밸런스 모노');
+const TSm = S('5.5mm TS', '수', '모노 (언밸런스)'), RCm = S('RCA', '수', '모노 (언밸런스)');
+this.spec = {
+c1: [XF, XM], c2: [XF, XM], c3: [XF, XM], c4: [XF, XM], c5: [XF, XM], c22: [XF, XM],
+c23: [XF, XM], c24: [XF, XM],
+c25: [TSm, TSm], c26: [TSm, TSm],
+c6: [XF, XM], c7: [XF, XM],
+c8: [S('5.5mm TS (키보드 Y케이블 한 갈래)', '수', '모노 (언밸런스)', '키보드 TRS 출력을 Y케이블(TS 2개)로 갈라 AG06 3/4 L·R에 꽂아요.'), TSm],
+c9: [S('5.5mm TS (키보드 Y케이블 한 갈래)', '수', '모노 (언밸런스)', '키보드 TRS 출력을 Y케이블(TS 2개)로 갈라 AG06 3/4 L·R에 꽂아요.'), TSm],
+c10: [S('5.5mm TS (드럼 출력)', '수', '모노 (언밸런스)', '드럼 출력 한 줄을 TS→RCA 변환해 AG06 5/6 RCA에 꽂아요.'), RCm], c27: [S('5.5mm TS (드럼 출력)', '수', '모노 (언밸런스)', '드럼 출력 한 줄을 TS→RCA 변환해 AG06 5/6 RCA에 꽂아요.'), RCm], c11: [TSm, TSm], c12: [TSm, TSm],
+c13: [RCm, S('5.5mm TS (RCA→TS 어댑터 끝)', '수', '모노 (언밸런스)', 'RCA↔RCA 케이블 끝에 RCA 암→5.5 TS 수 어댑터를 끼운 구성이에요.')],
+c14: [RCm, S('5.5mm TS (RCA→TS 어댑터 끝)', '수', '모노 (언밸런스)', 'RCA↔RCA 케이블 끝에 RCA 암→5.5 TS 수 어댑터를 끼운 구성이에요.')],
+c15: [S('3.5mm TRS (AUX)', '수', '스테레오 (L+R 한 선, RCA 적·백으로 분기)', 'L/R 두 줄이 한 케이블에서 갈라져요.'), RCm],
+c16: [S('3.5mm TRS (AUX)', '수', '스테레오 (L+R 한 선, RCA 적·백으로 분기)', 'L/R 두 줄이 한 케이블에서 갈라져요.'), RCm],
+c17: [TSm, RCm], c18: [TSm, RCm],
+c19: [XF, XM], c20: [XF, XM],
+c21: [S('5.5mm TS', '수', '모노 (언밸런스)', 'PHONES 잭은 스테레오라서 TS 플러그를 꽂으면 한쪽 채널만 나올 수 있어요. 소리가 약하면 확인해 보세요.'), TSm]
+};
+this.jackKind = { xlr: 'XLR', ts: '5.5mm 단자', rca: 'RCA 단자' };
+const cur = {};
+this.cables.forEach((c) => { cur[c.id] = c.to; });
+this.pairC = { c8: 'c9', c9: 'c8', c10: 'c27', c27: 'c10', c11: 'c12', c12: 'c11', c13: 'c14', c14: 'c13', c15: 'c16', c16: 'c15', c17: 'c18', c18: 'c17', c19: 'c20', c20: 'c19' };
+this.pairJ = { dx9l: 'dx9r', dx9r: 'dx9l', dx11l: 'dx11r', dx11r: 'dx11l', ag3l: 'ag3r', ag3r: 'ag3l', l4c1: 'l4c2', l4c2: 'l4c1', l4tl: 'l4tr', l4tr: 'l4tl', dxtl: 'dxtr', dxtr: 'dxtl', qsl: 'qsr', qsr: 'qsl', ag5l: 'ag5r', ag5r: 'ag5l' };
+this.advice = { 'rca>ts': 'RCA 암→5.5 TS 수 어댑터가 필요해요.', 'ts>rca': '5.5 TS 수→RCA 수 변환 케이블이 필요해요.', 'xlr>ts': 'XLR→5.5 TS 변환 케이블이 필요해요. 밸런스가 언밸런스로 바뀌어요.', 'ts>xlr': '언밸런스 신호를 XLR로 받으려면 DI BOX를 쓰는 게 안전해요.', 'rca>xlr': 'DI BOX를 거쳐서 연결하는 게 안전해요.', 'xlr>rca': '변환 케이블이 필요해요. 권장하지 않아요.' };
+let hist0 = [], savedAt = '';
+try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && this.jacks.filter((j) => j.id === o.cur[k]).length) cur[k] = o.cur[k]; }); savedAt = o.at || ''; } } catch (e) {}
+this.state = { cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt };
+}
+jk(id) { return this.jacks.filter((j) => j.id === id)[0]; }
+persist(cur) {
+const d = new Date();
+const at = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
+try { window.localStorage.setItem('twin.wiring.v2', JSON.stringify({ cur: cur, at: at })); } catch (e) {}
+return at;
+}
+commit(next, extra) {
+const s = this.state;
+const at = this.persist(next);
+const hist = s.hist.concat([s.cur]).slice(-20);
+this.setState(Object.assign({ cur: next, hist: hist, savedAt: at }, extra || {}));
+}
+move(cid, jid, withPartner) {
+const s = this.state;
+const next = Object.assign({}, s.cur);
+const old = next[cid];
+const occ = this.cables.filter((x) => x.id !== cid && next[x.id] === jid)[0];
+if (occ) next[occ.id] = old;
+next[cid] = jid;
+if (withPartner) {
+const pc = this.pairC[cid], pj = this.pairJ[jid];
+if (pc && pj && !this.cables.filter((x) => x.id !== pc && x.id !== cid && next[x.id] === pj).length) next[pc] = pj;
+}
+return next;
+}
+lab(id) { const j = this.jk(id); return j.dev + ' ' + j.name; }
+renderVals() {
+const s = this.state;
+const self = this;
+const colors = { xlr: '#1d1d1f', ts: '#6e6e73', rca: '#ff383c' };
+const chipBgs = { xlr: '#78788033', ts: '#78788033', rca: '#ff383c29' };
+const jlab = (id) => { const j = self.jk(id); return j.dev + ' ' + j.name; };
+let changeCount = 0;
+this.cables.forEach((c) => { if (s.cur[c.id] !== c.orig) changeCount++; });
+const order = [];
+this.cables.forEach((c) => { if (order.indexOf(c.grp) < 0) order.push(c.grp); });
+const groups = order.map((g) => ({
+title: g,
+rows: this.cables.filter((c) => c.grp === g).map((c, i) => {
+const changed = s.cur[c.id] !== c.orig;
+const sp = self.spec[c.id]; return { spec: sp[0].conn.split(' (')[0] + ' ' + sp[0].g + '놈 → ' + sp[1].conn.split(' (')[0] + ' ' + sp[1].g + '놈 · ' + (sp[0].sig.indexOf('스테레오') === 0 ? '스테레오' : sp[0].sig.split(' (')[0]), from: c.from, to: self.lab(s.cur[c.id]), dot: colors[c.cls], chip: changed ? '변경됨' : c.type, chipBg: changed ? '#ff8d2829' : chipBgs[c.cls], bg: 'transparent', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: c.id, draft: s.cur[c.id] }) };
+})
+}));
+let dia = { note: '', alt: '', fromDev: '', fromJack: '', toDev: '', toJack: '', type: '', color: '#6e6e73', toFill: '#f5f5f7', toStroke: '#8e8e93', changed: false, was: '', warn: false, warnText: '' };
+let opts = [];
+let jgroups = [];
+let jt = { title: '', now: '', kind: '', hasInfo: false, info: '' };
+let jopts = [];
+const jopen = !!s.jsel;
+let ends = [];
+let rec = { show: false, text: '', go: () => {} };
+const open = !!s.sel;
+if (open) {
+const c = this.cables.filter((x) => x.id === s.sel)[0];
+const d = this.jk(s.cur[c.id]);
+const o = this.jk(c.orig);
+const changed = s.cur[c.id] !== c.orig;
+dia = { alt: c.from + '에서 ' + d.dev + ' ' + d.name + '로 연결', fromDev: c.fromDev, fromJack: c.from.indexOf('(') > 0 ? c.from.split(' (')[0] : '출력', toDev: d.dev.replace('Mackie ', '').replace('Yamaha ', '').replace('MiCWL ', ''), toJack: d.name, type: c.type, color: colors[c.cls], toFill: changed ? '#0066cc1f' : '#f5f5f7', toStroke: changed ? '#0066cc' : '#8e8e93', changed: changed, was: self.lab(c.orig), warn: changed && d.dev !== o.dev, warnText: '다른 장비로 옮기는 변경이에요. 채널 이름과 점검 규칙이 새 연결에 맞춰 다시 계산돼요.' };
+const sp = this.spec[c.id];
+const pinsOf = (conn, male) => {
+const f = male ? '#1d1d1f' : 'none', sw = male ? 1 : 2;
+const out = [{ cx: 22, cy: 22, r: 19, fill: 'none', stroke: '#8e8e93', sw: male ? 1.5 : 3 }];
+if (conn.indexOf('XLR') === 0) [[22, 12], [13, 28], [31, 28]].forEach((q) => out.push({ cx: q[0], cy: q[1], r: 4, fill: f, stroke: '#1d1d1f', sw: sw }));
+else if (conn.indexOf('RCA') === 0) out.push({ cx: 22, cy: 22, r: 6, fill: f, stroke: '#1d1d1f', sw: sw });
+else if (conn.indexOf('3.5mm TRS') === 0 || conn.indexOf('5.5mm TRS') === 0) { out.push({ cx: 22, cy: 22, r: 13, fill: 'none', stroke: '#1d1d1f', sw: sw }); out.push({ cx: 22, cy: 22, r: 8, fill: 'none', stroke: '#1d1d1f', sw: sw }); out.push({ cx: 22, cy: 22, r: 3, fill: f, stroke: '#1d1d1f', sw: sw }); }
+else { out.push({ cx: 22, cy: 22, r: 11, fill: 'none', stroke: '#1d1d1f', sw: sw }); out.push({ cx: 22, cy: 22, r: 4, fill: f, stroke: '#1d1d1f', sw: sw }); }
+return out;
+};
+const mkEnd = (e, where, jackDesc) => ({ where: where, conn: e.conn, g: e.g === '수' ? '숫놈' : '암놈', gBg: e.g === '수' ? '#0066cc22' : '#ff8d2833', sig: e.sig, jack: jackDesc + ': ' + (e.g === '수' ? '암놈(구멍)' : '숫놈(핀)'), pins: pinsOf(e.conn, e.g === '수') });
+ends = [mkEnd(sp[0], '시작 끝 · ' + c.fromDev + ' 쪽', c.fromDev + ' 출력 단자'), mkEnd(sp[1], '도착 끝 · ' + d.dev.replace('Mackie ', '').replace('Yamaha ', '').replace('MiCWL ', '') + ' 쪽', d.name + ' 입력 단자')];
+dia.note = [sp[0].note, sp[1].note].filter((x) => x).join(' / ');
+const curJ = this.jk(s.cur[c.id]);
+const pcid = this.pairC[c.id], pj = this.pairJ[s.cur[c.id]];
+if (pcid && pj && s.cur[pcid] !== pj && this.jk(pj).cls === c.cls && !this.cables.filter((x) => x.id !== pcid && x.id !== c.id && s.cur[x.id] === pj).length) {
+const pcab = this.cables.filter((x) => x.id === pcid)[0];
+rec = { show: true, text: pcab.from + ' 선도 ' + jlab(pj) + '로 옮기면 L·R 짝이 맞아요.', go: () => { const nx = Object.assign({}, self.state.cur); nx[pcid] = pj; self.commit(nx, {}); } };
+}
+const devs = [];
+this.jacks.filter((j) => j.cls === c.cls).forEach((j) => { if (devs.indexOf(j.dev) < 0) devs.push(j.dev); });
+opts = devs.map((dv) => ({
+dev: dv,
+items: this.jacks.filter((j) => j.cls === c.cls && j.dev === dv).map((j) => {
+const user = this.cables.filter((x) => s.cur[x.id] === j.id && x.id !== c.id)[0];
+const dis = !!user;
+const isRec = !dis && j.id !== s.cur[c.id] && j.dev === curJ.dev && !self.cables.filter((x) => s.cur[x.id] === j.id).length && self.jacks.filter((z) => z.cls === c.cls && z.dev === j.dev && !self.cables.filter((x) => s.cur[x.id] === z.id).length)[0].id === j.id;
+return { name: j.name, sub: dis ? '사용 중: ' + user.from : (j.id === s.cur[c.id] ? '현재 연결' : (isRec ? '추천 · 같은 장비의 빈 단자' : '비어 있음')), dis: dis, op: dis ? 0.4 : 1, ck: s.cur[c.id] === j.id ? 1 : 0, pick: dis ? () => {} : () => self.commit(self.move(c.id, j.id, false), { draft: j.id }) };
+})
+}));
+}
+const jdevs = [];
+this.jacks.forEach((j) => { if (jdevs.indexOf(j.dev) < 0) jdevs.push(j.dev); });
+jgroups = jdevs.map((dv) => ({ title: dv, rows: this.jacks.filter((j) => j.dev === dv).map((j, i) => {
+const cb = self.cables.filter((x) => s.cur[x.id] === j.id)[0];
+return { name: j.name, src: cb ? cb.from : '비어 있음', srcColor: cb ? 'var(--label2)' : '#8e8e93', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ jsel: j.id }) };
+}) }));
+if (jopen) {
+const jj = this.jk(s.jsel);
+const cb = this.cables.filter((x) => s.cur[x.id] === s.jsel)[0];
+jt = { title: jj.name, now: cb ? cb.from : '비어 있음', kind: jj.dev + ' · ' + this.jackKind[jj.cls], hasInfo: false, info: '' };
+jopts = this.cables.map((c, i) => {
+const same = c.cls === jj.cls;
+const where = jlab(s.cur[c.id]);
+const here = s.cur[c.id] === s.jsel;
+const occ = cb && cb.id !== c.id;
+const from = this.jk(s.cur[c.id]);
+const sub = here ? '현재 연결' : (!same ? this.advice[c.cls + '>' + jj.cls] || '단자 종류가 달라요.' : '지금 ' + where + (c.orig === s.jsel ? ' · 원래 이 단자에 연결하던 소스' : '') + (occ ? ' · ' + cb.from + '와 자리 교체' : ''));
+const rec = same && !here && c.orig === s.jsel;
+return { name: c.from, sub: sub, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', op: same ? 1 : 0.4, tag: rec ? 1 : 0, ck: here ? 1 : 0, pick: (!same || here) ? () => {} : () => { self.commit(self.move(c.id, s.jsel, true), {}); } };
+});
+const mover = this.cables.filter((c) => c.cls === jj.cls && s.cur[c.id] !== s.jsel).length;
+jt.hasInfo = true; jt.info = '소스를 고르면 바로 저장돼요. 이미 쓰는 단자는 서로 자리를 바꾸고, L·R 짝이 있으면 짝 선도 함께 옮겨요. 단자 종류가 다른 소스는 어댑터를 안내해요.';
+}
+return {
+rec: rec, jgroups: jgroups, jt: jt, jopts: jopts, jopen: jopen, tabCable: s.tab === 'cable', tabJack: s.tab === 'jack',
+tabCableBg: s.tab === 'cable' ? '#ffffff' : 'transparent', tabJackBg: s.tab === 'jack' ? '#ffffff' : 'transparent',
+goCable: () => self.setState({ tab: 'cable' }), goJack: () => self.setState({ tab: 'jack' }),
+savedText: s.savedAt ? '자동 저장됨 · ' + s.savedAt : '변경하면 바로 저장돼요',
+canUndo: s.hist.length > 0,
+undo: () => { const h = self.state.hist.slice(); const prev = h.pop(); const at = self.persist(prev); self.setState({ cur: prev, hist: h, savedAt: at, draft: self.state.sel ? prev[self.state.sel] : null }); },
+jclose: () => self.setState({ jsel: null }),
+ends: ends, groups: groups, hasChanges: changeCount > 0, changeCount: changeCount, open: open, dia: dia, opts: opts,
+close: () => self.setState({ sel: null, draft: null }),
+apply: () => { const cur = Object.assign({}, self.state.cur); cur[self.state.sel] = self.state.draft; self.setState({ cur: cur, sel: null, draft: null }); },
+revert: () => { const c = self.cables.filter((x) => x.id === self.state.sel)[0]; self.commit(self.move(c.id, c.orig, false), { draft: c.orig }); }
+};
+}
+}
+
+export function create() { return new Component({}); }
