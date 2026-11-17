@@ -1,60 +1,36 @@
 // M5 배선·케이블 편집 (시안 MobWiring / 태블릿 TabWiringP·L).
-// 케이블·단자 목록, 짝 선 추천, 어댑터 안내, 자리 교체 규칙은 시안 코드(data/logic/wiring.js)를 그대로 실행해서 얻는다.
-// 저장만 앱 저장소로 바꾼다: 시트 키 `wiring` = { cur, at, t } (즉시 저장 + 다른 기기와 공유).
-import { useEffect, useMemo, useReducer, useState } from 'react';
-import { create } from '../data/logic/wiring';
+// 케이블·단자 목록, 짝 선 추천, 어댑터 안내, 자리 교체 규칙은 시안 코드를 그대로 실행한다(lib/wiring.ts).
+// 케이블 추가(+)·삭제는 2026-11-17 사용자 결정: 같은 단자 규칙으로 고르고, 삭제는 확인 후 실행취소 가능.
+import { useEffect, useState } from 'react';
 import { TabBar } from '../components/TabBar';
-import { setWiring, useStore } from '../store/store';
+import { TYPE, useWiringLogic, type Cls } from '../lib/wiring';
 
 const CHECK = <path d="M5 12.5l4.5 4.5L19 7" />;
 const Chevron = () => (
   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" stroke="#7a7a7a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 2l6 6-6 6" /></svg>
 );
 
-function useWiringLogic() {
-  const [, bump] = useReducer((n: number) => n + 1, 0);
-  const doc = useStore((s) => s.wiring);
-  const c = useMemo(() => {
-    const x = create();
-    x.setState = (o: object) => { Object.assign(x.state, o); bump(); };
-    // 시안의 localStorage 저장 대신 공유 저장소에 즉시 저장
-    x.persist = (cur: Record<string, string>) => {
-      const d = new Date();
-      const at = [d.getHours(), d.getMinutes(), d.getSeconds()].map((n) => String(n).padStart(2, '0')).join(':');
-      setWiring(cur, at);
-      return at;
-    };
-    return x;
-  }, []);
-  // 다른 기기에서 바뀐 배선 받기 (내가 막 저장한 것과 같으면 그대로)
-  useEffect(() => {
-    if (!doc || doc.cur === c.state.cur) return;
-    const ok: Record<string, string> = { ...c.state.cur };
-    const jacks = new Set(c.jacks.map((j: { id: string }) => j.id));
-    for (const k of Object.keys(doc.cur)) if (ok[k] !== undefined && jacks.has(doc.cur[k])) ok[k] = doc.cur[k];
-    Object.assign(c.state, { cur: ok, savedAt: doc.at || c.state.savedAt });
-    bump();
-  }, [doc, c]);
-  return c;
-}
-
 export function Wiring() {
-  const c = useWiringLogic();
-  const v = c.renderVals();
+  const { c, v } = useWiringLogic();
+  const [adding, setAdding] = useState(false);
+  const [askDel, setAskDel] = useState(false);
   const [note, setNote] = useState('');
-  const soon = (what: string) => { setNote(what + '는 다음 단계에서 만들어요. 지금은 케이블을 눌러 단자를 바꿀 수 있어요.'); };
   useEffect(() => {
-    if (!v.open && !v.jopen) return;
-    const f = (e: KeyboardEvent) => { if (e.key === 'Escape') (v.open ? v.close : v.jclose)(); };
+    if (!v.open && !v.jopen && !adding) return;
+    const f = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (askDel) setAskDel(false); else if (adding) setAdding(false); else (v.open ? v.close : v.jclose)();
+    };
     window.addEventListener('keydown', f);
     return () => window.removeEventListener('keydown', f);
-  }, [v.open, v.jopen]);
+  }, [v.open, v.jopen, adding, askDel]);
+  const selCable = v.open ? c.cables.find((x: { id: string }) => x.id === c.state.sel) : null;
 
   return (
     <div className="wiring">
       <header className="w-head">
         <h1>배선</h1>
-        <button className="w-add" aria-label="케이블 추가" onClick={() => soon('케이블 추가')}>
+        <button className="w-add" aria-label="케이블 추가" onClick={() => { setNote(''); setAdding(true); }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
         </button>
       </header>
@@ -188,12 +164,20 @@ export function Wiring() {
           {v.dia.warn && <div className="w-warnbox">{v.dia.warnText}</div>}
 
           <button className="w-revert" onClick={v.revert}>원래 연결로 되돌리기</button>
-          <button className="w-del" onClick={() => { v.close(); soon('케이블 삭제'); }}>
+          <button className="w-del" onClick={() => setAskDel(true)}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d70015" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" /></svg>
             케이블 삭제…
           </button>
         </Sheet>
       )}
+
+      {askDel && selCable && (
+        <Confirm title="케이블을 삭제할까요?" text={`${selCable.from} → ${c.lab(c.state.cur[selCable.id])}. 실행취소로 되돌릴 수 있어요.`}
+          ok="삭제" onCancel={() => setAskDel(false)}
+          onOk={() => { const f = selCable.from; setAskDel(false); c.deleteCable(selCable.id); setNote(f + ' 케이블을 삭제했어요. 되돌리려면 실행취소를 누르세요.'); }} />
+      )}
+
+      {adding && <AddSheet c={c} onClose={() => setAdding(false)} onAdded={(f) => { setAdding(false); setNote(f + ' 케이블을 추가했어요.'); }} />}
 
       {v.jopen && (
         <Sheet label="단자 소스 변경" title={v.jt.title} onClose={v.jclose}>
@@ -222,7 +206,7 @@ export function Wiring() {
   );
 }
 
-function Sheet({ label, title, onClose, children }: { label: string; title: string; onClose: () => void; children: React.ReactNode }) {
+function Sheet({ label, title, onClose, children, left, right }: { label: string; title: string; onClose: () => void; children: React.ReactNode; left?: string; right?: React.ReactNode }) {
   return (
     <>
       <div className="w-dim" onClick={onClose} aria-hidden="true" />
@@ -230,13 +214,108 @@ function Sheet({ label, title, onClose, children }: { label: string; title: stri
         <div className="w-sheet-top">
           <div className="grab" aria-hidden="true" />
           <div className="bar">
-            <span className="auto">자동 저장</span>
+            {left ? <button className="cancel" onClick={onClose}>{left}</button> : <span className="auto">자동 저장</span>}
             <h2>{title}</h2>
-            <button className="done" onClick={onClose} autoFocus>완료</button>
+            {right ?? <button className="done" onClick={onClose} autoFocus>완료</button>}
           </div>
         </div>
         <div className="w-sheet-body">{children}</div>
       </section>
     </>
+  );
+}
+
+/** 삭제 확인 (브라우저 confirm 대신 화면 안 대화상자) */
+function Confirm({ title, text, ok, onOk, onCancel }: { title: string; text: string; ok: string; onOk: () => void; onCancel: () => void }) {
+  return (
+    <>
+      <div className="w-dim top" onClick={onCancel} aria-hidden="true" />
+      <section className="w-alert" role="alertdialog" aria-modal="true" aria-labelledby="w-alert-t" aria-describedby="w-alert-d">
+        <h2 id="w-alert-t">{title}</h2>
+        <p id="w-alert-d">{text}</p>
+        <div className="btns">
+          <button onClick={onCancel} autoFocus>취소</button>
+          <button className="danger" onClick={onOk}>{ok}</button>
+        </div>
+      </section>
+    </>
+  );
+}
+
+/** 케이블 추가: 종류 → 시작 쪽(장비·단자) → 도착 단자. 도착 후보는 편집 시트와 같은 규칙(같은 커넥터만, 사용 중은 이유와 함께 비활성). */
+function AddSheet({ c, onClose, onAdded }: { c: any; onClose: () => void; onAdded: (from: string) => void }) {
+  const [cls, setCls] = useState<Cls>('xlr');
+  const [dev, setDev] = useState('');
+  const [jack, setJack] = useState('');
+  const [to, setTo] = useState('');
+  const devs: string[] = Array.from(new Set<string>(c.cables.map((x: { fromDev: string }) => x.fromDev)));
+  const groups: string[] = Array.from(new Set<string>(c.jacks.filter((j: any) => j.cls === cls).map((j: any) => j.dev)));
+  const user = (id: string) => c.cables.find((x: any) => c.state.cur[x.id] === id);
+  const from = (dev.trim() + (jack.trim() ? ' ' + jack.trim() : '')).trim();
+  const ready = !!dev.trim() && !!to;
+  const toJ = to ? c.jk(to) : null;
+  return (
+    <Sheet label="케이블 추가" title="케이블 추가" onClose={onClose} left="취소"
+      right={<button className="done" disabled={!ready} onClick={() => { c.addCable({ from, fromDev: dev.trim(), to, type: TYPE[cls], cls }); onAdded(from); }}>추가</button>}>
+      <div className="w-card">
+        <svg viewBox="0 0 326 120" width="100%" role="img" aria-label={(from || '시작 쪽') + '에서 ' + (toJ ? toJ.dev + ' ' + toJ.name : '도착 단자') + '로 연결'} style={{ display: 'block' }}>
+          <rect x="2" y="30" width="118" height="60" rx="14" fill="#f5f5f7" stroke="#8e8e93" strokeWidth="1.5" strokeDasharray={dev.trim() ? undefined : '4 4'} />
+          <text x="61" y="56" fontSize="13" fontWeight="600" textAnchor="middle" fill="#1d1d1f">{dev.trim() || '시작 장비'}</text>
+          <text x="61" y="74" fontSize="12" textAnchor="middle" fill="#1d1d1fcc">{jack.trim() || '출력'}</text>
+          <path d="M120 60 H206" stroke={{ xlr: '#1d1d1f', ts: '#6e6e73', rca: '#ff383c' }[cls]} strokeWidth="5" strokeLinecap="round" />
+          <text x="163" y="48" fontSize="12" textAnchor="middle" fill="#1d1d1f">{TYPE[cls]}</text>
+          <rect x="206" y="30" width="118" height="60" rx="14" fill={toJ ? '#0066cc1f' : '#f5f5f7'} stroke={toJ ? '#0066cc' : '#8e8e93'} strokeWidth="2" strokeDasharray={toJ ? undefined : '4 4'} />
+          <text x="265" y="56" fontSize="13" fontWeight="600" textAnchor="middle" fill="#1d1d1f">{toJ ? toJ.dev.replace(/^(Mackie|Yamaha|MiCWL) /, '') : '도착 장비'}</text>
+          <text x="265" y="74" fontSize="12" textAnchor="middle" fill="#1d1d1fcc">{toJ ? toJ.name : '입력 단자'}</text>
+        </svg>
+      </div>
+
+      <div>
+        <div className="w-group-h">케이블 종류</div>
+        <div className="w-seg in" role="radiogroup" aria-label="케이블 종류">
+          {(['xlr', 'ts', 'rca'] as Cls[]).map((k) => (
+            <button key={k} role="radio" aria-checked={cls === k} aria-selected={cls === k} onClick={() => { setCls(k); setTo(''); }}>{TYPE[k]}</button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="w-group-h">시작 쪽 (소스 장비·출력 단자)</div>
+        <div className="w-card form">
+          <label className="w-field"><span>장비</span>
+            <input value={dev} onChange={(e) => setDev(e.target.value)} placeholder="예: 새 마이크" list="w-devs" autoComplete="off" />
+          </label>
+          <datalist id="w-devs">{devs.map((d) => <option key={d} value={d} />)}</datalist>
+          <label className="w-field"><span>단자·설명</span>
+            <input value={jack} onChange={(e) => setJack(e.target.value)} placeholder="예: 출력 L (선택)" autoComplete="off" />
+          </label>
+          <div className="w-quick" aria-label="자주 쓰는 장비">
+            {devs.slice(0, 12).map((d) => <button key={d} aria-pressed={dev === d} onClick={() => setDev(d)}>{d}</button>)}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="w-group-h">도착 단자 ({TYPE[cls]} 입력)</div>
+        {groups.map((g) => (
+          <div key={g} className="w-opt">
+            <div className="dev">{g}</div>
+            {c.jacks.filter((j: any) => j.cls === cls && j.dev === g).map((j: any) => {
+              const u = user(j.id);
+              return (
+                <button key={j.id} className="w-row opt" aria-disabled={!!u || undefined} aria-pressed={to === j.id}
+                  style={{ opacity: u ? 0.4 : 1 }} onClick={() => { if (!u) setTo(j.id); }}>
+                  <span className="w-txt"><span>{j.name}</span><span className="sub13">{u ? '사용 중: ' + u.from : '비어 있음'}</span></span>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ opacity: to === j.id ? 1 : 0 }}>{CHECK}</svg>
+                </button>
+              );
+            })}
+          </div>
+        ))}
+        {!groups.some((g) => c.jacks.some((j: any) => j.cls === cls && j.dev === g && !user(j.id))) && (
+          <div className="w-warnbox">비어 있는 {TYPE[cls]} 입력이 없어요. 다른 케이블을 옮기거나 삭제한 뒤 추가해 주세요.</div>
+        )}
+      </div>
+    </Sheet>
   );
 }

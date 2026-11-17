@@ -227,3 +227,23 @@ button { font-family: inherit; cursor: pointer; }
   .det-body.tabletL .insp.docked .dialrow svg[viewBox="0 0 132 132"] { width: 172px; height: 172px; }
   .det-body.tabletL .insp.docked .dialrow svg[viewBox="0 0 64 156"] { width: 80px; height: 195px; }
 }
+/* 케이블 추가 시트·삭제 확인 (2026-11-17 사용자 결정) */
+.w-sheet-top .cancel { min-width: 64px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--accent); font-size: 17px; text-align: left; }
+.w-sheet-top .done:disabled { color: #8e8e93; cursor: default; }
+.w-seg.in { margin: 0; grid-template-columns: repeat(3, 1fr); }
+.w-seg.in button { min-height: 36px; font-size: 15px; }
+.w-card.form { display: flex; flex-direction: column; gap: 12px; }
+.w-field { display: flex; align-items: center; gap: 12px; min-height: 44px; }
+.w-field span { flex: none; width: 76px; font-size: 15px; line-height: 20px; color: var(--label2); }
+.w-field input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--fill3); font: inherit; color: var(--label); }
+.w-quick { display: flex; flex-wrap: wrap; gap: 8px; }
+.w-quick button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 18px; background: var(--fill3); color: var(--label); font-size: 15px; }
+.w-quick button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+.w-dim.top { z-index: 20; }
+.w-alert { position: fixed; z-index: 21; left: 50%; top: 50%; width: min(300px, calc(100vw - 48px)); transform: translate(-50%, -50%); background: rgba(255,255,255,0.97); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; text-align: center; }
+.w-alert h2 { margin: 20px 16px 4px; font-size: 17px; line-height: 22px; font-weight: 600; }
+.w-alert p { margin: 0 16px 16px; font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-alert .btns { display: grid; grid-template-columns: 1fr 1fr; border-top: 0.5px solid rgba(60,60,67,0.29); }
+.w-alert .btns button { min-height: 44px; border: 0; background: transparent; color: var(--accent); font-size: 17px; }
+.w-alert .btns button + button { border-left: 0.5px solid rgba(60,60,67,0.29); }
+.w-alert .btns .danger { color: #d70015; font-weight: 600; }
