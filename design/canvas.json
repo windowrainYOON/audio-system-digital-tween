@@ -5,7 +5,7 @@
     "MobAg06.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M4. 상세 · AG06",
+      "title": "M4. 패널 · AG06",
       "w": 390,
       "x": 1410,
       "y": 0
@@ -13,7 +13,7 @@
     "MobDfx.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M3. 상세 · DFX-12",
+      "title": "M3. 패널 · DFX-12",
       "w": 390,
       "x": 940,
       "y": 0
@@ -21,7 +21,7 @@
     "MobL4.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M2. 상세 · L4",
+      "title": "M2. 패널 · L4 (스테퍼 · 확대/이동)",
       "w": 390,
       "x": 470,
       "y": 0
@@ -29,7 +29,7 @@
     "MobOverview.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M1. 간략 보기 (전체 장비)",
+      "title": "M1. 홈 (상세 보기 · 확대/축소)",
       "w": 390,
       "x": 0,
       "y": 0
@@ -37,17 +37,18 @@
     "MobWiring.dc.html": {
       "h": 844,
       "is_interactive": true,
-      "title": "M5. 배선·케이블 편집",
+      "title": "M5. 배선 (케이블별·소스별·단자별 · 대체)",
       "w": 390,
       "x": 1880,
       "y": 0
     },
     "Mobile.dc.html": {
       "h": 844,
-      "title": "M6. 운영자 세팅 안내",
+      "title": "M6. 운영 (시작·끝내기·소스별 소리 조정)",
       "w": 390,
       "x": 2350,
-      "y": 0
+      "y": 0,
+      "is_interactive": true
     },
     "System.dc.html": {
       "h": 1400,
@@ -62,7 +63,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T1. 간략 보기 · 태블릿 세로",
+      "title": "T1. 홈 · 태블릿 세로",
       "is_interactive": true
     },
     "TabOverviewL.dc.html": {
@@ -70,7 +71,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T1. 간략 보기 · 태블릿 가로",
+      "title": "T1. 홈 · 태블릿 가로",
       "is_interactive": true
     },
     "TabL4P.dc.html": {
@@ -78,7 +79,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T2. 상세 · L4 · 태블릿 세로",
+      "title": "T2. 패널 · L4 · 태블릿 세로",
       "is_interactive": true
     },
     "TabL4L.dc.html": {
@@ -86,7 +87,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T2. 상세 · L4 · 태블릿 가로",
+      "title": "T2. 패널 · L4 · 태블릿 가로",
       "is_interactive": true
     },
     "TabDfxP.dc.html": {
@@ -94,7 +95,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T3. 상세 · DFX-12 · 태블릿 세로",
+      "title": "T3. 패널 · DFX-12 · 태블릿 세로",
       "is_interactive": true
     },
     "TabDfxL.dc.html": {
@@ -102,7 +103,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T3. 상세 · DFX-12 · 태블릿 가로",
+      "title": "T3. 패널 · DFX-12 · 태블릿 가로",
       "is_interactive": true
     },
     "TabAg06P.dc.html": {
@@ -110,7 +111,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T4. 상세 · AG06 · 태블릿 세로",
+      "title": "T4. 패널 · AG06 · 태블릿 세로",
       "is_interactive": true
     },
     "TabAg06L.dc.html": {
@@ -118,7 +119,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T4. 상세 · AG06 · 태블릿 가로",
+      "title": "T4. 패널 · AG06 · 태블릿 가로",
       "is_interactive": true
     },
     "TabWiringP.dc.html": {
@@ -126,7 +127,7 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T5. 배선·케이블 편집 · 태블릿 세로",
+      "title": "T5. 배선 · 태블릿 세로",
       "is_interactive": true
     },
     "TabWiringL.dc.html": {
@@ -134,7 +135,7 @@
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T5. 배선·케이블 편집 · 태블릿 가로",
+      "title": "T5. 배선 · 태블릿 가로",
       "is_interactive": true
     },
     "TabOperatorP.dc.html": {
@@ -142,21 +143,47 @@
       "y": 2800,
       "w": 834,
       "h": 1194,
-      "title": "T6. 운영자 세팅 안내 · 태블릿 세로"
+      "title": "T6. 운영 · 태블릿 세로",
+      "is_interactive": true
     },
     "TabOperatorL.dc.html": {
       "x": 6370,
       "y": 4114,
       "w": 1194,
       "h": 834,
-      "title": "T6. 운영자 세팅 안내 · 태블릿 가로"
+      "title": "T6. 운영 · 태블릿 가로",
+      "is_interactive": true
     },
     "Icons.dc.html": {
-      "x": 2820,
+      "x": 3290,
       "y": 0,
       "w": 1240,
       "h": 800,
       "title": "I1. 앱 아이콘 · 탭바 아이콘 시안"
+    },
+    "MobChecks.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "M8. 점검 (배지 목록)",
+      "is_interactive": true
+    },
+    "TabChecksP.dc.html": {
+      "x": 5484,
+      "y": 2800,
+      "w": 834,
+      "h": 1194,
+      "title": "T7. 점검 · 태블릿 세로",
+      "is_interactive": true
+    },
+    "TabChecksL.dc.html": {
+      "x": 7644,
+      "y": 4114,
+      "w": 1194,
+      "h": 834,
+      "title": "T7. 점검 · 태블릿 가로",
+      "is_interactive": true
     }
   },
   "createdOnFiles": {
@@ -188,7 +215,7 @@
       "kind": "title1",
       "x": 0,
       "y": 2520,
-      "maxW": 7564,
+      "maxW": 8838,
       "text": "태블릿 시안 (같은 화면을 넓힘 · 세로 834×1194 / 가로 1194×834)"
     }
   },
@@ -199,6 +226,7 @@
     "MobAg06.dc.html",
     "MobWiring.dc.html",
     "Mobile.dc.html",
+    "MobChecks.dc.html",
     "System.dc.html",
     "TabOverviewP.dc.html",
     "TabL4P.dc.html",
@@ -206,12 +234,14 @@
     "TabAg06P.dc.html",
     "TabWiringP.dc.html",
     "TabOperatorP.dc.html",
+    "TabChecksP.dc.html",
     "TabOverviewL.dc.html",
     "TabL4L.dc.html",
     "TabDfxL.dc.html",
     "TabAg06L.dc.html",
     "TabWiringL.dc.html",
     "TabOperatorL.dc.html",
+    "TabChecksL.dc.html",
     "Icons.dc.html"
   ],
   "pages": [],

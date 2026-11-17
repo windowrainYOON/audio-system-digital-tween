@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>점검 · 태블릿 세로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit}
+@keyframes sheetUp{from{transform:translateY(110%)}to{transform:none}}
+@keyframes sheetDown{from{transform:none}to{transform:translateY(110%)}}
+@keyframes dimIn{from{opacity:0}to{opacity:1}}
+@keyframes dimOut{from{opacity:1}to{opacity:0}}
+</style>
+</helmet>
+<div style="--row:#ffffff;--bg:#f5f5f7;--label:#1d1d1f;--label2:#1d1d1fcc;--sep:#3c3c434a;--fill3:#7676801f;--accent:#0066cc;position:relative;width:834px;height:1194px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,'Noto Sans KR',sans-serif;font-size:17px;line-height:22px;word-break:keep-all">
+  <header style="flex:none;padding:16px 24px 0;display:flex;flex-direction:column;gap:8px;background:var(--bg);z-index:2">
+    <div style="display:flex;align-items:center;gap:8px;min-height:44px"><h1 style="margin:0;flex:1;font-size:34px;line-height:41px;font-weight:700">점검</h1><span role="status" aria-label="서버 연결 상태: 연결됨" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:16px;background:#dff5e3;font-size:13px;line-height:18px;font-weight:600;color:#1d1d1f"><span style="width:8px;height:8px;border-radius:4px;background:#34c759" aria-hidden="true"></span>연결됨</span></div>
+    <div role="group" aria-label="점검 보기 선택" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px"><sc-for list="{{fchips}}" as="c" hint-placeholder-count="4"><button onClick="{{c.go}}" aria-pressed="{{c.on}}" style="flex:none;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:{{c.bg}};color:{{c.fg}};font-size:15px;font-weight:600">{{c.label}}</button></sc-for></div>
+  </header>
+  <main style="flex:1;min-height:0;overflow-y:auto;padding:8px max(24px, calc(50% - 380px)) 100px">
+    <div style="font-size:13px;line-height:18px;color:var(--label2);padding:0 16px 12px">믹서 그림 위 배지(!)로 보이는 것들을 모았어요. 누르면 원인과 확인할 것을 보여 줘요.</div>
+    <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+        <button onClick="{{r.pick}}" style="width:100%;min-height:64px;padding:10px 16px;border:0;border-top:{{r.bt}};background:transparent;display:flex;align-items:center;gap:12px;text-align:left;color:var(--label)">
+          <span style="flex:none;width:28px;height:28px;border-radius:14px;background:{{r.dot}};color:{{r.dotFg}};display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700" aria-hidden="true">{{r.mark}}</span>
+          <span style="flex:1;min-width:0"><span style="display:block;font-weight:600">{{r.title}}</span><span style="display:block;font-size:15px;line-height:20px;color:var(--label2)">{{r.where}}</span></span>
+          <span style="flex:none;padding:2px 10px;border-radius:12px;background:{{r.bg}};font-size:12px;line-height:18px;font-weight:600">{{r.grade}}</span>
+          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" stroke="#7a7a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2l6 6-6 6"/></svg>
+        </button>
+      </sc-for>
+    </div>
+  </main>
+  <sc-if value="{{open}}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{close}}" style="position:absolute;inset:0;background:rgba(0,0,0,0.25);z-index:4;animation:{{dimAnim}}"></div>
+    <section aria-label="점검 내용" style="animation:{{sheetAnim}};position:absolute;left:50%;width:560px;margin-left:-280px;bottom:88px;z-index:5;border-radius:28px;background:rgba(255,255,255,0.97);box-shadow:0 8px 30px rgba(0,0,0,0.18),0 0 0 0.5px var(--sep);padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;font-size:17px;line-height:22px;font-weight:600">{{info.title}}</div>
+        <span style="padding:2px 10px;border-radius:12px;background:{{info.bg}};font-size:12px;line-height:18px;font-weight:600">{{info.badge}}</span>
+        <button onClick="{{close}}" aria-label="닫기" style="flex:none;width:44px;height:44px;margin:-10px -8px -10px 0;border:0;border-radius:22px;background:transparent;color:var(--label2);display:inline-flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 5l5 5 5-5"/></svg></button>
+      </div>
+      <div style="font-size:13px;line-height:18px;color:var(--label2)">{{info.where}}</div>
+      <div style="font-size:15px;line-height:20px;color:var(--label2)">{{info.l1}}</div>
+      <div style="font-size:15px;line-height:20px;color:var(--label2)">{{info.l2}}</div>
+      <div style="font-size:15px;line-height:20px;color:var(--label2)">{{info.l3}}</div>
+    </section>
+  </sc-if>
+  <nav aria-label="하단 메뉴" style="position:absolute;left:50%;width:480px;margin-left:-240px;bottom:16px;height:56px;border-radius:28px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 0 0 0.5px var(--sep);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 4px;z-index:6">
+    <a href="TabOverviewP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 L12 4 L20 11"/><path d="M6 9.5 V20 H18 V9.5"/><path d="M10 20 v-5 h4 v5"/></svg>홈</a>
+    <a href="TabWiringP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="5" height="6" rx="1.2"/><path d="M5 10 v3 q0 6 7 6 q7 0 7 -6 v-3"/><rect x="16.5" y="4" width="5" height="6" rx="1.2"/><path d="M4 4 V2 M6 4 V2 M18 4 V2 M20 4 V2"/></svg>배선</a>
+    <a href="TabDfxP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 V21 M12 3 V21 M18 3 V21"/><rect x="3.5" y="13" width="5" height="3.5" rx="1"/><rect x="9.5" y="6" width="5" height="3.5" rx="1"/><rect x="15.5" y="10" width="5" height="3.5" rx="1"/></svg>패널</a>
+    <a href="TabChecksP.dc.html" aria-current="page" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--fill3);color:var(--accent);font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16 16 L21 21"/><path d="M8 11 l2 2 l4 -4"/></svg>점검</a>
+    <a href="TabOperatorP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4 V2.8 h6 V4"/><path d="M8.5 10 l1.5 1.5 l3 -3"/><path d="M8.5 16 h7"/></svg>운영</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":834,"height":1194}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { f: 'all', sel: '', closing: false };
+}
+renderVals() {
+const s = this.state;
+const self = this;
+const W = '#fff3d6', R = '#ffd9d6', B = '#d8ecff';
+const I = {
+Ag: { title: 'Yamaha AG06', badge: '주의 1', bg: W, l1: '+48V(팬텀)가 켜져 있어요. CH1 DI BOX가 패시브면 끄는 것이 안전해요.', l2: '키보드는 TRS 출력을 TS 2줄로 나눠 3/4에, 드럼은 TS 모노 2줄→RCA로 5/6에 연결해요.', l3: 'STEREO OUT → DFX-12 9/10 L·R', go: 'AG06 상세 보기' },
+L4: { title: 'MiCWL L4', badge: '정상', bg: '#dff5e3', l1: 'CD → CH1/2 (RCA↔RCA + TS 어댑터), PC → CH3/4 (AUX→RCA).', l2: 'MAIN OUT L·R → DFX-12 CD/TAPE IN (스테레오).', l3: '막힌 곳이 없어요.', go: 'L4 상세 보기' },
+Dfx: { title: 'Mackie DFX-12', badge: '참고 1', bg: B, l1: '11/12번만 비어 있어요(안 쓰는 채널은 페이더를 맨 아래로). 5/6번은 매립형 라인이 이어져 있어요.', l2: '1·2번 강대상1 구즈넥 L·R, 3·4·5/6번 매립형 XLR(기도석·아래강대상), 7/8번 무선, 9/10번 AG06, CD/TAPE IN은 L4.', l3: 'MAIN OUT L·R(XLR) → QSC, PHONES → MPS1200.', go: 'DFX-12 상세 보기' },
+Qsc: { title: 'R 스피커가 약해요', badge: '주의 · 이슈 #1', bg: W, l1: '1) L·R 스피커 케이블을 바꿔 꽂아 보세요.', l2: '2) R 스피커만 따로 테스트 음원으로 확인하세요.', l3: '3) QSC R 채널 게인 노브 위치와 DFX-12 MAIN R 페이더를 확인하세요.', go: 'DFX-12 MAIN 보기' },
+Mps: { title: 'MPS1200 CH1 고장', badge: '오류', bg: R, l1: 'MPS1200은 자모실 스피커용 서브 앰프예요. CH1 채널이 고장났어요.', l2: '자모실 스피커가 CH1에 연결돼 있는지 확인이 필요해요. 모니터 스피커는 메인 스피커에서 이어지는 구성이라 MPS1200과 무관해요.', l3: 'DFX-12 PHONES → MPS1200 입력은 그대로 연결돼 있어요.', go: '배선 편집' }
+};
+const L = [['Mps', 'err', 'MPS1200 서브 앰프 · 자모실'], ['Ag', 'warn', 'Yamaha AG06 · CH1 +48V'], ['Qsc', 'warn', 'QSC 메인 앰프 · 메인 스피커 R'], ['Dfx', 'note', 'Mackie DFX-12 · CH11/12']];
+const G = { err: ['오류', '#ff3b30', '#fff', '×', R], warn: ['주의', '#ff9500', '#1d1d1f', '!', W], note: ['참고', '#0a84ff', '#fff', 'i', B] };
+const shut = (patch) => { self.setState({ closing: true }); clearTimeout(self.__ct); self.__ct = setTimeout(() => self.setState(Object.assign({ closing: false }, patch)), 220); };
+const vis = L.filter((x) => s.f === 'all' || x[1] === s.f);
+const cnt = (g) => L.filter((x) => x[1] === g).length;
+const it = I[s.sel] || I.Mps;
+const cur = L.filter((x) => x[0] === s.sel)[0] || L[0];
+return {
+fchips: [['all', '전체 ' + L.length], ['err', '오류 ' + cnt('err')], ['warn', '주의 ' + cnt('warn')], ['note', '참고 ' + cnt('note')]].map((c) => ({ label: c[1], on: s.f === c[0] ? 'true' : 'false', bg: s.f === c[0] ? 'var(--accent)' : 'var(--fill3)', fg: s.f === c[0] ? '#fff' : 'var(--label)', go: () => self.setState({ f: c[0] }) })),
+rows: vis.map((x, i) => ({ title: I[x[0]].title, where: x[2], grade: G[x[1]][0], dot: G[x[1]][1], dotFg: G[x[1]][2], mark: G[x[1]][3], bg: G[x[1]][4], bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: x[0], closing: false }) })),
+open: !!s.sel, info: { title: it.title, badge: it.badge, bg: it.bg, where: cur[2], l1: it.l1, l2: it.l2, l3: it.l3 },
+close: () => shut({ sel: '' }),
+sheetAnim: s.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: s.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out'
+};
+}
+}
+</script>
+</body>
+</html>

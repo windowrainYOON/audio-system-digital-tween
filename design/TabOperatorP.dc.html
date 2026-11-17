@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>운영자 세팅 안내 · 태블릿 세로</title>
+<title>운영 · 태블릿 세로</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,58 +12,137 @@
 <style>
 body{margin:0}
 button{font-family:inherit}
+@keyframes sheetUp{from{transform:translateY(110%)}to{transform:none}}
+@keyframes sheetDown{from{transform:none}to{transform:translateY(110%)}}
+@keyframes dimIn{from{opacity:0}to{opacity:1}}
+@keyframes dimOut{from{opacity:1}to{opacity:0}}
 </style>
 </helmet>
-<div style="--bg:#f5f5f7;--row:#ffffff;--label:#1d1d1f;--label2:#1d1d1fcc;--sep:#3c3c434a;--fill3:#7676801f;--accent:#0066cc;position:relative;width:834px;height:1194px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,'Noto Sans KR',sans-serif;font-size:17px;line-height:22px;word-break:keep-all">
-  <header style="padding:20px 32px 0;min-height:44px;display:flex;align-items:center">
-    <div style="flex:1;font-size:34px;line-height:41px;font-weight:700">주일 세팅</div>
-    <span style="font-size:17px;line-height:22px;color:var(--label2)">2 / 5</span>
+<div style="--row:#ffffff;--bg:#f5f5f7;--label:#1d1d1f;--label2:#1d1d1fcc;--sep:#3c3c434a;--fill3:#7676801f;--accent:#0066cc;position:relative;width:834px;height:1194px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,'Noto Sans KR',sans-serif;font-size:17px;line-height:22px;word-break:keep-all">
+  <header style="flex:none;padding:16px 24px 0;display:flex;flex-direction:column;gap:8px;background:var(--bg);z-index:2">
+    <div style="display:flex;align-items:center;gap:8px;min-height:44px"><h1 style="margin:0;flex:1;font-size:34px;line-height:41px;font-weight:700">운영</h1><span role="status" aria-label="서버 연결 상태: 연결됨" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:16px;background:#dff5e3;font-size:13px;line-height:18px;font-weight:600;color:#1d1d1f"><span style="width:8px;height:8px;border-radius:4px;background:#34c759" aria-hidden="true"></span>연결됨</span></div>
+    <div role="group" aria-label="운영 보기 선택" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px"><sc-for list="{{gchips}}" as="c" hint-placeholder-count="3"><button onClick="{{c.go}}" aria-pressed="{{c.on}}" style="flex:none;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:{{c.bg}};color:{{c.fg}};font-size:15px;font-weight:600">{{c.label}}</button></sc-for></div>
+    <sc-if value="{{isSrc}}" hint-placeholder-val="{{ false }}">
+      <div role="group" aria-label="소스 선택" style="display:flex;align-items:center;min-height:44px;margin-bottom:8px;border-radius:22px;background:#fff;box-shadow:inset 0 0 0 1px var(--sep)"><button onClick="{{srcPrev}}" aria-label="이전 소스" style="flex:none;width:44px;height:44px;border:0;border-radius:22px;background:transparent;color:var(--accent);display:flex;align-items:center;justify-content:center"><svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2L3 9l6 7"/></svg></button><div style="flex:1;text-align:center;font-size:15px;line-height:20px"><span style="color:var(--label2)">소스 </span><b>{{srcName}}</b><span style="color:var(--label2)"> · {{srcPos}}</span></div><button onClick="{{srcNext}}" aria-label="다음 소스" style="flex:none;width:44px;height:44px;border:0;border-radius:22px;background:transparent;color:var(--accent);display:flex;align-items:center;justify-content:center"><svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2l6 7-6 7"/></svg></button></div>
+    </sc-if>
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:4px"><div style="flex:1;height:4px;border-radius:2px;background:#78788033;overflow:hidden"><div style="width:{{pct}};height:100%;background:#0066cc"></div></div><span style="font-size:15px;line-height:20px;color:var(--label2)">{{progress}}</span></div>
   </header>
-  <div style="padding:12px 32px 0"><div style="height:4px;border-radius:2px;background:#78788033;overflow:hidden"><div style="width:40%;height:100%;background:#0066cc"></div></div></div>
 
-  <main style="flex:1;overflow-y:auto;padding:20px 32px 100px;display:flex;flex-direction:column;gap:16px">
+  <main style="flex:1;min-height:0;overflow-y:auto;padding:12px max(24px, calc(50% - 380px)) 100px;display:flex;flex-direction:column;gap:16px">
+    <sc-if value="{{hasDone}}" hint-placeholder-val="{{ true }}">
     <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate">
-      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 20px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg><span style="flex:1;color:var(--label2)">1 · 믹서 MAIN을 맨 아래로</span><span style="font-size:13px;line-height:18px;color:var(--label2)">완료</span></div>
-      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 20px;border-top:0.5px solid var(--sep)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg><span style="flex:1;color:var(--label2)">2 · 안 쓰는 채널 MUTE</span><span style="font-size:13px;line-height:18px;color:var(--label2)">완료</span></div>
+      <sc-for list="{{done}}" as="d" hint-placeholder-count="2">
+        <button onClick="{{d.go}}" style="width:100%;display:flex;align-items:center;gap:12px;min-height:44px;padding:0 16px;border:0;border-top:{{d.bt}};background:transparent;text-align:left;font-size:17px;color:var(--label2)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg><span style="flex:1">{{d.t}}</span><span style="font-size:13px;line-height:18px">완료</span></button>
+      </sc-for>
     </div>
+    </sc-if>
 
-    <section aria-label="지금 할 일" style="background:var(--row);border-radius:18px;padding:24px;box-shadow:0 0 0 2px #0066cc inset">
-      <div style="font-size:13px;line-height:18px;font-weight:600;color:var(--accent)">지금 할 일 · 3단계</div>
-      <div style="font-size:28px;line-height:34px;font-weight:700;margin-top:4px">무선 마이크 켜고 수신기 확인</div>
-      <div style="margin-top:8px;font-size:17px;line-height:22px;color:var(--label2)">DFX-12 CH7/8 노브를 아래 위치에 맞춰 주세요.</div>
+    <sc-if value="{{hasNow}}" hint-placeholder-val="{{ true }}">
+    <section aria-label="지금 할 일" style="background:var(--row);border-radius:18px;padding:16px;box-shadow:0 0 0 2px #0066cc inset">
+      <div style="font-size:13px;line-height:18px;font-weight:600;color:var(--accent)">지금 할 일 · {{now.n}}단계</div>
+      <div style="font-size:20px;line-height:25px;font-weight:600;margin-top:4px">{{now.t}}</div>
+      <div style="margin-top:8px;font-size:15px;line-height:20px;color:var(--label2)">{{now.d}}</div>
+      <sc-if value="{{now.hasCtl}}" hint-placeholder-val="{{ true }}">
       <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center">
-          <svg width="112" height="112" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="#f5f5f7" stroke="#48484a" stroke-width="1.5"/><line x1="32" y1="28" x2="32" y2="13" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round" transform="rotate(-30 32 32)"/></svg>
-          <div style="font-size:20px;line-height:25px;font-weight:600">GAIN</div><div style="font-size:17px;line-height:22px;color:var(--label2)">11시</div>
-        </div>
-        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center">
-          <svg width="112" height="112" viewBox="0 0 64 64" aria-hidden="true"><rect x="28" y="4" width="8" height="56" rx="4" fill="#1d1d1f"/><rect x="14" y="26" width="36" height="14" rx="4" fill="#f5f5f7" stroke="#48484a" stroke-width="1.5"/></svg>
-          <div style="font-size:20px;line-height:25px;font-weight:600">페이더</div><div style="font-size:17px;line-height:22px;color:var(--label2)">U 근처</div>
-        </div>
+        <sc-for list="{{now.ctl}}" as="k" hint-placeholder-count="2">
+          <div style="background:var(--bg);border-radius:12px;padding:12px;text-align:center">
+            <sc-if value="{{k.knob}}" hint-placeholder-val="{{ true }}"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="#f5f5f7" stroke="#48484a" stroke-width="1.5"/><line x1="32" y1="28" x2="32" y2="13" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round" transform="{{k.rot}}"/></svg></sc-if>
+            <sc-if value="{{k.fader}}" hint-placeholder-val="{{ false }}"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="28" y="4" width="8" height="56" rx="4" fill="#1d1d1f"/><rect x="14" y="{{k.fy}}" width="36" height="14" rx="4" fill="#f5f5f7" stroke="#48484a" stroke-width="1.5"/></svg></sc-if>
+            <sc-if value="{{k.sw}}" hint-placeholder-val="{{ false }}"><svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="22" width="44" height="22" rx="11" fill="{{k.swc}}"/><text x="32" y="37.5" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">{{k.swt}}</text></svg></sc-if>
+            <div style="font-weight:600">{{k.name}}</div><div style="font-size:15px;line-height:20px;color:var(--label2)">{{k.val}}</div>
+          </div>
+        </sc-for>
       </div>
-      <button style="margin-top:16px;width:100%;min-height:50px;border:0;border-radius:25px;background:var(--accent);color:#fff;font-size:17px;font-weight:600">했어요</button>
-      <button style="margin-top:8px;width:100%;min-height:44px;border:0;border-radius:22px;background:var(--fill3);color:var(--accent);font-size:17px">소리가 안 나요</button>
+      </sc-if>
+      <button onClick="{{doneNow}}" style="margin-top:16px;width:100%;min-height:50px;border:0;border-radius:25px;background:var(--accent);color:#fff;font-size:17px;font-weight:600">했어요</button>
+      <button onClick="{{help}}" style="margin-top:8px;width:100%;min-height:44px;border:0;border-radius:22px;background:var(--fill3);color:var(--accent);font-size:17px">소리가 안 나요</button>
     </section>
+    </sc-if>
+    <sc-if value="{{allDone}}" hint-placeholder-val="{{ false }}">
+      <div style="background:#dff5e3;border-radius:18px;padding:16px;font-size:17px;line-height:22px"><b>모두 마쳤어요.</b> <span style="color:var(--label2)">{{doneMsg}}</span> <button onClick="{{restart}}" style="display:block;margin-top:12px;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:#fff;color:var(--accent);font-size:15px;font-weight:600">처음부터 다시</button></div>
+    </sc-if>
 
+    <sc-if value="{{hasLeft}}" hint-placeholder-val="{{ true }}">
     <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate">
-      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 20px"><span style="width:22px;height:22px;border-radius:11px;border:2px solid #8e8e93;box-sizing:border-box" aria-hidden="true"></span><span style="flex:1">4 · AG06 건반·드럼 레벨</span></div>
-      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 20px;border-top:0.5px solid var(--sep)"><span style="width:22px;height:22px;border-radius:11px;border:2px solid #8e8e93;box-sizing:border-box" aria-hidden="true"></span><span style="flex:1">5 · QSC 앰프 켜고 리허설</span></div>
+      <sc-for list="{{left}}" as="l" hint-placeholder-count="2">
+        <div style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 16px;border-top:{{l.bt}}"><span style="width:22px;height:22px;border-radius:11px;border:2px solid #8e8e93;box-sizing:border-box;flex:none" aria-hidden="true"></span><span style="flex:1">{{l.t}}</span></div>
+      </sc-for>
     </div>
+    </sc-if>
   </main>
 
-  <nav aria-label="하단 메뉴" style="position:absolute;left:50%;width:480px;margin-left:-240px;bottom:16px;height:56px;border-radius:28px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 0 0 0.5px var(--sep);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 4px">
-    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 L12 4 L20 11"/><path d="M6 9.5 V20 H18 V9.5"/><path d="M10 20 v-5 h4 v5"/></svg>홈</button>
-    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="5" height="6" rx="1.2"/><path d="M5 10 v3 q0 6 7 6 q7 0 7 -6 v-3"/><rect x="16.5" y="4" width="5" height="6" rx="1.2"/><path d="M4 4 V2 M6 4 V2 M18 4 V2 M20 4 V2"/></svg>배선</button>
-    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 V21 M12 3 V21 M18 3 V21"/><rect x="3.5" y="13" width="5" height="3.5" rx="1"/><rect x="9.5" y="6" width="5" height="3.5" rx="1"/><rect x="15.5" y="10" width="5" height="3.5" rx="1"/></svg>패널</button>
-    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16 16 L21 21"/><path d="M8 11 l2 2 l4 -4"/></svg>점검</button>
-    <button style="min-height:48px;border:0;border-radius:24px;background:var(--fill3);color:var(--accent);font-size:11px;line-height:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4 V2.8 h6 V4"/><path d="M8.5 10 l1.5 1.5 l3 -3"/><path d="M8.5 16 h7"/></svg>운영</button>
+  <sc-if value="{{helpOpen}}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{helpClose}}" style="position:absolute;inset:0;background:rgba(0,0,0,0.25);z-index:4;animation:{{dimAnim}}"></div>
+    <section aria-label="소리가 안 날 때" style="animation:{{sheetAnim}};position:absolute;left:50%;width:560px;margin-left:-280px;bottom:88px;z-index:5;border-radius:28px;background:rgba(255,255,255,0.97);box-shadow:0 8px 30px rgba(0,0,0,0.18),0 0 0 0.5px var(--sep);padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;font-size:17px;line-height:22px;font-weight:600">소리가 안 날 때 · {{now.t}}</div><button onClick="{{helpClose}}" aria-label="닫기" style="flex:none;width:44px;height:44px;margin:-10px -8px -10px 0;border:0;border-radius:22px;background:transparent;color:var(--label2);display:inline-flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 5l5 5 5-5"/></svg></button></div>
+      <sc-for list="{{tips}}" as="tp" hint-placeholder-count="4"><div style="font-size:15px;line-height:20px;color:var(--label2)">{{tp.t}}</div></sc-for>
+    </section>
+  </sc-if>
+  <nav aria-label="하단 메뉴" style="position:absolute;left:50%;width:480px;margin-left:-240px;bottom:16px;height:56px;border-radius:28px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 0 0 0.5px var(--sep);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 4px;z-index:6">
+    <a href="TabOverviewP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 L12 4 L20 11"/><path d="M6 9.5 V20 H18 V9.5"/><path d="M10 20 v-5 h4 v5"/></svg>홈</a>
+    <a href="TabWiringP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="5" height="6" rx="1.2"/><path d="M5 10 v3 q0 6 7 6 q7 0 7 -6 v-3"/><rect x="16.5" y="4" width="5" height="6" rx="1.2"/><path d="M4 4 V2 M6 4 V2 M18 4 V2 M20 4 V2"/></svg>배선</a>
+    <a href="TabDfxP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 V21 M12 3 V21 M18 3 V21"/><rect x="3.5" y="13" width="5" height="3.5" rx="1"/><rect x="9.5" y="6" width="5" height="3.5" rx="1"/><rect x="15.5" y="10" width="5" height="3.5" rx="1"/></svg>패널</a>
+    <a href="TabChecksP.dc.html" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;color:var(--label2)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16 16 L21 21"/><path d="M8 11 l2 2 l4 -4"/></svg>점검</a>
+    <a href="TabOperatorP.dc.html" aria-current="page" style="min-height:48px;border-radius:24px;text-decoration:none;font-size:11px;line-height:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--fill3);color:var(--accent);font-weight:600"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4 V2.8 h6 V4"/><path d="M8.5 10 l1.5 1.5 l3 -3"/><path d="M8.5 16 h7"/></svg>운영</a>
   </nav>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":834,"height":1194}}'>
 class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { g: 'start', st: { start: 2, end: 0 }, src: 0, sst: {}, help: false, closing: false };
+}
 renderVals() {
-return {};
+const s = this.state;
+const self = this;
+// controls: [name, kind, value 0..1, text]
+const K = (n, v, t) => ({ name: n, knob: true, fader: false, sw: false, rot: 'rotate(' + (-135 + 270 * v) + ' 32 32)', val: t });
+const F = (n, v, t) => ({ name: n, knob: false, fader: true, sw: false, fy: 46 - 40 * v, val: t });
+const S = (n, on, t) => ({ name: n, knob: false, fader: false, sw: true, swc: on ? '#E0332B' : '#5E6166', swt: on ? 'ON' : 'OFF', val: t });
+const G = {
+start: { label: '시스템 시작하기', msg: '이제 예배를 시작해도 돼요.', steps: [
+['믹서 MAIN을 맨 아래로', 'DFX-12 MAIN L·R 페이더와 L4 MAIN 노브를 맨 아래로 내려요. 켤 때 "펑" 소리를 막아요.', [F('MAIN L·R', 0, '맨 아래 (-∞)'), K('L4 MAIN', 0, '7시 (0)')]],
+['안 쓰는 채널 MUTE', 'DFX-12 CH11/12는 비어 있어요. MUTE를 켜고 페이더를 맨 아래로 두세요.', [S('CH11/12 MUTE', true, 'ON'), F('CH11/12 페이더', 0, '맨 아래')]],
+['믹서 전원 켜기', 'L4 → AG06 → DFX-12 순서로 켜요. 앰프는 아직 켜지 마세요.', []],
+['무선 마이크 켜고 수신기 확인', 'DFX-12 CH7/8 노브를 아래 위치에 맞춰 주세요.', [K('GAIN', 0.39, '11시'), F('페이더', 0.75, 'U 근처')]],
+['AG06 건반·드럼 레벨', 'AG06 3/4(키보드)와 5/6(드럼) 레벨을 맞추고, DFX-12 CH9/10 페이더를 U 근처로 올려요.', [K('AG06 3/4·5/6', 0.5, '12시'), F('DFX CH9/10', 0.75, 'U 근처')]],
+['앰프 켜고 리허설', '앰프는 마지막에 켜요. QSC → MPS1200을 켠 뒤 MAIN을 천천히 U 근처까지 올려요.', [F('MAIN L·R', 0.75, 'U 근처')]]] },
+end: { label: '끝내기', msg: '전원이 모두 꺼졌어요.', steps: [
+['MAIN 내리기', 'DFX-12 MAIN L·R 페이더를 맨 아래로 내려요.', [F('MAIN L·R', 0, '맨 아래 (-∞)')]],
+['앰프 먼저 끄기', '끌 때는 켤 때의 반대예요. MPS1200 → QSC 앰프를 먼저 꺼요.', []],
+['믹서 끄기', 'DFX-12 → AG06 → L4 순서로 꺼요.', []],
+['무선 마이크 끄고 충전', '무선 마이크 전원을 끄고 충전기에 꽂아 두세요.', []],
+['다음 예배를 위해 확인', '안 쓰는 채널 MUTE와 페이더 위치는 그대로 두면 다음 시작이 쉬워요.', []]] }
+};
+const SRC = [['구즈넥 L', 'DFX-12', 'CH1', 'mic'], ['구즈넥 R', 'DFX-12', 'CH2', 'mic'], ['매립형 1', 'DFX-12', 'CH3', 'mic'], ['매립형 2', 'DFX-12', 'CH4', 'mic'], ['매립형 3', 'DFX-12', 'CH5/6', 'mic'], ['무선 마이크', 'DFX-12', 'CH7/8', 'mic'], ['베이스', 'AG06', 'CH1', 'di'], ['기타', 'AG06', 'CH2', 'di'], ['키보드', 'AG06', 'CH3/4', 'line'], ['드럼', 'AG06', 'CH5/6', 'line'], ['CD', 'L4', 'CH1/2', 'l4'], ['PC (OBS)', 'L4', 'CH3/4', 'l4']];
+const sv = SRC[s.src];
+const route = sv[1] === 'DFX-12' ? '' : (sv[1] === 'AG06' ? ' AG06 소리는 DFX-12 CH9/10으로 들어가요.' : ' L4 소리는 DFX-12 CD/TAPE IN으로 들어가요.');
+const lvl = sv[3] === 'l4' ? K(sv[2] === 'CH3/4' ? '3/4 LEVEL' : 'LEVEL', 0.65, '눈금 6.5') : F(sv[2] + ' 페이더', 0.75, 'U 근처');
+const srcSteps = [
+['페이더(레벨) 맨 아래로', sv[1] + ' ' + sv[2] + ' 페이더나 LEVEL을 먼저 맨 아래로 내려요.', [sv[3] === 'l4' ? K('LEVEL', 0, '맨 아래') : F(sv[2] + ' 페이더', 0, '맨 아래')]],
+['GAIN 맞추기', sv[0] + '를 평소 크기로 소리 내며 ' + sv[1] + ' ' + sv[2] + ' GAIN을 올려요. PEAK 램프가 가끔만 깜빡이면 알맞아요.', [K('GAIN', sv[3] === 'mic' ? 0.5 : 0.39, sv[3] === 'mic' ? '12시 근처에서 시작' : '11시 근처에서 시작')]],
+['레벨 올리기', '소리를 들으며 레벨을 천천히 올려요.' + route, [lvl]],
+['소리 확인', '메인 스피커 L·R 양쪽에서 들리는지 확인해요.', []]];
+const g = s.g === 'src' ? { label: '소스별 소리 조정하기', msg: sv[0] + ' 소리를 맞췄어요.', steps: srcSteps } : G[s.g];
+const idx = s.g === 'src' ? (s.sst[s.src] || 0) : s.st[s.g];
+const setIdx = (k) => { if (self.state.g === 'src') { const o = Object.assign({}, self.state.sst); o[self.state.src] = k; self.setState({ sst: o }); } else { const o = Object.assign({}, self.state.st); o[self.state.g] = k; self.setState({ st: o }); } };
+const N = g.steps.length;
+const shut = (patch) => { self.setState({ closing: true }); clearTimeout(self.__ct); self.__ct = setTimeout(() => self.setState(Object.assign({ closing: false }, patch)), 220); };
+const now = idx < N ? { n: idx + 1, t: g.steps[idx][0], d: g.steps[idx][1], ctl: g.steps[idx][2], hasCtl: g.steps[idx][2].length > 0 } : { n: 0, t: '', d: '', ctl: [], hasCtl: false };
+return {
+gchips: [['start', '시스템 시작하기'], ['end', '끝내기'], ['src', '소스별 소리 조정']].map((c) => ({ label: c[1], on: s.g === c[0] ? 'true' : 'false', bg: s.g === c[0] ? 'var(--accent)' : 'var(--fill3)', fg: s.g === c[0] ? '#fff' : 'var(--label)', go: () => self.setState({ g: c[0] }) })),
+isSrc: s.g === 'src', srcName: sv[0] + ' → ' + sv[1] + ' ' + sv[2], srcPos: (s.src + 1) + ' / ' + SRC.length,
+srcPrev: () => self.setState({ src: (self.state.src + SRC.length - 1) % SRC.length }), srcNext: () => self.setState({ src: (self.state.src + 1) % SRC.length }),
+pct: Math.round(100 * Math.min(idx, N) / N) + '%', progress: Math.min(idx, N) + ' / ' + N,
+done: g.steps.slice(0, idx).map((x, i) => ({ t: (i + 1) + ' · ' + x[0], bt: i === 0 ? 'none' : '0.5px solid var(--sep)', go: () => setIdx(i) })), hasDone: idx > 0,
+now: now, hasNow: idx < N, allDone: idx >= N, doneMsg: g.msg, restart: () => setIdx(0),
+left: g.steps.slice(idx + 1).map((x, i) => ({ t: (idx + i + 2) + ' · ' + x[0], bt: i === 0 ? 'none' : '0.5px solid var(--sep)' })), hasLeft: idx + 1 < N,
+doneNow: () => setIdx(idx + 1),
+help: () => self.setState({ help: true, closing: false }), helpOpen: !!s.help, helpClose: () => shut({ help: false }),
+tips: [{ t: '1) 해당 채널 MUTE가 꺼져 있는지(OFF) 확인하세요.' }, { t: '2) 케이블이 배선 탭의 단자에 맞게 꽂혀 있는지 확인하세요.' }, { t: '3) 믹서와 앰프 전원 램프가 켜져 있는지 확인하세요.' }, { t: '4) GAIN과 페이더가 맨 아래가 아닌지 확인하세요. 점검 탭에 알림이 있으면 먼저 보세요.' }],
+sheetAnim: s.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: s.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out'
+};
 }
 }
 </script>
