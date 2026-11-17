@@ -1,0 +1,31 @@
+// SYNC-BEGIN
+componentDidMount() {
+const self = this; this.__d = {};
+const patch = (b) => {
+const p = self.__d[b]; if (!p || !p.vals) return;
+const root = document.querySelector('svg[data-b="' + b + '"]'); if (!root) return;
+root.querySelectorAll('[data-cid]').forEach((g) => {
+const v = p.vals[g.getAttribute('data-cid')]; if (v === undefined || v === null) return;
+const kl = g.querySelector('[data-r="kl"]');
+if (kl) kl.setAttribute('transform', 'translate(' + kl.getAttribute('data-x') + ',' + kl.getAttribute('data-y') + ') rotate(' + (-135 + 270 * v) + ')');
+const fc = g.querySelector('[data-r="fc"]');
+if (fc) fc.setAttribute('y', String(Number(fc.getAttribute('data-ya')) + Number(fc.getAttribute('data-yb')) * v));
+const bf = g.querySelector('[data-r="bf"]');
+if (bf) {
+const on = v === 1; const col = g.getAttribute('data-col');
+bf.setAttribute('fill', on ? col : '#5E6166'); bf.setAttribute('stroke', on ? '#1B1F23' : '#3A3C40');
+const q = (r) => g.querySelector('[data-r="' + r + '"]');
+q('bg').setAttribute('opacity', on ? '1' : '0'); q('bon').setAttribute('opacity', on ? '1' : '0'); q('boff').setAttribute('opacity', on ? '0' : '1');
+}
+});
+const p1 = root.querySelector('[data-r="ph1"]'); const p2 = root.querySelector('[data-r="ph2"]');
+if (p1 && p.phantom !== undefined) { p1.setAttribute('fill', p.phantom ? '#E0332B' : '#5A2A2A'); p2.setAttribute('x', p.phantom ? '389' : '374'); }
+};
+const take = (b, p) => { if (!p || !p.vals) return; const o = self.__d[b]; if (o && o.t >= p.t) return; self.__d[b] = p; patch(b); };
+const rd = () => ['ag', 'dfx', 'l4'].forEach((b) => { try { take(b, JSON.parse(window.localStorage.getItem('mixsync:' + b))); } catch (e) {} });
+rd(); window.addEventListener('storage', rd);
+this.__iv = setInterval(() => { rd(); ['ag', 'dfx', 'l4'].forEach(patch); }, 1500);
+try { if (window.claude && window.claude.use) window.claude.use('db').then((db) => { if (db) ['ag', 'dfx', 'l4'].forEach((b) => db.doc('mixer/' + b).onSnapshot((s) => { if (s.exists) take(b, s.data()); }, () => {})); }).catch(() => {}); } catch (e) {}
+}
+componentWillUnmount() { clearInterval(this.__iv); }
+// SYNC-END

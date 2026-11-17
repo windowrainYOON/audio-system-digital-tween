@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>모바일 믹서 패널</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="--bg:#f5f5f7;--row:#ffffff;--label:#1d1d1f;--label2:#1d1d1fcc;--sep:#3c3c434a;--fill:#78788033;--fill3:#7676801f;--accent:#0066cc;--green:#34c759;--red:#ff383c;position:relative;width:390px;height:844px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--label);font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,'Noto Sans KR',sans-serif;font-size:17px;line-height:22px;word-break:keep-all">
+
+  <header style="padding:12px 16px 0;display:flex;align-items:center;gap:8px;min-height:44px">
+    <div style="flex:1;font-size:34px;line-height:41px;font-weight:700">믹서 패널</div>
+    <button aria-label="실물 사진과 비교" style="width:44px;height:44px;border-radius:22px;border:0;background:var(--fill3);color:var(--accent);display:flex;align-items:center;justify-content:center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+    </button>
+  </header>
+
+  <div style="padding:12px 16px 0">
+    <div role="tablist" aria-label="믹서 선택" style="display:flex;padding:2px;border-radius:9px;background:var(--fill3)">
+      <sc-for list="{{devs}}" as="d" hint-placeholder-count="3">
+        <button role="tab" aria-selected="{{d.on}}" onClick="{{d.pick}}" style="flex:1;min-height:44px;border:0;border-radius:7px;background:{{d.bg}};color:var(--label);font-size:15px;font-weight:{{d.fw}};box-shadow:{{d.sh}}">{{d.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding:12px 0 0;overflow-x:auto;white-space:nowrap;scrollbar-width:none">
+    <div style="display:inline-flex;gap:8px;padding:0 16px">
+      <sc-for list="{{secs}}" as="s" hint-placeholder-count="6">
+        <button onClick="{{s.pick}}" aria-pressed="{{s.on}}" style="min-height:44px;padding:0 16px;border:0;border-radius:22px;background:{{s.bg}};color:{{s.fg}};font-size:15px;font-weight:600">{{s.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <main style="flex:1;overflow-y:auto;padding:16px 16px 100px">
+    <sc-if value="{{hasJacks}}" hint-placeholder-val="{{ true }}">
+      <div style="font-size:13px;line-height:18px;color:var(--label2);padding:0 16px 6px;text-transform:uppercase">입력단·출력단</div>
+      <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate;margin-bottom:24px">
+        <sc-for list="{{jacks}}" as="j" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 16px;border-top:{{j.bt}}">
+            <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="{{j.r}}" fill="{{j.fill}}" stroke="#8e8e93" stroke-width="2"/><circle cx="14" cy="14" r="{{j.hr}}" fill="#1d1d1f"/></svg>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:600">{{j.name}}</div>
+              <div style="font-size:15px;line-height:20px;color:var(--label2)">{{j.conn}} · {{j.link}}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{hasCells}}" hint-placeholder-val="{{ true }}">
+      <div style="font-size:13px;line-height:18px;color:var(--label2);padding:0 16px 6px;text-transform:uppercase">컨트롤</div>
+      <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0">
+        <sc-for list="{{cells}}" as="c" hint-placeholder-count="6">
+          <button onClick="{{c.pick}}" aria-label="{{c.aria}}" style="min-height:112px;padding:10px 4px 8px;border:0;border-radius:0;background:{{c.bg}};display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--label)">
+            <sc-if value="{{c.isKnob}}" hint-placeholder-val="{{ false }}">
+              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="29" fill="none" stroke="{{c.ring}}" stroke-width="3"/>
+                <circle cx="32" cy="32" r="22" fill="{{c.cap}}" stroke="#48484a" stroke-width="1.5"/>
+                <line x1="32" y1="28" x2="32" y2="13" stroke="{{c.ptr}}" stroke-width="4" stroke-linecap="round" transform="{{c.tf}}"/>
+                <circle cx="{{c.dx}}" cy="{{c.dy}}" r="5" fill="#ff8d28" stroke="#1d1d1f" stroke-width="1" opacity="{{c.dotOp}}"/>
+              </svg>
+            </sc-if>
+            <sc-if value="{{c.isFader}}" hint-placeholder-val="{{ false }}">
+              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="28" y="4" width="8" height="56" rx="4" fill="#1d1d1f"/>
+                <rect x="14" y="{{c.fy}}" width="36" height="14" rx="4" fill="{{c.cap}}" stroke="{{c.ring}}" stroke-width="3"/>
+                <circle cx="52" cy="{{c.fy}}" r="5" fill="#ff8d28" stroke="#1d1d1f" stroke-width="1" opacity="{{c.dotOp}}"/>
+              </svg>
+            </sc-if>
+            <sc-if value="{{c.isBtn}}" hint-placeholder-val="{{ false }}">
+              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="8" y="20" width="48" height="24" rx="12" fill="{{c.fill}}" stroke="{{c.ring}}" stroke-width="3"/>
+                <circle cx="{{c.bx}}" cy="32" r="9" fill="#ffffff"/>
+                <circle cx="56" cy="20" r="5" fill="#ff8d28" stroke="#1d1d1f" stroke-width="1" opacity="{{c.dotOp}}"/>
+              </svg>
+            </sc-if>
+            <sc-if value="{{c.isLamp}}" hint-placeholder-val="{{ false }}">
+              <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="12" fill="{{c.lampFill}}" stroke="#48484a" stroke-width="2"/></svg>
+            </sc-if>
+            <div style="font-size:15px;line-height:20px;font-weight:600;text-align:center">{{c.name}}</div>
+            <div style="font-size:13px;line-height:16px;color:var(--label2);text-align:center">{{c.val}}</div>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+
+  <nav aria-label="하단 메뉴" style="position:absolute;left:12px;right:12px;bottom:12px;height:56px;border-radius:28px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 0 0 0.5px var(--sep);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 4px">
+    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px">홈</button>
+    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px">배선</button>
+    <button style="min-height:48px;border:0;border-radius:24px;background:var(--fill3);color:var(--accent);font-size:11px;line-height:13px;font-weight:600">패널</button>
+    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px">점검</button>
+    <button style="min-height:48px;border:0;background:transparent;color:var(--label2);font-size:11px;line-height:13px">운영</button>
+  </nav>
+
+  <sc-if value="{{open}}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4)"></div>
+    <section role="dialog" aria-modal="true" aria-label="{{sel.name}}" style="position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:18px 18px 0 0;padding:8px 16px 24px;display:flex;flex-direction:column;gap:12px">
+      <div style="width:36px;height:5px;border-radius:3px;background:var(--fill);align-self:center"></div>
+      <div style="font-size:20px;line-height:25px;font-weight:600;text-align:center">{{sel.name}}</div>
+      <sc-if value="{{sel.isCont}}" hint-placeholder-val="{{ true }}">
+        <input type="range" min="0" max="100" step="1" value="{{sel.v100}}" onInput="{{onSlide}}" aria-label="{{sel.name}} 값" style="width:100%;min-height:44px;accent-color:#0066cc;margin:0">
+      </sc-if>
+      <sc-if value="{{sel.isBtn}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;min-height:56px;padding:0 16px;background:var(--row);border-radius:18px">
+          <div style="flex:1">{{sel.name}}</div>
+          <button role="switch" aria-checked="{{sel.on}}" aria-label="{{sel.name}} 켜기" onClick="{{onToggle}}" style="position:relative;width:51px;height:31px;border:0;border-radius:16px;background:{{sel.swBg}};padding:0">
+            <span style="position:absolute;top:2px;left:{{sel.swLeft}}px;width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></span>
+          </button>
+        </div>
+      </sc-if>
+      <div style="background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate">
+        <div style="display:flex;min-height:44px;align-items:center;padding:0 16px"><span style="flex:1">시계 방향 위치</span><span style="font-weight:600">{{sel.hour}}</span></div>
+        <div style="display:flex;min-height:44px;align-items:center;padding:0 16px;border-top:0.5px solid var(--sep)"><span style="flex:1">눈금</span><span style="font-weight:600">{{sel.scale}}</span></div>
+        <div style="display:flex;min-height:44px;align-items:center;padding:0 16px;border-top:0.5px solid var(--sep)"><span style="flex:1">아날로그 값 (대략)</span><span style="font-weight:600;text-align:right">{{sel.db}}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:15px;line-height:20px">
+        <span style="padding:2px 10px;border-radius:12px;background:{{sel.badgeBg}};font-weight:600">{{sel.badge}}</span>
+        <span style="color:var(--label2)">{{sel.hint}}</span>
+      </div>
+      <button onClick="{{markSynced}}" style="min-height:50px;border:0;border-radius:25px;background:var(--accent);color:#fff;font-size:17px;font-weight:600">실물에 맞췄어요</button>
+      <button onClick="{{close}}" style="min-height:44px;border:0;background:transparent;color:var(--accent);font-size:17px">닫기</button>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.build();
+const vals = {};
+Object.keys(this.devs).forEach((k) => {
+this.devs[k].secs.forEach((s) => { (s.items || []).forEach((it) => { vals[it.id] = it.def; }); });
+});
+this.state = { dev: 'l4', sec: 'ch1', sel: null, vals: vals, synced: {} };
+}
+build() {
+const WH = '#f5f5f7', BK = '#1d1d1f', RD = '#b3243b', BL = '#2f5fa8', YL = '#f2c200', SV = '#d1d1d6';
+const K = (id, name, kind, def, cap) => ({ id: id, name: name, type: 'knob', kind: kind, def: def, cap: cap || SV });
+const F = (id, name, kind, def, cap) => ({ id: id, name: name, type: 'fader', kind: kind, def: def, cap: cap || WH });
+const B = (id, name, kind, def) => ({ id: id, name: name, type: 'button', kind: kind, def: def });
+const L = (id, name, on) => ({ id: id, name: name, type: 'lamp', kind: 'lamp', def: on ? 1 : 0 });
+const J = (name, conn, link, k) => ({ name: name, conn: conn, link: link || '비어 있음', k: k || 'ts' });
+const l4 = [
+{ id: 'ch1', label: 'CH1', jacks: [J('CH1 XLR (마이크)', 'XLR 입력'), J('CH1 LINE', '5.5 TS 입력', 'CD 왼쪽 (RCA→TS 어댑터)')],
+items: [K('l4g1', 'CH1 GAIN', 'gain', 0.4, BK), K('l4h1', 'CH1 HIGH', 'tone', 0.5, WH), K('l4o1', 'CH1 LOW', 'tone', 0.5, WH), K('l4e1', 'CH1 EFF', 'level', 0, YL), K('l4v1', 'CH1 LEVEL', 'level', 0.6, RD), L('l4p1', 'CH1 PEAK', false)] },
+{ id: 'ch2', label: 'CH2', jacks: [J('CH2 XLR (마이크)', 'XLR 입력'), J('CH2 LINE', '5.5 TS 입력', 'CD 오른쪽 (RCA→TS 어댑터)')],
+items: [K('l4g2', 'CH2 GAIN', 'gain', 0.4, BK), K('l4h2', 'CH2 HIGH', 'tone', 0.5, WH), K('l4o2', 'CH2 LOW', 'tone', 0.5, WH), K('l4e2', 'CH2 EFF', 'level', 0, YL), K('l4v2', 'CH2 LEVEL', 'level', 0.6, RD), L('l4p2', 'CH2 PEAK', false)] },
+{ id: 'ch34', label: 'CH3/4', jacks: [J('TAPE L', 'RCA 입력', 'PC 왼쪽 (AUX→RCA)', 'rcaw'), J('TAPE R', 'RCA 입력', 'PC 오른쪽 (AUX→RCA)', 'rcar')],
+items: [K('l4v34', '3/4 레벨', 'level', 0.6, RD), K('l4u', 'USB VOL', 'level', 0.5, RD), K('l4r', 'RETURN', 'level', 0, YL), K('l4ec', 'ECHO', 'level', 0, YL), K('l4ev', 'EFFECT VOL', 'level', 0.5, YL), B('l4ph', '+48V 팬텀', 'phantom', 0)] },
+{ id: 'main', label: 'MAIN', jacks: [J('MAIN OUT L', '5.5 TS 출력', 'DFX-12 CD/TAPE IN L'), J('MAIN OUT R', '5.5 TS 출력', 'DFX-12 CD/TAPE IN R'), J('PHONE', '5.5 출력')],
+items: [K('l4ml', 'MAIN L', 'level', 0.7, RD), K('l4mr', 'MAIN R', 'level', 0.7, RD)] },
+{ id: 'eq', label: '그래픽 EQ', items: ['63', '160', '400', '1K', '2.5K', '6.3K', '16K'].map((f, i) => F('l4q' + i, f + ' Hz', 'eq', 0.5, WH)) },
+{ id: 'usb', label: 'USB 플레이어', items: [B('l4b1', '이전 곡', 'sw', 0), B('l4b2', '재생·일시정지', 'sw', 0), B('l4b3', '정지', 'sw', 0), B('l4b4', '다음 곡', 'sw', 0)] }
+];
+const ag = [
+{ id: 'ch1', label: 'CH1', jacks: [J('CH1 XLR', 'XLR 입력', 'DI BOX 출력 1 (베이스)')],
+items: [B('agph', '+48V 팬텀', 'phantom', 1), B('agp1', 'CH1 PAD', 'sw', 0), K('agg1', 'CH1 GAIN', 'gain', 0.4, BK), B('agc1', 'COMP/EQ', 'sw', 0), B('age1', 'CH1 EFFECT', 'sw', 0), K('agl1', 'CH1 MIC 레벨', 'level', 0.6, SV), L('agk1', 'CH1 PEAK', false)] },
+{ id: 'ch2', label: 'CH2', jacks: [J('CH2 XLR', 'XLR 입력', 'DI BOX 출력 2 (통기타)')],
+items: [B('agt', 'CH2 GUITAR', 'sw', 0), B('agp2', 'CH2 PAD', 'sw', 0), K('agg2', 'CH2 GAIN', 'gain', 0.4, BK), B('aga', 'AMP SIM', 'sw', 0), B('age2', 'CH2 EFFECT', 'sw', 0), K('agl2', 'CH2 MIC/GTR 레벨', 'level', 0.6, SV), L('agk2', 'CH2 PEAK', false)] },
+{ id: 'ch34', label: 'CH3/4', jacks: [J('3/4 L/MONO', '5.5 TS 입력', 'Alesis 드럼 (예정)'), J('3/4 R', '5.5 TS 입력')],
+items: [B('agh3', '3/4 GAIN HIGH/LOW', 'sw', 0), K('agl3', '3/4 드럼 레벨', 'level', 0.6, SV)] },
+{ id: 'ch56', label: 'CH5/6', jacks: [J('5/6 L', 'RCA 입력', '키보드 왼쪽', 'rcaw'), J('5/6 R', 'RCA 입력', '키보드 오른쪽', 'rcar')],
+items: [B('agh5', '5/6 GAIN HIGH/LOW', 'sw', 0), K('agl5', '5/6 키보드 레벨', 'level', 0.6, SV), B('aglb', 'LOOPBACK', 'sw', 0), K('aglu', 'USB 레벨', 'level', 0, SV)] },
+{ id: 'out', label: '출력·모니터', jacks: [J('STEREO OUT L', '5.5 TS 출력', 'DFX-12 CH9/10 L'), J('STEREO OUT R', '5.5 TS 출력', 'DFX-12 CH9/10 R'), J('MON OUT L', '5.5 출력'), J('MON OUT R', '5.5 출력'), J('PHONES', '5.5 출력'), J('FOOT SW', '5.5 입력'), J('HEADSET CH1 MIC', '헤드셋 입력'), J('HEADSET PHONES', '헤드셋 출력'), J('AUX', '입력')],
+items: [B('agmm', 'MONITOR MUTE', 'mute', 0), K('agms', 'MONITOR SPEAKER', 'level', 0.5, SV), K('agmp', 'MONITOR PHONES', 'level', 0.3, SV), B('agpw', 'POWER', 'sw', 1), L('agpl', 'PEAK L', false), L('agpr', 'PEAK R', false), L('agsl', 'SIG L', true), L('agsr', 'SIG R', true)] }
+];
+const names = ['1', '2', '3', '4', '5/6', '7/8', '9/10', '11/12'];
+const links = { 0: '강대상1 마이크', 1: '기도석 마이크', 2: '아래강대상 마이크', 3: '매립형 마이크', 5: '무선 마이크 수신기' };
+const dfx = names.map((n, i) => {
+const jacks = [];
+if (i < 6) jacks.push(J('CH' + n + ' MIC', 'XLR 입력', links[i]));
+if (i < 4) { jacks.push(J('CH' + n + ' LINE IN', '5.5 입력')); jacks.push(J('CH' + n + ' INSERT', '5.5 TRS')); }
+else { jacks.push(J('CH' + n + ' L(MONO)', '5.5 입력', i === 6 ? 'AG06 STEREO OUT L' : null)); jacks.push(J('CH' + n + ' R', '5.5 입력', i === 6 ? 'AG06 STEREO OUT R' : null)); }
+const it = [K('dg' + i, 'GAIN', 'gain', 0.3, WH)];
+if (i < 4) it.push(B('dl' + i, 'LOW CUT 75Hz', 'sw', 0));
+it.push(K('dh' + i, 'EQ HI', 'tone', 0.5, BL), K('do' + i, 'EQ LOW', 'tone', 0.5, BL), K('da' + i, 'AUX 1 MON', 'level', 0, RD), K('db' + i, 'AUX 2 EFX', 'level', 0, RD), K('dp' + i, 'PAN', 'pan', 0.5, BK), B('dm' + i, 'MUTE', 'mute', 0), F('df' + i, '페이더', 'fader', 0, WH));
+return { id: 's' + i, label: 'CH' + n, jacks: jacks, items: it };
+});
+dfx.push({ id: 'mst', label: '마스터·이펙트', items: [].concat(['60', '250', '1K', '3.5K', '12K'].map((f, i) => F('dq' + i, 'EQ ' + f + 'Hz', 'eq', 0.5, WH)), [B('dme', 'EQ MAIN/AUX1', 'sw', 0), B('dby', 'EQ BYPASS', 'sw', 0), K('dfx', '이펙트 선택', 'fx', 0.5, BK), K('ds1', 'AUX1/MON SEND', 'level', 0.5, RD), K('ds2', 'AUX2/EFX SEND', 'level', 0.5, RD), K('dfa', '모니터로 보내는 이펙트', 'level', 0, RD), B('dvo', 'VOCAL ELIMINATOR', 'sw', 0), B('dbr', 'BREAK SWITCH', 'sw', 0)]) });
+dfx.push({ id: 'ret', label: '리턴·메인', items: [F('dr1', 'AUX1 RETURN', 'fader', 0, RD), B('dm8', 'AUX1 RET MUTE', 'mute', 0), F('dr2', 'AUX2/EFX RETURN', 'fader', 0, RD), B('dm9', 'AUX2 RET MUTE', 'mute', 0), F('dr3', 'CD/TAPE RETURN', 'fader', 0, WH), B('dm10', 'TAPE RET MUTE', 'mute', 0), F('dml', 'MAIN MIX L', 'fader', 0, BL), F('dmr', 'MAIN MIX R', 'fader', 0, BL), K('dpn', 'PHONES 레벨', 'level', 0.3, BK), B('dpw', '+48V 팬텀', 'phantom', 0)] });
+dfx.push({ id: 'io', label: '입출력 단자', jacks: [J('CD/TAPE IN L', 'RCA 입력', 'L4 MAIN OUT L', 'rcaw'), J('CD/TAPE IN R', 'RCA 입력', 'L4 MAIN OUT R', 'rcar'), J('TAPE OUT L', 'RCA 출력', null, 'rcaw'), J('TAPE OUT R', 'RCA 출력', null, 'rcar'), J('STEREO AUX RETURN 1 L', '5.5 입력'), J('STEREO AUX RETURN 1 R', '5.5 입력'), J('STEREO AUX RETURN 2 L', '5.5 입력'), J('STEREO AUX RETURN 2 R', '5.5 입력'), J('AUX SEND 1 MON', '5.5 출력'), J('AUX SEND 2 EFX', '5.5 출력'), J('EFX FOOT SWITCH', '5.5 입력'), J('MAIN OUT LEFT', 'XLR 출력', 'QSC 앰프', 'xlr'), J('MAIN OUT RIGHT', 'XLR 출력', 'QSC 앰프', 'xlr'), J('MAIN OUT L 밸런스(5.5)', '5.5 출력'), J('MAIN OUT R 밸런스(5.5)', '5.5 출력'), J('PHONES', '5.5 출력', 'MPS1200 서브 앰프')], items: [] });
+this.devs = { l4: { label: 'L4', secs: l4 }, dfx: { label: 'DFX-12', secs: dfx }, ag: { label: 'AG06', secs: ag } };
+}
+fxNames() { return ['SM. ROOM', 'MD. PLATE', 'LG. PLATE', 'MD. HALL', 'LG. HALL', 'CATHEDRAL', 'GATE', 'REVERB', 'DELAY 1', 'DELAY 2', 'DELAY 3', 'DELAY 4', 'CHORUS', 'FLANGE', 'PHASER', 'SPRING']; }
+fmt(it, v) {
+const ang = -135 + 270 * v;
+const h = (12 + ang / 30) % 12;
+const hh = Math.floor(h) || 12;
+const mm = Math.round((h - Math.floor(h)) * 60);
+const hour = (it.type === 'knob') ? (hh + '시' + (mm ? ' ' + mm + '분' : '')) : '-';
+const scale = (it.type === 'knob' && it.kind !== 'fx') ? (v * 10).toFixed(1) : '-';
+let db = '';
+if (it.type === 'button' || it.type === 'lamp') db = v ? 'ON' : 'OFF';
+else if (it.kind === 'gain') db = '약 ' + (v * 50).toFixed(0) + ' dB';
+else if (it.kind === 'tone') db = (-15 + 30 * v).toFixed(0) + ' dB';
+else if (it.kind === 'eq') db = (-12 + 24 * v).toFixed(0) + ' dB';
+else if (it.kind === 'pan') db = v === 0.5 ? '중앙' : ((v < 0.5 ? '왼쪽 ' : '오른쪽 ') + Math.round(Math.abs(v - 0.5) * 200) + '%');
+else if (it.kind === 'fader') db = v < 0.03 ? '-∞' : ((v - 0.75) * 48).toFixed(0) + ' dB';
+else if (it.kind === 'fx') db = this.fxNames()[Math.round(v * 15)];
+else db = v < 0.03 ? '-∞ (꺼짐)' : (v * 10).toFixed(1) + ' / 10';
+return { hour: hour, scale: scale, db: db };
+}
+all() { const m = {}; Object.keys(this.devs).forEach((k) => { this.devs[k].secs.forEach((s) => { (s.items || []).forEach((it) => { m[it.id] = it; }); }); }); return m; }
+renderVals() {
+const s = this.state;
+const self = this;
+const dev = this.devs[s.dev];
+let sec = dev.secs.filter((x) => x.id === s.sec)[0];
+if (!sec) sec = dev.secs[0];
+const dot = (id) => (s.synced[id] === false ? 1 : 0);
+const devs = Object.keys(this.devs).map((k) => ({ label: this.devs[k].label, on: k === s.dev, bg: k === s.dev ? '#ffffff' : 'transparent', fw: k === s.dev ? 600 : 400, sh: k === s.dev ? '0 1px 3px rgba(0,0,0,0.18)' : 'none', pick: () => self.setState({ dev: k, sec: self.devs[k].secs[0].id, sel: null }) }));
+const secs = dev.secs.map((x) => ({ label: x.label, on: x.id === sec.id, bg: x.id === sec.id ? '#0066cc' : '#7676801f', fg: x.id === sec.id ? '#ffffff' : '#1d1d1f', pick: () => self.setState({ sec: x.id }) }));
+const jacks = (sec.jacks || []).map((j, i) => {
+const o = { name: j.name, conn: j.conn, link: j.link, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', r: 9, hr: 4, fill: '#1d1d1f' };
+if (j.k === 'xlr') { o.r = 12; o.hr = 7; }
+if (j.k === 'rcaw') { o.fill = '#f5f5f7'; o.hr = 3; }
+if (j.k === 'rcar') { o.fill = '#ff383c'; o.hr = 3; }
+return o;
+});
+const cells = (sec.items || []).map((it) => {
+const val = s.vals[it.id];
+const f = self.fmt(it, val);
+const ang = -135 + 270 * val;
+const rad = (ang - 90) * Math.PI / 180;
+const on = val === 1;
+const isSel = s.sel === it.id;
+return {
+aria: it.name, name: it.name, bg: isSel ? '#0066cc1f' : 'transparent',
+val: it.type === 'knob' ? (f.hour + ' · ' + f.scale) : (it.type === 'fader' ? f.db : (on ? 'ON' : 'OFF')),
+isKnob: it.type === 'knob', isFader: it.type === 'fader', isBtn: it.type === 'button', isLamp: it.type === 'lamp',
+ring: isSel ? '#0066cc' : 'transparent', cap: it.cap || '#d1d1d6',
+ptr: (it.cap === '#1d1d1f' || it.cap === '#2f5fa8' || it.cap === '#b3243b') ? '#ffffff' : '#1d1d1f',
+tf: 'rotate(' + ang + ' 32 32)',
+dx: 32 + 22 * Math.cos(rad), dy: 32 + 22 * Math.sin(rad), dotOp: dot(it.id),
+fy: 46 - val * 40,
+fill: on ? (it.kind === 'mute' || it.kind === 'phantom' ? '#ff383c' : '#34c759') : '#c7c7cc', bx: on ? 44 : 20,
+lampFill: on ? '#34c759' : '#c7c7cc',
+pick: it.type === 'lamp' ? () => {} : () => self.setState({ sel: it.id })
+};
+});
+const all = this.all();
+const sel = s.sel ? all[s.sel] : null;
+let selOut = { name: '', v100: 0, hour: '', scale: '', db: '', isBtn: false, isCont: true, on: false, swBg: '#78788052', swLeft: 2, badge: '', badgeBg: '#34c75929', hint: '' };
+if (sel) {
+const v = s.vals[sel.id];
+const f = this.fmt(sel, v);
+const synced = s.synced[sel.id] !== false;
+selOut = { name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db, isBtn: sel.type === 'button', isCont: sel.type !== 'button', on: v === 1, swBg: v === 1 ? '#34c759' : '#78788052', swLeft: v === 1 ? 22 : 2,
+badge: synced ? '실물과 일치' : '실물 확인 필요', badgeBg: synced ? '#34c75929' : '#ff8d2829', hint: synced ? '' : '실물을 위 값으로 돌려 주세요' };
+}
+return {
+devs: devs, secs: secs, jacks: jacks, cells: cells,
+hasJacks: jacks.length > 0, hasCells: cells.length > 0,
+open: !!s.sel, sel: selOut,
+onSlide: (e) => {
+let nv = Number(e.target.value) / 100;
+const it = all[self.state.sel];
+if (it.kind === 'fx') nv = Math.round(nv * 15) / 15;
+const vals = Object.assign({}, self.state.vals);
+vals[it.id] = nv;
+const sy = Object.assign({}, self.state.synced);
+sy[it.id] = false;
+self.setState({ vals: vals, synced: sy });
+},
+onToggle: () => {
+const id = self.state.sel;
+const vals = Object.assign({}, self.state.vals);
+vals[id] = vals[id] === 1 ? 0 : 1;
+const sy = Object.assign({}, self.state.synced);
+sy[id] = false;
+self.setState({ vals: vals, synced: sy });
+},
+markSynced: () => {
+const sy = Object.assign({}, self.state.synced);
+sy[self.state.sel] = true;
+self.setState({ synced: sy });
+},
+close: () => self.setState({ sel: null })
+};
+}
+}
+</script>
+</body>
+</html>

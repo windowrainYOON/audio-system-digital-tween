@@ -1,0 +1,98 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "MobAg06.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "M4. 상세 · AG06",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "MobDfx.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "M3. 상세 · DFX-12",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "MobL4.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "M2. 상세 · L4",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "MobOverview.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "M1. 간략 보기 (전체 장비)",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "MobWiring.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "M5. 배선·케이블 편집",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "Mobile.dc.html": {
+      "h": 844,
+      "title": "M6. 운영자 세팅 안내",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    },
+    "System.dc.html": {
+      "h": 1400,
+      "is_interactive": true,
+      "title": "M7. 전체 배선도 (실제 믹서 그림 · 확대/축소)",
+      "w": 1500,
+      "x": 0,
+      "y": 1000
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-17T09:00:00Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/7sAtip8cTeL8WiRb1EVKc7",
+      "copiedAt": "2026-11-17T01:50:00Z",
+      "namespace": "apple-hig",
+      "title": "Apple HIG",
+      "version": "1794670712-ace5"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "음향 디지털 트윈 시안 (모바일 웹앱 · 실물 믹서 기반)",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "MobOverview.dc.html",
+    "MobL4.dc.html",
+    "MobDfx.dc.html",
+    "MobAg06.dc.html",
+    "MobWiring.dc.html",
+    "Mobile.dc.html",
+    "System.dc.html"
+  ],
+  "pages": [],
+  "title": "음향 디지털 트윈 시안"
+}
