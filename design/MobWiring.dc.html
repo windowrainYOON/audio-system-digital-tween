@@ -163,14 +163,14 @@ button{font-family:inherit}
         </sc-if>
 
         <div>
-          <div style="font-size:13px;line-height:18px;color:var(--label2);padding:0 16px 6px;text-transform:uppercase">연결할 단자 ({{dia.type}} 입력)</div>
+          <div style="font-size:13px;line-height:18px;color:var(--label2);padding:0 16px 6px;text-transform:uppercase">연결할 단자 (모든 입력 · {{dia.type}} 케이블)</div>
           <sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
             <div style="margin-bottom:12px;background:var(--row);border-radius:18px;overflow:hidden;isolation:isolate">
               <div style="padding:10px 16px 4px;font-size:13px;line-height:18px;font-weight:600;color:var(--label2)">{{o.dev}}</div>
               <sc-for list="{{o.items}}" as="i" hint-placeholder-count="3">
                 <button onClick="{{i.pick}}" aria-disabled="{{i.dis}}" style="width:100%;min-height:52px;padding:6px 16px;border:0;border-top:0.5px solid rgba(60,60,67,0.29);background:transparent;display:flex;align-items:center;gap:12px;text-align:left;color:var(--label);opacity:{{i.op}}">
                   <span style="flex:1;min-width:0">
-                    <span style="display:block">{{i.name}}</span>
+                    <span style="display:block">{{i.name}}<sc-if value="{{i.diff}}" hint-placeholder-val="{{ false }}"><span style="margin-left:6px;padding:1px 8px;border-radius:10px;background:#ff8d2829;color:#8a4b00;font-size:12px;line-height:18px;font-weight:600;vertical-align:2px">{{i.kind}}</span></sc-if></span>
                     <span style="display:block;font-size:13px;line-height:16px;color:var(--label2)">{{i.sub}}</span>
                   </span>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:{{i.ck}}"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
@@ -240,7 +240,7 @@ button{font-family:inherit}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;border-top:0.5px solid var(--sep)">
         <button onClick="{{askNo}}" style="min-height:44px;border:0;background:transparent;color:var(--accent);font-size:17px">취소</button>
-        <button onClick="{{askYes}}" style="min-height:44px;border:0;border-left:0.5px solid var(--sep);background:transparent;color:var(--accent);font-size:17px;font-weight:600">대체</button>
+        <button onClick="{{askYes}}" style="min-height:44px;border:0;border-left:0.5px solid var(--sep);background:transparent;color:var(--accent);font-size:17px;font-weight:600">{{ask.ok}}</button>
       </div>
     </section>
   </sc-if>
@@ -328,6 +328,8 @@ c17: [TSm, RCm], c18: [TSm, RCm],
 c19: [XF, XM], c20: [XF, XM],
 c21: [S('5.5mm TS', '수', '모노 (언밸런스)', 'PHONES 잭은 스테레오라서 TS 플러그를 꽂으면 한쪽 채널만 나올 수 있어요. 소리가 약하면 확인해 보세요.'), TSm]
 };
+this.pairL = ['dx9l', 'dx11l', 'ag3l', 'l4c1', 'l4tl', 'dxtl', 'qsl', 'ag5l'];
+this.pairName = { dx9l: 'CH9/10 (L·R)', dx11l: 'CH11/12 (L·R)', ag3l: '3/4 (L·R)', l4c1: 'CH1·CH2 LINE (L·R)', l4tl: 'TAPE (L·R)', dxtl: 'CD/TAPE IN (L·R)', qsl: '입력 L·R (XLR)', ag5l: '5/6 (L·R)' };
 this.jackKind = { xlr: 'XLR', ts: '5.5mm 단자', rca: 'RCA 단자' };
 const cur = {};
 this.cables.forEach((c) => { cur[c.id] = c.to; });
@@ -362,6 +364,19 @@ if (withPartner) {
 const pc = this.pairC[cid], pj = this.pairJ[jid];
 if (pc && pj && !this.cables.filter((x) => x.id !== pc && x.id !== cid && next[x.id] === pj).length) next[pc] = pj;
 }
+return next;
+}
+movePair(cid, jl) {
+// 2026-11-18 사용자 결정: L·R 스테레오 단자는 한 단자로 다룬다. 케이블은 제 쪽(L/R)에, 짝 선은 반대쪽에 꽂고, 두 단자에 있던 다른 케이블은 뽑는다.
+const c = this.cables.filter((x) => x.id === cid)[0];
+const jr = this.pairJ[jl];
+const isR = this.pairL.indexOf(c.orig) < 0 && !!this.pairJ[c.orig];
+const mine = isR ? jr : jl, other = isR ? jl : jr;
+const pc = this.pairC[cid];
+const next = Object.assign({}, this.state.cur);
+this.cables.forEach((x) => { if (x.id !== cid && x.id !== pc && (next[x.id] === jl || next[x.id] === jr)) next[x.id] = null; });
+next[cid] = mine;
+if (pc) next[pc] = other;
 return next;
 }
 lab(id) { if (!id) return '뽑혀 있음 (연결 안 됨)'; const j = this.jk(id); return j.dev + ' ' + j.name; }
@@ -417,14 +432,31 @@ const pcab = this.cables.filter((x) => x.id === pcid)[0];
 rec = { show: true, text: pcab.from + ' 선도 ' + jlab(pj) + '로 옮기면 L·R 짝이 맞아요.', go: () => { const nx = Object.assign({}, self.state.cur); nx[pcid] = pj; self.commit(nx, {}); } };
 }
 const devs = [];
-this.jacks.filter((j) => j.cls === c.cls).forEach((j) => { if (devs.indexOf(j.dev) < 0) devs.push(j.dev); });
+this.jacks.forEach((j) => { if (devs.indexOf(j.dev) < 0) devs.push(j.dev); });
+// 2026-11-18 사용자 결정: 꽂을 수 있는 모든 입력 단자를 보여 주고, 종류가 다른 단자는 고를 때 알림 팝업을 한 번만 띄운다
 opts = devs.map((dv) => ({
 dev: dv,
-items: this.jacks.filter((j) => j.cls === c.cls && j.dev === dv).map((j) => {
+items: this.jacks.filter((j) => j.dev === dv && !(this.pairJ[j.id] && this.pairL.indexOf(j.id) < 0)).map((j) => {
+const diff = j.cls !== c.cls;
+if (this.pairJ[j.id]) {
+const jr = this.pairJ[j.id], pname = this.pairName[j.id];
+const pcab = this.cables.filter((x) => x.id === this.pairC[c.id])[0];
+const users = this.cables.filter((x) => x.id !== c.id && (!pcab || x.id !== pcab.id) && (s.cur[x.id] === j.id || s.cur[x.id] === jr));
+const uname = users.map((x) => x.from).join(', ');
+const here = s.cur[c.id] === j.id || s.cur[c.id] === jr;
+const mate = pcab ? ' · 짝 선(' + pcab.from + ')도 함께 옮겨요' : '';
+const tst = c.from + (pcab ? ' L·R' : '') + ' → ' + pname + (users.length ? ' · ' + uname + ' 뽑힘' : '');
+const toast = diff ? tst + ' · 어댑터 필요' : tst;
+const go = () => self.commit(self.movePair(c.id, j.id), { draft: j.id });
+const ask = (o) => () => self.setState({ ask: Object.assign({ cid: c.id, jid: j.id, partner: false, pair: true, toast: toast }, o) });
+if (diff) return { name: pname, diff: true, kind: '종류 다름 · ' + self.jackKind[j.cls], sub: (users.length ? '지금 꽂힘: ' + uname + ' · ' : '') + '어댑터 필요', dis: false, op: 1, ck: 0, pick: ask({ ok: '그래도 꽂기', title: '단자 종류가 달라요', text: c.type + ' 케이블을 ' + j.dev.replace(/^(Mackie|Yamaha|MiCWL) /, '') + ' ' + pname + '(' + self.jackKind[j.cls] + ')에 꽂으려면: ' + (self.advice[c.cls + '>' + j.cls] || '단자 종류가 달라요.') + (pcab ? ' 짝 선 ' + pcab.from + '도 함께 옮겨요.' : '') + (users.length ? ' 지금 꽂힌 ' + uname + '은(는) 뽑혀요.' : '') }) };
+return { name: pname, diff: false, kind: '', sub: here ? '현재 연결' : (users.length ? '지금 꽂힘: ' + uname + ' · 고르면 대체돼요' : '비어 있음' + mate), dis: false, op: 1, ck: here ? 1 : 0, pick: here ? () => {} : (users.length ? ask({ ok: '대체', title: pname + '에 꽂을까요?', text: (pcab ? c.from + '과(와) 짝 선 ' + pcab.from + '을(를) 함께 꽂아요. ' : '') + '지금 꽂힌 ' + uname + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.' }) : go) };
+}
 const user = this.cables.filter((x) => s.cur[x.id] === j.id && x.id !== c.id)[0];
 const dis = false;
-const isRec = !dis && j.id !== s.cur[c.id] && j.dev === curJ.dev && !self.cables.filter((x) => s.cur[x.id] === j.id).length && self.jacks.filter((z) => z.cls === c.cls && z.dev === j.dev && !self.cables.filter((x) => s.cur[x.id] === z.id).length)[0].id === j.id;
-return { name: j.name, sub: user ? '지금 꽂힘: ' + user.from + ' · 고르면 대체돼요' : (j.id === s.cur[c.id] ? '현재 연결' : (isRec ? '추천 · 같은 장비의 빈 단자' : '비어 있음')), dis: false, op: 1, ck: s.cur[c.id] === j.id ? 1 : 0, pick: j.id === s.cur[c.id] ? () => {} : (user ? () => self.setState({ ask: { cid: c.id, jid: j.id, partner: false, title: j.name + '에 꽂을까요?', text: '지금 꽂힌 ' + user.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + j.name + ' · ' + user.from + ' 뽑힘' } }) : () => self.commit(self.move(c.id, j.id, false), { draft: j.id })) };
+const isRec = !dis && !diff && j.id !== s.cur[c.id] && j.dev === curJ.dev && !self.cables.filter((x) => s.cur[x.id] === j.id).length && self.jacks.filter((z) => z.cls === c.cls && z.dev === j.dev && !self.cables.filter((x) => s.cur[x.id] === z.id).length)[0].id === j.id;
+if (diff) { const adv = self.advice[c.cls + '>' + j.cls] || '단자 종류가 달라요.'; return { name: j.name, diff: true, kind: '종류 다름 · ' + self.jackKind[j.cls], sub: (user ? '지금 꽂힘: ' + user.from + ' · ' : '') + '어댑터 필요', dis: false, op: 1, ck: 0, pick: () => self.setState({ ask: { cid: c.id, jid: j.id, partner: false, ok: '그래도 꽂기', title: '단자 종류가 달라요', text: c.type + ' 케이블을 ' + j.dev.replace(/^(Mackie|Yamaha|MiCWL) /, '') + ' ' + j.name + '(' + self.jackKind[j.cls] + ')에 꽂으려면: ' + adv + (user ? ' 지금 꽂힌 ' + user.from + '은(는) 뽑혀요.' : ''), toast: c.from + ' → ' + j.name + (user ? ' · ' + user.from + ' 뽑힘' : '') + ' · 어댑터 필요' } }) }; }
+return { name: j.name, diff: false, kind: '', sub: user ? '지금 꽂힘: ' + user.from + ' · 고르면 대체돼요' : (j.id === s.cur[c.id] ? '현재 연결' : (isRec ? '추천 · 같은 장비의 빈 단자' : '비어 있음')), dis: false, op: 1, ck: s.cur[c.id] === j.id ? 1 : 0, pick: j.id === s.cur[c.id] ? () => {} : (user ? () => self.setState({ ask: { cid: c.id, jid: j.id, partner: false, ok: '대체', title: j.name + '에 꽂을까요?', text: '지금 꽂힌 ' + user.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + j.name + ' · ' + user.from + ' 뽑힘' } }) : () => self.commit(self.move(c.id, j.id, false), { draft: j.id })) };
 })
 }));
 }
@@ -447,7 +479,7 @@ const occ = cb && cb.id !== c.id;
 const from = this.jk(s.cur[c.id]);
 const sub = here ? '현재 연결' : (!same ? '어댑터 필요 · ' + (this.advice[c.cls + '>' + jj.cls] || '단자 종류가 달라요.') + (occ ? ' · 고르면 ' + cb.from + ' 대신 꽂혀요' : '') : '지금 ' + where + (c.orig === s.jsel ? ' · 원래 이 단자에 연결하던 소스' : '') + (occ ? ' · 고르면 ' + cb.from + ' 대신 꽂혀요' : ''));
 const rec = same && !here && c.orig === s.jsel;
-return { name: c.from, sub: sub, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', op: 1, tag: rec ? 1 : 0, ck: here ? 1 : 0, pick: here ? () => {} : (occ ? () => self.setState({ ask: { cid: c.id, jid: s.jsel, partner: true, title: jj.name + '에 ' + c.from + '을(를) 꽂을까요?', text: '지금 꽂힌 ' + cb.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + jj.name + ' · ' + cb.from + ' 뽑힘' } }) : () => { self.commit(self.move(c.id, s.jsel, true), {}); }) };
+return { name: c.from, sub: sub, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', op: 1, tag: rec ? 1 : 0, ck: here ? 1 : 0, pick: here ? () => {} : (!same ? () => self.setState({ ask: { cid: c.id, jid: s.jsel, partner: false, ok: '그래도 꽂기', title: '단자 종류가 달라요', text: c.type + ' 케이블을 ' + jj.name + '(' + self.jackKind[jj.cls] + ')에 꽂으려면: ' + (self.advice[c.cls + '>' + jj.cls] || '단자 종류가 달라요.') + (occ ? ' 지금 꽂힌 ' + cb.from + '은(는) 뽑혀요.' : ''), toast: c.from + ' → ' + jj.name + (occ ? ' · ' + cb.from + ' 뽑힘' : '') + ' · 어댑터 필요' } }) : occ ? () => self.setState({ ask: { cid: c.id, jid: s.jsel, partner: true, ok: '대체', title: jj.name + '에 ' + c.from + '을(를) 꽂을까요?', text: '지금 꽂힌 ' + cb.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + jj.name + ' · ' + cb.from + ' 뽑힘' } }) : () => { self.commit(self.move(c.id, s.jsel, true), {}); }) };
 });
 const mover = this.cables.filter((c) => c.cls === jj.cls && s.cur[c.id] !== s.jsel).length;
 jt.hasInfo = true; jt.info = '소스를 고르면 바로 저장돼요. 이미 꽂힌 단자에 고르면 확인 후 원래 소스를 뽑고 대체해요. L·R 짝이 있으면 짝 선도 함께 옮겨요. 단자 종류가 다른 소스는 어댑터를 안내해요.';
@@ -468,8 +500,8 @@ const shut = (patch) => { self.setState({ closing: true }); clearTimeout(self.__
 return {
 sgroups: sgroups, tabSrc: s.tab === 'src',
 vchips: VIEWS.map((v) => ({ label: v[1], on: s.tab === v[0] ? 'true' : 'false', bg: s.tab === v[0] ? 'var(--accent)' : 'var(--fill3)', fg: s.tab === v[0] ? '#fff' : 'var(--label)', go: () => self.setState({ tab: v[0] }) })),
-askOpen: !!s.ask, ask: s.ask || { title: '', text: '' }, askNo: () => self.setState({ ask: null }),
-askYes: () => { const a = self.state.ask; if (!a) return; self.commit(self.move(a.cid, a.jid, a.partner), { ask: null, draft: self.state.sel ? a.jid : self.state.draft, toast: a.toast }); clearTimeout(self.__tt); self.__tt = setTimeout(() => self.setState({ toast: '' }), 5000); },
+askOpen: !!s.ask, ask: s.ask || { title: '', text: '', ok: '대체' }, askNo: () => self.setState({ ask: null }),
+askYes: () => { const a = self.state.ask; if (!a) return; self.commit(a.pair ? self.movePair(a.cid, a.jid) : self.move(a.cid, a.jid, a.partner), { ask: null, draft: self.state.sel ? a.jid : self.state.draft, toast: a.toast }); clearTimeout(self.__tt); self.__tt = setTimeout(() => self.setState({ toast: '' }), 5000); },
 toastOpen: !!s.toast, toast: s.toast,
 rec: rec, jgroups: jgroups, jt: jt, jopts: jopts, jopen: jopen, tabCable: s.tab === 'cable', tabJack: s.tab === 'jack',
 tabCableBg: s.tab === 'cable' ? '#ffffff' : 'transparent', tabJackBg: s.tab === 'jack' ? '#ffffff' : 'transparent',
