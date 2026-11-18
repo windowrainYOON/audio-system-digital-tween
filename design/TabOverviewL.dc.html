@@ -1587,6 +1587,16 @@ const WR = [
 ['c21', '', '#6B7280', '4 3', 323.8, 434.85, 'M323.8 434.85 H340 V752 H65 V760']
 ];
 const ORIG = { c25: 'dii1', c26: 'dii2', c6: 'agx1', c7: 'agx2', c8: 'ag3l', c9: 'ag3r', c10: 'ag5l', c27: 'ag5r', c13: 'l4c1', c14: 'l4c2', c15: 'l4tl', c16: 'l4tr', c23: 'wmi1', c24: 'wmi2', c3: 'dxm3', c4: 'dxm4', c22: 'dxm5', c1: 'dxm1', c2: 'dxm2', c5: 'dxm6', c11: 'dx9l', c12: 'dx9r', c17: 'dxtl', c18: 'dxtr', c19: 'qsl', c20: 'qsr', c21: 'mps' };
+// 바뀐 연결의 경로: 같은 구역이면 바로, 아니면 장비 사이 통로(x≈202, L4 쪽은 오른쪽 끝)로 돌려 그린다
+const route = (ix, sx, sy, t) => {
+const k = ix % 4, jx = t[0], jy = t[1], lane = t[2], ln = lane - k * 3;
+const zs = sy < 84 ? 'top' : (sy < 300 ? 'board' : (sy < 388 ? 'mid' : 'low'));
+const zt = lane < 100 ? 'top' : (lane < 400 ? 'mid' : 'amp');
+if (sy < lane && ((zs === 'top' && zt === 'top') || (zs === 'mid' && zt === 'mid'))) return 'M' + sx + ' ' + sy + ' V' + ln + ' H' + jx + ' V' + jy;
+const cx = zt === 'amp' || (sx >= 206 && jx >= 206) ? 356 - k * 2.5 : 202 - k * 2.5;
+const ya = zs === 'top' ? 70 - k * 3 : (zs === 'board' ? 46 - k * 3 : (zs === 'mid' ? 368 + k * 3 : 382 - k * 3));
+return 'M' + sx + ' ' + sy + ' V' + ya + ' H' + cx + ' V' + ln + ' H' + jx + ' V' + jy;
+};
 
 const W = '#fff3d6', R = '#ffd9d6', B = '#d8ecff';
 const I = {
@@ -1634,7 +1644,7 @@ const id = w[0], jid = cur(id), ch = jid !== ORIG[id];
 if (!jid || !J[jid]) { tags.push({ x: w[4], y: w[5] + 6, d: 'M' + (w[4] - 2) + ' ' + (w[5] + 4) + ' L' + (w[4] + 2) + ' ' + (w[5] + 8) + ' M' + (w[4] + 2) + ' ' + (w[5] + 4) + ' L' + (w[4] - 2) + ' ' + (w[5] + 8) }); return; }
 const t = J[jid];
 let d = w[6];
-if (ch) { const ln = t[2] - (ix % 4) * 3; d = w[5] < ln ? 'M' + w[4] + ' ' + w[5] + ' V' + ln + ' H' + t[0] + ' V' + t[1] : 'M' + w[4] + ' ' + w[5] + ' V' + (w[5] + 8) + ' H' + (356 - (ix % 4) * 3) + ' V' + ln + ' H' + t[0] + ' V' + t[1]; }
+if (ch) d = route(ix, w[4], w[5], t);
 wires.push({ d: d, color: w[2], dash: w[3] || 'none', under: ch ? '#ff9500' : '#fff', uw: ch ? 5.6 : 4.6, op: w[1] ? o(w[1]) : 1, jx: t[0], jy: t[1] });
 });
 

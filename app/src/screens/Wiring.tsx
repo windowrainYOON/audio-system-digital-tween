@@ -48,7 +48,18 @@ export function Wiring() {
       {v.hasChanges && (
         <div className="w-warn" role="status">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></svg>
-          <div><strong>{v.changeCount}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+          <div className="w-warn-body">
+            <div><strong>{v.changeCount}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+            {/* 2026-11-18 사용자 결정: 홈 배선도에 반영할지 여기서 고른다 (UI_GUIDE M5) */}
+            <div className="w-ap" role="group" aria-label="홈 배선도에 반영">
+              <span>홈 배선도에 반영</span>
+              <div className="seg">
+                <button aria-pressed={v.apOnP === 'true'} onClick={v.apOn}>반영</button>
+                <button aria-pressed={v.apOffP === 'true'} onClick={v.apOff}>반영 안 함</button>
+              </div>
+            </div>
+            <div className="w-ap-t">{v.apText}</div>
+          </div>
         </div>
       )}
       {note && (
@@ -173,14 +184,14 @@ export function Wiring() {
           )}
 
           <div>
-            <div className="w-group-h">연결할 단자 ({v.dia.type} 입력)</div>
+            <div className="w-group-h">연결할 단자 (모든 입력 · {v.dia.type} 케이블)</div>
             {v.opts.map((o: any) => (
               <div key={o.dev} className="w-opt">
                 <div className="dev">{o.dev}</div>
                 {o.items.map((it: any) => (
                   <button key={it.name} className="w-row opt" onClick={it.pick}
                     aria-pressed={it.ck === 1} style={{ opacity: it.op }}>
-                    <span className="w-txt"><span>{it.name}</span><span className="sub13">{it.sub}</span></span>
+                    <span className="w-txt"><span>{it.name}{it.diff && <span className="w-kind">{it.kind}</span>}</span><span className="sub13">{it.sub}</span></span>
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ opacity: it.ck }}>{CHECK}</svg>
                   </button>
                 ))}
@@ -230,7 +241,7 @@ export function Wiring() {
       )}
 
       {v.askOpen && (
-        <Confirm title={v.ask.title} text={v.ask.text} ok="대체" onCancel={v.askNo} onOk={v.askYes} />
+        <Confirm title={v.ask.title} text={v.ask.text} ok={v.ask.ok || '대체'} onCancel={v.askNo} onOk={v.askYes} />
       )}
     </div>
   );

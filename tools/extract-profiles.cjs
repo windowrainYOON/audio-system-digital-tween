@@ -137,41 +137,14 @@ function overview() {
   const cables = [], boxes = [];
   const cable = (key, d, color, dash, label, lx, ly) => cables.push({ key, d, color, dash: dash || '', label: label || '', lx, ly });
   const sbox = (key, x, y, w, h, title, sub, sub2, fill, stroke) => boxes.push({ key, x, y, w, h, title, sub: sub || '', sub2: sub2 || '', fill: fill || '#fff', stroke: stroke || '#9aa0a6' });
-  sbox('Bs', 0, 0, 56, 30, '베이스', 'DI BOX');
-  sbox('Kb', 60, 0, 42, 30, '키보드', 'TRS→TS×2');
-  sbox('Gt', 34, 38, 42, 30, '기타', 'DI BOX');
-  sbox('Dr', 84, 38, 38, 30, '드럼', 'TS×2→RCA', '', '#DDF5EE', '#0F766E');
-  const A1 = ag(110, 0)[0], A2 = ag(206, 0)[0], A3 = ag(305, 0)[0], A5 = ag(402, 0)[0];
-  cable('Bs', `M${A1} 30 V105.5`, '#444', 0, 'XLR', A1 + 2, 92);
-  cable('Gt', `M${A2} 68 V105.5`, '#444', 0, 'XLR', A2 + 2, 92);
-  cable('Kb', `M${A3} 30 V105.5`, '#6B7280', 0, 'TS ×2', A3 + 2, 50);
-  cable('Dr', `M${A5} 68 V106.5`, '#0F766E', 0, 'RCA', A5 + 2, 92);
-  sbox('Cd', 206, 0, 42, 40, 'CD', 'RCA→TS', '×2');
-  sbox('Pc', 250, 0, 52, 40, 'PC (OBS)', 'AUX→RCA');
-  const c1 = l4(160, 0)[0], c2 = l4(254, 0)[0], pw = l4(334, 0)[0], pr = l4(358, 0)[0];
-  cable('Cd', `M${c1} 40 V84`, '#B0B0B0'); cable('Cd', `M${c2} 40 V84`, '#B0B0B0');
-  cable('Pc', `M${pw} 40 V84`, '#9a9a9a'); cable('Pc', `M${pr} 40 V84`, '#E0332B');
-  sbox('Gl', 4, 302, 58, 24, '구즈넥 L');
-  sbox('M1', 66, 302, 40, 24, '매립형 1');
-  sbox('M3', 110, 302, 52, 24, '매립형 3');
-  sbox('Gr', 38, 332, 44, 24, '구즈넥 R');
-  sbox('M2', 88, 332, 44, 24, '매립형 2');
-  sbox('Wl', 137, 332, 31, 24, '무선');
-  const jt = DFy + (68 - 21) * DFs;
-  [['Gl', 103, 326], ['Gr', 165.5, 356], ['M1', 228, 326], ['M2', 290.5, 356], ['M3', 353, 326], ['Wl', 415.5, 356]]
-    .forEach(([k, cx, y0]) => cable(k, `M${df(cx, 0)[0]} ${y0} V${jt}`, '#444'));
-  const [ol, olY] = ag(494, 108), [or, orY] = ag(554, 108);
-  const [d1x, d1y] = df(478, 123), [d2x, d2y] = df(478, 158);
-  cable('CAg', `M${ol} ${olY - 4} V50 H196 V${d1y} H${d1x + 5.8}`, '#B45309', '4 3', '5.5 TS ×2 (L·R)', 150, 46);
-  cable('CAg', `M${or} ${orY - 4} V58 H173 V${d2y} H${d2x - 5.8}`, '#B45309', '4 3');
-  const [m1x, m1y] = l4(465, 362), [m2x, m2y] = l4(465, 410), [t1x, t1y] = df(596, 134), [t2x, t2y] = df(596, 160);
-  const rx = l4(530, 0)[0];
-  cable('CL4', `M${m1x} ${m1y - 4.4} V56 H354 V368 H222 V${t1y} H${t1x - 4.6}`, '#9a9a9a', 0, 'RCA ×2 → CD/TAPE IN', 226, 366);
-  cable('CL4', `M${m2x + 4.4} ${m2y} H${rx} V62 H348 V360 H217 V${t2y} H${t2x - 4.6}`, '#E0332B');
-  const [o1x, o1y] = df(752, 62), [o2x, o2y] = df(815, 62), [p1x, p1y] = df(815, 118);
-  cable('', `M${o1x} ${o1y - 8.4} V396 H352 V760`, '#6B7280');
-  cable('', `M${o2x} ${o2y - 8.4} V402 H346 V760`, '#6B7280');
-  cable('', `M${p1x + 5.8} ${p1y} H340 V752 H65 V760`, '#6B7280', '4 3', 'PHONES', 120, 749);
+  // 2026-11-18: 소스·중간 장비(DI BOX, 매립형 XLR 패널) 상자. 케이블은 배선 데이터(wires)로 앱이 그린다.
+  // [key, 제목, 부제, x, y, w, h, 누르면 소스 흐름]
+  [['Bs', '베이스', '', 0, -60, 30, 20, 1], ['Gt', '통기타', '', 34, -60, 30, 20, 1], ['Di', 'DI BOX', '2ch', 0, -30, 66, 22, 0],
+    ['Kb', '키보드', 'TRS→TS×2', 66, -60, 40, 30, 1], ['Dr', '드럼', 'TS×2→RCA', 110, -60, 40, 30, 1],
+    ['Cd', 'CD', 'RCA→TS ×2', 206, 0, 42, 40, 1], ['Pc', 'PC (OBS)', 'AUX→RCA', 250, 0, 52, 40, 1],
+    ['M1', '기도석', '마이크', 70, 300, 38, 24, 1], ['M2', '아래강대상', '마이크', 112, 300, 46, 24, 1], ['Wp', '매립형 XLR 패널', '입력 1·2·3 → 출력 1·2·3', 74, 336, 74, 22, 0],
+    ['Gl', '구즈넥 L', '', 0, 336, 34, 22, 1], ['Gr', '구즈넥 R', '', 36, 336, 34, 22, 1], ['Wl', '무선', '', 150, 336, 28, 22, 1]]
+    .forEach(([k, t, sub, x, y, w, h, c]) => { sbox(k, x, y, w, h, t, sub, '', k === 'Dr' ? '#DDF5EE' : c ? '#fff' : '#F4F3EE', k === 'Dr' ? '#0F766E' : '#9aa0a6'); boxes[boxes.length - 1].src = !!c; });
   sbox('Qsc', 240, 760, 118, 40, 'QSC 메인 앰프', 'MAIN OUT L·R');
   sbox('Mps', 0, 760, 130, 40, 'MPS1200 서브 앰프', 'PHONES → 입력');
   ['M268 800 V830', 'M330 800 V830', 'M65 800 V830', 'M268 866 V896', 'M330 866 V896'].forEach((d) => cable('', d, '#6B7280'));
@@ -189,8 +162,11 @@ function overview() {
   const body = src.slice(src.indexOf("const W = '"), src.indexOf('const sv = S['));
   const cleaned = body.replace(/const mk = [^\n]*\n/, '').replace(/const ms = [^\n]*\n/, '').replace(/const r = [^\n]*\n/, '');
   const data = new Function('s', 'self', cleaned + ';return {I, S, on, post, phones};')({}, {});
-  const H = 940;
-  const ov = { width: 358, height: H, boards, cables: cables.map((c) => ({ ...c, d: c.d.replace(/(\d+\.\d{3,})/g, (m) => String(num(+m))) })), boxes, badges, names, devices: data.I, sources: data.S, highlight: data.on, post: data.post, phones: data.phones };
+  const H = 1004;
+  // 케이블 좌표·원래 경로는 시안 MobOverview의 J·WR·ORIG를 그대로 가져온다
+  const wsrc = src.slice(src.indexOf('const J = {'), src.indexOf('// 바뀐 연결의 경로'));
+  const wm = new Function(wsrc + ';return {J, WR, ORIG};')();
+  const ov = { width: 358, height: H, top: -64, boards, jacks: wm.J, wires: wm.WR.map((w) => ({ id: w[0], key: w[1], color: w[2], dash: w[3], sx: w[4], sy: w[5], d: w[6], orig: wm.ORIG[w[0]] })), cables: cables.map((c) => ({ ...c, d: c.d.replace(/(\d+\.\d{3,})/g, (m) => String(num(+m))) })), boxes, badges, names, devices: data.I, sources: data.S, highlight: data.on, post: data.post, phones: data.phones };
   fs.writeFileSync(path.join(OUT, 'overview.json'), JSON.stringify(ov, null, 1));
   console.log('overview cables', cables.length, 'boxes', boxes.length, 'sources', Object.keys(data.S).length);
 }

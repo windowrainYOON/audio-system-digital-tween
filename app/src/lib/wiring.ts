@@ -38,9 +38,10 @@ export function useWiringLogic() {
       for (const a of x.added) x.spec[a.id] = SPEC[a.cls as Cls];
     };
     x.snap = (): Snap => ({ cur: x.state.cur, added: x.added, removed: x.removed });
-    x.save = () => { const at = stamp(); setWiring(x.state.cur, at, x.added, x.removed); return at; };
+    x.save = () => { const at = stamp(); setWiring(x.state.cur, at, x.added, x.removed, x.state.ap !== false); return at; };
     x.setState = (o: object) => { Object.assign(x.state, o); bump(); };
-    x.persist = (cur: Cur) => { x.state.cur = cur; return x.save(); };
+    // 시안의 '홈 배선도에 반영' 선택도 persist(cur, ap)로 저장한다
+    x.persist = (cur: Cur, ap?: boolean) => { x.state.cur = cur; if (ap !== undefined) x.state.ap = ap; return x.save(); };
     // 시안 commit과 같지만 기록에 추가·삭제까지 담는다
     x.commit = (next: Cur, extra?: object) => {
       const hist = x.state.hist.concat([x.snap()]).slice(-20);
@@ -96,7 +97,7 @@ export function useWiringLogic() {
       cur[k.id] = j === null ? null : j && jacks.has(j) ? j : k.orig; // null(뽑힘)은 그대로 둔다
     }
     const sel = c.state.sel && cur[c.state.sel] ? c.state.sel : null;
-    Object.assign(c.state, { cur, sel, savedAt: doc.at || c.state.savedAt });
+    Object.assign(c.state, { cur, sel, ap: doc.ap !== false, savedAt: doc.at || c.state.savedAt });
     bump();
   }, [doc, c]);
 

@@ -1,6 +1,6 @@
 // 믹서 한 대의 그림: 시안에서 옮긴 정적 도면(art) + 데이터로 그리는 컨트롤.
 // 간략 보기·전체 배선도·상세 화면이 모두 이 컴포넌트와 같은 상태를 쓴다.
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import type { BoardState, Profile } from '../data/types';
 import type { FlowDraw } from '../lib/flow';
 import { Button, Fader, Knob } from './Controls';
@@ -9,15 +9,19 @@ const Art = memo(function Art({ html }: { html: string }) {
   return <g dangerouslySetInnerHTML={{ __html: html }} />;
 });
 
-interface Props { profile: Profile; state: BoardState; selected?: string; onPick?: (id: string) => void; showUnsynced?: boolean; flow?: FlowDraw | null; flows?: FlowDraw[]; flowWidth?: number; onJack?: (i: number) => void }
+interface Props { profile: Profile; state: BoardState; selected?: string; onPick?: (id: string) => void; showUnsynced?: boolean; flow?: FlowDraw | null; flows?: FlowDraw[]; flowWidth?: number; onJack?: (i: number) => void; noStubs?: boolean }
 
-export function PanelLayer({ profile, state, selected, onPick, showUnsynced = true, flow, flows, flowWidth = 1, onJack }: Props) {
+// 홈 그림에서는 믹서 도면 안의 입력 케이블 토막을 지운다(케이블은 배선 데이터로 위에 그린다)
+const STUBS = /<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">[\s\S]*?<\/g>/;
+
+export function PanelLayer({ profile, state, selected, onPick, showUnsynced = true, flow, flows, flowWidth = 1, onJack, noStubs }: Props) {
+  const art = useMemo(() => (noStubs ? profile.art.replace(STUBS, '') : profile.art), [profile.art, noStubs]);
   const ph = profile.phantom;
   const all = (flow ? [flow] : []).concat(flows || []);
   const w = flowWidth;
   return (
     <g>
-      <Art html={profile.art} />
+      <Art html={art} />
       {ph && (
         <g aria-label={state.phantom ? '+48V 켜짐' : '+48V 꺼짐'}>
           <circle cx={ph.lamp.cx} cy={ph.lamp.cy} r={ph.lamp.r} fill={state.phantom ? ph.lamp.on : ph.lamp.off} />
