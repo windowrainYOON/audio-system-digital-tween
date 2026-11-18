@@ -79,9 +79,9 @@ this.pairJ = { dx9l: 'dx9r', dx9r: 'dx9l', dx11l: 'dx11r', dx11r: 'dx11l', ag3l:
 this.advice = { 'rca>ts': 'RCA 암→5.5 TS 수 어댑터가 필요해요.', 'ts>rca': '5.5 TS 수→RCA 수 변환 케이블이 필요해요.', 'xlr>ts': 'XLR→5.5 TS 변환 케이블이 필요해요. 밸런스가 언밸런스로 바뀌어요.', 'ts>xlr': '언밸런스 신호를 XLR로 받으려면 DI BOX를 쓰는 게 안전해요.', 'rca>xlr': 'DI BOX를 거쳐서 연결하는 게 안전해요.', 'xlr>rca': '변환 케이블이 필요해요. 권장하지 않아요.' };
 let hist0 = [], savedAt = '';
 try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && this.jacks.filter((j) => j.id === o.cur[k]).length) cur[k] = o.cur[k]; }); savedAt = o.at || ''; } } catch (e) {}
-this.state = { cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt };
+this.state = { cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt, ask: null, toast: '' };
 }
-jk(id) { return this.jacks.filter((j) => j.id === id)[0]; }
+jk(id) { return this.jacks.filter((j) => j.id === id)[0] || { id: null, dev: '', name: '연결 안 됨', cls: '' }; }
 persist(cur) {
 const d = new Date();
 const at = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
@@ -99,7 +99,7 @@ const s = this.state;
 const next = Object.assign({}, s.cur);
 const old = next[cid];
 const occ = this.cables.filter((x) => x.id !== cid && next[x.id] === jid)[0];
-if (occ) next[occ.id] = old;
+if (occ) next[occ.id] = null;
 next[cid] = jid;
 if (withPartner) {
 const pc = this.pairC[cid], pj = this.pairJ[jid];
@@ -107,13 +107,13 @@ if (pc && pj && !this.cables.filter((x) => x.id !== pc && x.id !== cid && next[x
 }
 return next;
 }
-lab(id) { const j = this.jk(id); return j.dev + ' ' + j.name; }
+lab(id) { if (!id) return '뽑혀 있음 (연결 안 됨)'; const j = this.jk(id); return j.dev + ' ' + j.name; }
 renderVals() {
 const s = this.state;
 const self = this;
 const colors = { xlr: '#1d1d1f', ts: '#6e6e73', rca: '#ff383c' };
 const chipBgs = { xlr: '#78788033', ts: '#78788033', rca: '#ff383c29' };
-const jlab = (id) => { const j = self.jk(id); return j.dev + ' ' + j.name; };
+const jlab = (id) => self.lab(id);
 let changeCount = 0;
 this.cables.forEach((c) => { if (s.cur[c.id] !== c.orig) changeCount++; });
 const order = [];
@@ -122,7 +122,7 @@ const groups = order.map((g) => ({
 title: g,
 rows: this.cables.filter((c) => c.grp === g).map((c, i) => {
 const changed = s.cur[c.id] !== c.orig;
-const sp = self.spec[c.id]; return { spec: sp[0].conn.split(' (')[0] + ' ' + sp[0].g + '놈 → ' + sp[1].conn.split(' (')[0] + ' ' + sp[1].g + '놈 · ' + (sp[0].sig.indexOf('스테레오') === 0 ? '스테레오' : sp[0].sig.split(' (')[0]), from: c.from, to: self.lab(s.cur[c.id]), dot: colors[c.cls], chip: changed ? '변경됨' : c.type, chipBg: changed ? '#ff8d2829' : chipBgs[c.cls], bg: 'transparent', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: c.id, draft: s.cur[c.id] }) };
+const sp = self.spec[c.id]; return { spec: sp[0].conn.split(' (')[0] + ' ' + sp[0].g + '놈 → ' + sp[1].conn.split(' (')[0] + ' ' + sp[1].g + '놈 · ' + (sp[0].sig.indexOf('스테레오') === 0 ? '스테레오' : sp[0].sig.split(' (')[0]), from: c.from, to: self.lab(s.cur[c.id]), dot: colors[c.cls], chip: !s.cur[c.id] ? '뽑힘' : (changed ? '변경됨' : c.type), chipBg: changed ? '#ff8d2829' : chipBgs[c.cls], bg: 'transparent', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: c.id, draft: s.cur[c.id], closing: false }) };
 })
 }));
 let dia = { note: '', alt: '', fromDev: '', fromJack: '', toDev: '', toJack: '', type: '', color: '#6e6e73', toFill: '#f5f5f7', toStroke: '#8e8e93', changed: false, was: '', warn: false, warnText: '' };
@@ -165,18 +165,19 @@ opts = devs.map((dv) => ({
 dev: dv,
 items: this.jacks.filter((j) => j.cls === c.cls && j.dev === dv).map((j) => {
 const user = this.cables.filter((x) => s.cur[x.id] === j.id && x.id !== c.id)[0];
-const dis = !!user;
+const dis = false;
 const isRec = !dis && j.id !== s.cur[c.id] && j.dev === curJ.dev && !self.cables.filter((x) => s.cur[x.id] === j.id).length && self.jacks.filter((z) => z.cls === c.cls && z.dev === j.dev && !self.cables.filter((x) => s.cur[x.id] === z.id).length)[0].id === j.id;
-return { name: j.name, sub: dis ? '사용 중: ' + user.from : (j.id === s.cur[c.id] ? '현재 연결' : (isRec ? '추천 · 같은 장비의 빈 단자' : '비어 있음')), dis: dis, op: dis ? 0.4 : 1, ck: s.cur[c.id] === j.id ? 1 : 0, pick: dis ? () => {} : () => self.commit(self.move(c.id, j.id, false), { draft: j.id }) };
+return { name: j.name, sub: user ? '지금 꽂힘: ' + user.from + ' · 고르면 대체돼요' : (j.id === s.cur[c.id] ? '현재 연결' : (isRec ? '추천 · 같은 장비의 빈 단자' : '비어 있음')), dis: false, op: 1, ck: s.cur[c.id] === j.id ? 1 : 0, pick: j.id === s.cur[c.id] ? () => {} : (user ? () => self.setState({ ask: { cid: c.id, jid: j.id, partner: false, title: j.name + '에 꽂을까요?', text: '지금 꽂힌 ' + user.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + j.name + ' · ' + user.from + ' 뽑힘' } }) : () => self.commit(self.move(c.id, j.id, false), { draft: j.id })) };
 })
 }));
 }
 const jdevs = [];
 this.jacks.forEach((j) => { if (jdevs.indexOf(j.dev) < 0) jdevs.push(j.dev); });
-jgroups = jdevs.map((dv) => ({ title: dv, rows: this.jacks.filter((j) => j.dev === dv).map((j, i) => {
-const cb = self.cables.filter((x) => s.cur[x.id] === j.id)[0];
-return { name: j.name, src: cb ? cb.from : '비어 있음', srcColor: cb ? 'var(--label2)' : '#8e8e93', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ jsel: j.id }) };
-}) }));
+const JORD = [['AG06', ['agx1', 'agx2', 'ag3l', 'ag3r', 'ag5l', 'ag5r'], ['c11', 'c12']], ['L4', ['l4x1', 'l4c1', 'l4x2', 'l4c2', 'l4tl', 'l4tr'], ['c17', 'c18']], ['DFX-12', ['dxm1', 'dxm2', 'dxm3', 'dxm4', 'dxm5', 'dxm6', 'dx9l', 'dx9r', 'dx11l', 'dx11r', 'dxtl', 'dxtr'], ['c19', 'c20', 'c21']], ['그 밖의 장비 (매립형 패널 · DI BOX · 앰프)', ['wmi1', 'wmi2', 'wmi3', 'dii1', 'dii2', 'qsl', 'qsr', 'mps'], []]];
+const inRow = (jid, i) => { const j = self.jk(jid); const cb = self.cables.filter((x) => s.cur[x.id] === jid)[0]; return { name: (i === 0 && false ? '' : '') + j.name + (JORD[3][1].indexOf(jid) >= 0 ? ' · ' + j.dev : ''), src: cb ? '← ' + cb.from : '비어 있음', srcColor: cb ? 'var(--label2)' : '#8e8e93', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: cb ? () => self.setState({ sel: cb.id, draft: s.cur[cb.id] }) : () => self.setState({ jsel: jid }) }; };
+const outRow = (cid, i) => { const c = self.cables.filter((x) => x.id === cid)[0]; return { name: c.from.replace(/^(AG06|L4|DFX-12) /, '').split(' → ')[0], src: '→ ' + self.lab(s.cur[cid]), srcColor: s.cur[cid] ? 'var(--label2)' : '#d70015', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: cid, draft: s.cur[cid] }) }; };
+jgroups = [];
+JORD.forEach((g) => { jgroups.push({ title: g[2].length ? g[0] + ' · 입력' : g[0], rows: g[1].map(inRow) }); if (g[2].length) jgroups.push({ title: g[0] + ' · 출력', rows: g[2].map(outRow) }); });
 if (jopen) {
 const jj = this.jk(s.jsel);
 const cb = this.cables.filter((x) => s.cur[x.id] === s.jsel)[0];
@@ -187,23 +188,40 @@ const where = jlab(s.cur[c.id]);
 const here = s.cur[c.id] === s.jsel;
 const occ = cb && cb.id !== c.id;
 const from = this.jk(s.cur[c.id]);
-const sub = here ? '현재 연결' : (!same ? this.advice[c.cls + '>' + jj.cls] || '단자 종류가 달라요.' : '지금 ' + where + (c.orig === s.jsel ? ' · 원래 이 단자에 연결하던 소스' : '') + (occ ? ' · ' + cb.from + '와 자리 교체' : ''));
+const sub = here ? '현재 연결' : (!same ? '어댑터 필요 · ' + (this.advice[c.cls + '>' + jj.cls] || '단자 종류가 달라요.') + (occ ? ' · 고르면 ' + cb.from + ' 대신 꽂혀요' : '') : '지금 ' + where + (c.orig === s.jsel ? ' · 원래 이 단자에 연결하던 소스' : '') + (occ ? ' · 고르면 ' + cb.from + ' 대신 꽂혀요' : ''));
 const rec = same && !here && c.orig === s.jsel;
-return { name: c.from, sub: sub, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', op: same ? 1 : 0.4, tag: rec ? 1 : 0, ck: here ? 1 : 0, pick: (!same || here) ? () => {} : () => { self.commit(self.move(c.id, s.jsel, true), {}); } };
+return { name: c.from, sub: sub, bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', op: 1, tag: rec ? 1 : 0, ck: here ? 1 : 0, pick: here ? () => {} : (occ ? () => self.setState({ ask: { cid: c.id, jid: s.jsel, partner: true, title: jj.name + '에 ' + c.from + '을(를) 꽂을까요?', text: '지금 꽂힌 ' + cb.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.', toast: c.from + ' → ' + jj.name + ' · ' + cb.from + ' 뽑힘' } }) : () => { self.commit(self.move(c.id, s.jsel, true), {}); }) };
 });
 const mover = this.cables.filter((c) => c.cls === jj.cls && s.cur[c.id] !== s.jsel).length;
-jt.hasInfo = true; jt.info = '소스를 고르면 바로 저장돼요. 이미 쓰는 단자는 서로 자리를 바꾸고, L·R 짝이 있으면 짝 선도 함께 옮겨요. 단자 종류가 다른 소스는 어댑터를 안내해요.';
+jt.hasInfo = true; jt.info = '소스를 고르면 바로 저장돼요. 이미 꽂힌 단자에 고르면 확인 후 원래 소스를 뽑고 대체해요. L·R 짝이 있으면 짝 선도 함께 옮겨요. 단자 종류가 다른 소스는 어댑터를 안내해요.';
 }
+const SRC = [['마이크', [['구즈넥 L', ['c1']], ['구즈넥 R', ['c2']], ['매립형 1 (기도석 마이크)', ['c23', 'c3']], ['매립형 2 (아래강대상 마이크)', ['c24', 'c4']], ['매립형 3', ['c22']], ['무선 마이크', ['c5']]]], ['악기', [['베이스', ['c25', 'c6']], ['기타', ['c26', 'c7']], ['키보드 (L·R)', ['c8', 'c9']], ['드럼 (L·R)', ['c10', 'c27']]]], ['재생', [['CD (L·R)', ['c13', 'c14']], ['PC (OBS) (L·R)', ['c15', 'c16']]]]];
+const cab = (id) => self.cables.filter((x) => x.id === id)[0];
+const sgroups = SRC.map((g) => ({ title: g[0], rows: g[1].map((r, i) => {
+const ids = r[1]; const stereo = r[0].indexOf('L·R') > 0; const last = stereo ? ids : [ids[ids.length - 1]];
+const main = cab(last[0]); const chg = ids.some((id) => s.cur[id] !== cab(id).orig); const off = last.some((id) => !s.cur[id]);
+return { name: r[0], to: last.map((id) => self.lab(s.cur[id])).join(' · '), toColor: off ? '#d70015' : 'var(--label2)',
+chain: stereo ? main.type + ' 2줄 (L·R)' : ids.map((id) => cab(id).type).join(' → ') + (ids.length > 1 ? ' (' + self.lab(s.cur[ids[0]]) + ' 경유)' : ''),
+dot: colors[main.cls], chip: off ? '뽑힘' : (chg ? '변경됨' : main.type), chipBg: chg || off ? '#ff8d2829' : chipBgs[main.cls], bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)',
+pick: () => self.setState({ sel: main.id, draft: s.cur[main.id] }) };
+}) }));
+const VIEWS = [['cable', '케이블별'], ['src', '소스별'], ['jack', '단자별']];
+const shut = (patch) => { self.setState({ closing: true }); clearTimeout(self.__ct); self.__ct = setTimeout(() => self.setState(Object.assign({ closing: false }, patch)), 220); };
 return {
+sgroups: sgroups, tabSrc: s.tab === 'src',
+vchips: VIEWS.map((v) => ({ label: v[1], on: s.tab === v[0] ? 'true' : 'false', bg: s.tab === v[0] ? 'var(--accent)' : 'var(--fill3)', fg: s.tab === v[0] ? '#fff' : 'var(--label)', go: () => self.setState({ tab: v[0] }) })),
+askOpen: !!s.ask, ask: s.ask || { title: '', text: '' }, askNo: () => self.setState({ ask: null }),
+askYes: () => { const a = self.state.ask; if (!a) return; self.commit(self.move(a.cid, a.jid, a.partner), { ask: null, draft: self.state.sel ? a.jid : self.state.draft, toast: a.toast }); clearTimeout(self.__tt); self.__tt = setTimeout(() => self.setState({ toast: '' }), 5000); },
+toastOpen: !!s.toast, toast: s.toast,
 rec: rec, jgroups: jgroups, jt: jt, jopts: jopts, jopen: jopen, tabCable: s.tab === 'cable', tabJack: s.tab === 'jack',
 tabCableBg: s.tab === 'cable' ? '#ffffff' : 'transparent', tabJackBg: s.tab === 'jack' ? '#ffffff' : 'transparent',
 goCable: () => self.setState({ tab: 'cable' }), goJack: () => self.setState({ tab: 'jack' }),
 savedText: s.savedAt ? '자동 저장됨 · ' + s.savedAt : '변경하면 바로 저장돼요',
 canUndo: s.hist.length > 0,
-undo: () => { const h = self.state.hist.slice(); const prev = h.pop(); const at = self.persist(prev); self.setState({ cur: prev, hist: h, savedAt: at, draft: self.state.sel ? prev[self.state.sel] : null }); },
-jclose: () => self.setState({ jsel: null }),
+undo: () => { self.setState({ toast: '' }); const h = self.state.hist.slice(); const prev = h.pop(); const at = self.persist(prev); self.setState({ cur: prev, hist: h, savedAt: at, draft: self.state.sel ? prev[self.state.sel] : null }); },
+jclose: () => shut({ jsel: null }), sheetAnim: s.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: s.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out',
 ends: ends, groups: groups, hasChanges: changeCount > 0, changeCount: changeCount, open: open, dia: dia, opts: opts,
-close: () => self.setState({ sel: null, draft: null }),
+close: () => shut({ sel: null, draft: null }),
 apply: () => { const cur = Object.assign({}, self.state.cur); cur[self.state.sel] = self.state.draft; self.setState({ cur: cur, sel: null, draft: null }); },
 revert: () => { const c = self.cables.filter((x) => x.id === self.state.sel)[0]; self.commit(self.move(c.id, c.orig, false), { draft: c.orig }); }
 };

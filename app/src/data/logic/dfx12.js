@@ -211,7 +211,7 @@ J(592, 42, 'ts'); J(633, 42, 'ts'); J(592, 85, 'ts'); J(633, 85, 'ts');
 J(596, 134, 'rcaw'); J(596, 160, 'rcar'); J(636, 134, 'rcaw'); J(636, 160, 'rcar');
 J(677, 42, 'ts'); J(677, 85, 'ts'); J(684, 157, 'ts');
 J(752, 62, 'xlr'); J(815, 62, 'xlr'); J(752, 118, 'ts'); J(815, 118, 'ts'); J(815, 160, 'ts');
-const jumpTo = (x, y) => () => { const el = document.getElementById('pan'); if (el) el.scrollTo({ left: Math.max(0, (x - 0.0) * 0.9 - 12), top: Math.max(0, (y - -150.0) * 0.9 - 12), behavior: 'smooth' }); };
+const jumpTo = (x, y) => () => { const el = document.getElementById('pan'); if (el) el.scrollTo({ left: Math.max(0, (x - 0.0) * 0.9 * (self.state.z || 1) - 12), top: Math.max(0, (y - -150.0) * 0.9 * (self.state.z || 1) - 12), behavior: 'smooth' }); };
 const chips = [["마이크 입력", 40, -150], ["CH5~12 입력", 330, -150], ["GAIN·EQ·AUX", 40, 230], ["페이더", 40, 540], ["리턴·EQ", 580, 200], ["MAIN", 760, -100]].map((c) => ({ label: c[0], go: jumpTo(c[1], c[2]) }));
 
 const fmtDb = (db) => db;
@@ -299,9 +299,10 @@ const sy0 = Object.assign({}, self.state.synced);
 sy0[self.state.sel] = false;
 self.setState({ vals: vs, synced: sy0 });
 };
+const shut = (patch) => { self.setState({ closing: true }); clearTimeout(self.__ct); self.__ct = setTimeout(() => self.setState(Object.assign({ closing: false }, patch)), 220); };
 return {
-inspOpen: !!this.state.open, inspClosed: !this.state.open, hideInsp: () => this.setState({ open: false }), showInsp: () => this.setState({ open: true }),
-chips: chips, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', aPh: 0,
+sheetAnim: self.state.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: self.state.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out', bgTap: (e) => { const t = e && e.target; if (!(t && t.closest && t.closest('[role="button"],button,a'))) shut({ open: false }); }, inspOpen: !!this.state.open, inspClosed: !this.state.open, hideInsp: () => shut({ open: false }), showInsp: () => this.setState({ open: true }),
+pw: Math.round(835 * (self.state.z || 1)), ph: Math.round(900 * (self.state.z || 1)), zIn: () => self.setState({ z: Math.min(3, (self.state.z || 1) + 0.5) }), zOut: () => self.setState({ z: Math.max(0.5, (self.state.z || 1) - 0.25) }), chips: chips, secLabel: chips[(self.state.sec || 0)].label, secPos: ((self.state.sec || 0) + 1) + ' / ' + chips.length, ddAny: !!self.state.dd, ddDevOpen: self.state.dd === 'dev', ddSecOpen: self.state.dd === 'sec', ddDevRot: self.state.dd === 'dev' ? 'rotate(180deg)' : 'none', ddSecRot: self.state.dd === 'sec' ? 'rotate(180deg)' : 'none', ddDev: () => self.setState({ dd: self.state.dd === 'dev' ? null : 'dev' }), ddSec: () => self.setState({ dd: self.state.dd === 'sec' ? null : 'sec' }), ddClose: () => self.setState({ dd: null }), secItems: chips.map((c, k) => ({ label: c.label, fw: k === (self.state.sec || 0) ? 600 : 400, op: k === (self.state.sec || 0) ? 1 : 0, bt: k ? '0.5px solid var(--sep)' : '0', pick: () => { self.setState({ sec: k, dd: null }); c.go(); } })), secPrev: () => { const k = ((self.state.sec || 0) + chips.length - 1) % chips.length; self.setState({ sec: k }); chips[k].go(); }, secNext: () => { const k = ((self.state.sec || 0) + 1) % chips.length; self.setState({ sec: k }); chips[k].go(); }, names: nameList, selInfo: info, more: s.more, toggleMore: () => self.setState({ more: !self.state.more }), moreLabel: s.more ? '설명 접기' : '설명 보기', aPh: 0,
 flowD: fv.d, flowDots: fv.dots, flowArrow: fv.arrow, flowText: fv.text, hasFlow: !!fv.text, knobs: knobs, faders: faders, buttons: buttons, texts: [], textsBake: texts, lamps: lamps, jacks: jacks, pins: pins,
 sel: { isKnob: sel.type === 'knob', isFad: sel.type === 'fader', capc: sel.cap || '#f5f5f7', ptrc: (sel.cap === '#1a1a1a' || sel.cap === '#111' || sel.cap === '#222') ? '#ffffff' : '#111111', dialTf: 'rotate(' + (-135 + 270 * v) + ' 66 66)', fy: 10 + (1 - v) * 136 - 11, fyc: 10 + (1 - v) * 136, name: sel.name, v100: Math.round(v * 100), hour: f.hour, scale: f.scale, db: f.db,
 isBtn: sel.type === 'button', isCont: sel.type !== 'button',
