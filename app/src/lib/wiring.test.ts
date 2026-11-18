@@ -2,6 +2,18 @@
 import { describe, expect, it } from 'vitest';
 import { create } from '../data/logic/wiring';
 
+describe('케이블 삭제 뒤에도 화면이 그려진다 (흰 화면 버그)', () => {
+  it('기본 케이블을 하나씩 지워도 세 보기 모두 오류 없이 그려진다', () => {
+    const ids = create().cables.map((x: { id: string }) => x.id);
+    for (const id of ids) {
+      const c = create();
+      c.cables = c.cables.filter((x: { id: string }) => x.id !== id);
+      delete c.state.cur[id];
+      for (const tab of ['cable', 'src', 'jack']) { c.state.tab = tab; expect(() => c.renderVals()).not.toThrow(); }
+    }
+  });
+});
+
 describe('배선 대체', () => {
   it('꽂힌 단자로 옮기면 원래 케이블은 뽑힘(null)', () => {
     const c = create();

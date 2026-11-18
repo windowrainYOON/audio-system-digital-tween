@@ -5,6 +5,7 @@ import { Wiring } from './screens/Wiring';
 import { Checks } from './screens/Checks';
 import { Operator } from './screens/Operator';
 import { TabBar } from './components/TabBar';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { readHash } from './nav';
 import { startSync } from './store/store';
 
@@ -20,11 +21,13 @@ export function App() {
 
   return (
     <div className="app">
+      <ErrorBoundary resetKey={route + board}>
       {route === 'home' && <Overview />}
       {route === 'panel' && <DeviceDetail board={board} />}
       {route === 'wiring' && <Wiring />}
       {route === 'checks' && <Checks />}
       {route === 'ops' && <Operator />}
+      </ErrorBoundary>
       <TabBar current={route} />
     </div>
   );
