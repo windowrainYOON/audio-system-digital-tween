@@ -87,9 +87,17 @@ button { font-family: inherit; cursor: pointer; }
 .w-seg { margin: 8px 16px 0; padding: 2px; border-radius: 9px; background: var(--fill3); display: grid; grid-template-columns: 1fr 1fr; }
 .w-seg button { min-height: 32px; border: 0; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 600; color: var(--label); }
 .w-seg button[aria-selected="true"] { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
-.w-warn { margin: 8px 16px 0; padding: 12px 16px; border-radius: 18px; background: #ff8d2829; display: flex; gap: 12px; align-items: center; }
+.w-warn { margin: 8px 16px 0; padding: 12px 16px; border-radius: 18px; background: #ff8d2829; display: flex; gap: 12px; align-items: flex-start; }
 .w-warn svg { flex: none; }
-.w-warn div { flex: 1; font-size: 15px; line-height: 20px; }
+.w-warn-body { flex: 1; min-width: 0; font-size: 15px; line-height: 20px; }
+.w-ap { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+.w-ap > span { flex: 1; font-size: 13px; line-height: 18px; font-weight: 600; }
+.w-ap .seg { display: flex; padding: 2px; border-radius: 10px; background: var(--fill3); }
+.w-ap .seg button { min-height: 32px; padding: 0 12px; border: 0; border-radius: 8px; font-size: 13px; font-weight: 600; background: transparent; color: var(--label); }
+.w-ap .seg button[aria-pressed="true"] { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.w-ap-t { margin-top: 6px; font-size: 13px; line-height: 18px; color: var(--label2); }
+.w-kind { margin-left: 6px; padding: 1px 8px; border-radius: 10px; background: #ff8d2829; color: #8a4b00; font-size: 12px; line-height: 18px; font-weight: 600; vertical-align: 2px; }
+.ov-note { margin: 0 52px 8px 0; padding: 8px 12px; border-radius: 12px; background: #ff8d2829; font-size: 13px; line-height: 18px; }
 .w-note { margin: 8px 16px 0; padding: 8px 8px 8px 16px; border-radius: 18px; background: var(--info); display: flex; gap: 8px; align-items: center; font-size: 15px; line-height: 20px; }
 .w-note span { flex: 1; }
 .w-note button { min-height: 44px; padding: 0 12px; border: 0; background: transparent; color: var(--accent); font-size: 15px; font-weight: 600; }

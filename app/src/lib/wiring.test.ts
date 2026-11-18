@@ -39,3 +39,36 @@ describe('배선 대체', () => {
     expect(titles.slice(0, 6)).toEqual(['AG06 · 입력', 'AG06 · 출력', 'L4 · 입력', 'L4 · 출력', 'DFX-12 · 입력', 'DFX-12 · 출력']);
   });
 });
+
+describe('단자 후보 = 모든 입력 (2026-11-18 사용자 결정)', () => {
+  const items = (c: ReturnType<typeof create>) => c.renderVals().opts.flatMap((o: { items: unknown[] }) => o.items);
+  it('종류가 다른 단자도 보이고, 고르면 팝업 한 번(그래도 꽂기) 뒤 옮겨진다', () => {
+    const c = create();
+    c.setState({ sel: 'c1', draft: 'dxm1' });
+    const all = items(c);
+    expect(all.some((i: { name: string }) => i.name === '입력 (5.5)')).toBe(true);
+    const tape = all.find((i: { name: string }) => i.name === 'TAPE (L·R)');
+    expect(tape.diff).toBe(true);
+    tape.pick();
+    const v = c.renderVals();
+    expect(v.ask.title).toBe('단자 종류가 달라요');
+    expect(v.ask.ok).toBe('그래도 꽂기');
+    expect(v.ask.text).toContain('뽑혀요');
+    v.askYes();
+    expect(c.state.cur.c1).toBe('l4tl');
+    expect(c.state.cur.c15).toBeNull();
+    expect(c.state.cur.c16).toBeNull();
+  });
+  it('L·R 단자는 한 줄이고, 짝 선도 반대쪽에 함께 꽂힌다', () => {
+    const c = create();
+    c.setState({ sel: 'c8', draft: 'ag3l' });
+    const all = items(c);
+    expect(all.some((i: { name: string }) => i.name === 'CH9/10 R')).toBe(false);
+    all.find((i: { name: string }) => i.name === 'CH9/10 (L·R)').pick();
+    c.renderVals().askYes();
+    expect(c.state.cur.c8).toBe('dx9l');
+    expect(c.state.cur.c9).toBe('dx9r');
+    expect(c.state.cur.c11).toBeNull();
+    expect(c.state.cur.c12).toBeNull();
+  });
+});
