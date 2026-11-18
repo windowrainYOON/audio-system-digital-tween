@@ -38,7 +38,10 @@ export function useWiringLogic() {
       for (const a of x.added) x.spec[a.id] = SPEC[a.cls as Cls];
     };
     x.snap = (): Snap => ({ cur: x.state.cur, added: x.added, removed: x.removed });
-    x.save = () => { const at = stamp(); setWiring(x.state.cur, at, x.added, x.removed, x.state.ap !== false); return at; };
+    x.save = () => { const at = stamp(); setWiring(x.state.cur, at, x.added, x.removed, x.state.ap !== false, x.state.ack || ''); return at; };
+    // 노란 변경 알림 '확인'(2026-11-18): 지금 변경 묶음을 기억해 두고, 새로 바꾸면 다시 알린다. 추가·삭제도 묶음에 넣는다
+    x.sig = () => x.changeSig(x.state.cur) + '|' + x.added.map((a: AddedCable) => a.id).join(',') + '|' + x.removed.join(',');
+    x.ackNow = () => { x.state.ack = x.sig(); const at = x.save(); x.setState({ savedAt: at }); };
     x.setState = (o: object) => { Object.assign(x.state, o); bump(); };
     // 시안의 '홈 배선도에 반영' 선택도 persist(cur, ap)로 저장한다
     x.persist = (cur: Cur, ap?: boolean) => { x.state.cur = cur; if (ap !== undefined) x.state.ap = ap; return x.save(); };
@@ -97,7 +100,7 @@ export function useWiringLogic() {
       cur[k.id] = j === null ? null : j && jacks.has(j) ? j : k.orig; // null(뽑힘)은 그대로 둔다
     }
     const sel = c.state.sel && cur[c.state.sel] ? c.state.sel : null;
-    Object.assign(c.state, { cur, sel, ap: doc.ap !== false, savedAt: doc.at || c.state.savedAt });
+    Object.assign(c.state, { cur, sel, ap: doc.ap !== false, ack: doc.ack || '', savedAt: doc.at || c.state.savedAt });
     bump();
   }, [doc, c]);
 
@@ -105,6 +108,6 @@ export function useWiringLogic() {
   const extra = c.added.length + c.removed.length;
   return {
     c,
-    v: { ...v, undo: c.undoSnap, changeCount: v.changeCount + extra, hasChanges: v.changeCount + extra > 0 },
+    v: { ...v, undo: c.undoSnap, ackNow: c.ackNow, changeCount: v.changeCount + extra, hasChanges: v.changeCount + extra > 0 && c.sig() !== (c.state.ack || '') },
   };
 }

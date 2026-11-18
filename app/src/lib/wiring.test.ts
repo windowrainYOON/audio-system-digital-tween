@@ -72,3 +72,15 @@ describe('단자 후보 = 모든 입력 (2026-11-18 사용자 결정)', () => {
     expect(c.state.cur.c12).toBeNull();
   });
 });
+
+describe('노란 변경 알림 확인 (2026-11-18 사용자 결정)', () => {
+  it('확인하면 사라지고, 새로 바꾸면 다시 뜬다', () => {
+    const c = create();
+    c.commit(c.move('c5', 'dxm5', false), {});
+    expect(c.renderVals().hasChanges).toBe(true);
+    c.renderVals().ackNow();
+    expect(c.renderVals().hasChanges).toBe(false);
+    c.commit(c.move('c1', 'dxm6', false), {});
+    expect(c.renderVals().hasChanges).toBe(true);
+  });
+});
