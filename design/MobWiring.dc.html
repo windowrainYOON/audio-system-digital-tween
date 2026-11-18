@@ -432,9 +432,9 @@ const jdevs = [];
 this.jacks.forEach((j) => { if (jdevs.indexOf(j.dev) < 0) jdevs.push(j.dev); });
 const JORD = [['AG06', ['agx1', 'agx2', 'ag3l', 'ag3r', 'ag5l', 'ag5r'], ['c11', 'c12']], ['L4', ['l4x1', 'l4c1', 'l4x2', 'l4c2', 'l4tl', 'l4tr'], ['c17', 'c18']], ['DFX-12', ['dxm1', 'dxm2', 'dxm3', 'dxm4', 'dxm5', 'dxm6', 'dx9l', 'dx9r', 'dx11l', 'dx11r', 'dxtl', 'dxtr'], ['c19', 'c20', 'c21']], ['그 밖의 장비 (매립형 패널 · DI BOX · 앰프)', ['wmi1', 'wmi2', 'wmi3', 'dii1', 'dii2', 'qsl', 'qsr', 'mps'], []]];
 const inRow = (jid, i) => { const j = self.jk(jid); const cb = self.cables.filter((x) => s.cur[x.id] === jid)[0]; return { name: (i === 0 && false ? '' : '') + j.name + (JORD[3][1].indexOf(jid) >= 0 ? ' · ' + j.dev : ''), src: cb ? '← ' + cb.from : '비어 있음', srcColor: cb ? 'var(--label2)' : '#8e8e93', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: cb ? () => self.setState({ sel: cb.id, draft: s.cur[cb.id] }) : () => self.setState({ jsel: jid }) }; };
-const outRow = (cid, i) => { const c = self.cables.filter((x) => x.id === cid)[0]; return { name: c.from.replace(/^(AG06|L4|DFX-12) /, '').split(' → ')[0], src: '→ ' + self.lab(s.cur[cid]), srcColor: s.cur[cid] ? 'var(--label2)' : '#d70015', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: cid, draft: s.cur[cid] }) }; };
+const outRow = (cid, i) => { const c = self.cables.filter((x) => x.id === cid)[0]; if (!c) return null; return { name: c.from.replace(/^(AG06|L4|DFX-12) /, '').split(' → ')[0], src: '→ ' + self.lab(s.cur[cid]), srcColor: s.cur[cid] ? 'var(--label2)' : '#d70015', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => self.setState({ sel: cid, draft: s.cur[cid] }) }; };
 jgroups = [];
-JORD.forEach((g) => { jgroups.push({ title: g[2].length ? g[0] + ' · 입력' : g[0], rows: g[1].map(inRow) }); if (g[2].length) jgroups.push({ title: g[0] + ' · 출력', rows: g[2].map(outRow) }); });
+JORD.forEach((g) => { jgroups.push({ title: g[2].length ? g[0] + ' · 입력' : g[0], rows: g[1].map(inRow) }); const outs = g[2].map(outRow).filter((r) => r); if (outs.length) jgroups.push({ title: g[0] + ' · 출력', rows: outs.map((r, i) => Object.assign(r, { bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)' })) }); });
 if (jopen) {
 const jj = this.jk(s.jsel);
 const cb = this.cables.filter((x) => s.cur[x.id] === s.jsel)[0];
@@ -455,7 +455,8 @@ jt.hasInfo = true; jt.info = '소스를 고르면 바로 저장돼요. 이미 �
 const SRC = [['마이크', [['구즈넥 L', ['c1']], ['구즈넥 R', ['c2']], ['매립형 1 (기도석 마이크)', ['c23', 'c3']], ['매립형 2 (아래강대상 마이크)', ['c24', 'c4']], ['매립형 3', ['c22']], ['무선 마이크', ['c5']]]], ['악기', [['베이스', ['c25', 'c6']], ['기타', ['c26', 'c7']], ['키보드 (L·R)', ['c8', 'c9']], ['드럼 (L·R)', ['c10', 'c27']]]], ['재생', [['CD (L·R)', ['c13', 'c14']], ['PC (OBS) (L·R)', ['c15', 'c16']]]]];
 const cab = (id) => self.cables.filter((x) => x.id === id)[0];
 const sgroups = SRC.map((g) => ({ title: g[0], rows: g[1].map((r, i) => {
-const ids = r[1]; const stereo = r[0].indexOf('L·R') > 0; const last = stereo ? ids : [ids[ids.length - 1]];
+const ids = r[1].filter((id) => cab(id)); const stereo = r[0].indexOf('L·R') > 0; const last = stereo ? ids : ids.slice(-1);
+if (!ids.length) return { name: r[0], to: '연결된 케이블이 없어요 (삭제됨)', toColor: '#d70015', chain: '', dot: '#8e8e93', chip: '없음', chipBg: '#ff8d2829', bt: i === 0 ? 'none' : '0.5px solid rgba(60,60,67,0.29)', pick: () => {} };
 const main = cab(last[0]); const chg = ids.some((id) => s.cur[id] !== cab(id).orig); const off = last.some((id) => !s.cur[id]);
 return { name: r[0], to: last.map((id) => self.lab(s.cur[id])).join(' · '), toColor: off ? '#d70015' : 'var(--label2)',
 chain: stereo ? main.type + ' 2줄 (L·R)' : ids.map((id) => cab(id).type).join(' → ') + (ids.length > 1 ? ' (' + self.lab(s.cur[ids[0]]) + ' 경유)' : ''),
