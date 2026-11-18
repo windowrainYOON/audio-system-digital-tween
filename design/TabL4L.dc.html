@@ -173,7 +173,7 @@ defs.forEach((d) => { vals[d.id] = d.def; });
 this.state = { z: 1.45, more: false, sel: 'g1', vals: vals, synced: {}, phantom: false, power: true };
 // PINCH-BEGIN 2026-11-18 사용자 결정: 홈·패널 탭은 두 손가락(트랙패드는 ctrl+휠)으로 확대·축소. +/− 버튼은 없앴다.
 // 확대 배율은 state.z, 대상은 id="pan" 스크롤 상자. 손가락 가운데가 제자리에 머물게 스크롤을 맞춘다.
-if (typeof document !== 'undefined' && !this.__pinch) {
+if (typeof document !== 'undefined' && document.addEventListener && !this.__pinch) {
 const self = this; this.__pinch = 1; let d0 = 0, z0 = 1;
 const ZMIN = 0.5, ZMAX = 3;
 const box = () => document.getElementById('pan');
