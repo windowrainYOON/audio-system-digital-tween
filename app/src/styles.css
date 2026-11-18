@@ -90,6 +90,9 @@ button { font-family: inherit; cursor: pointer; }
 .w-warn { margin: 8px 16px 0; padding: 12px 16px; border-radius: 18px; background: #ff8d2829; display: flex; gap: 12px; align-items: flex-start; }
 .w-warn svg { flex: none; }
 .w-warn-body { flex: 1; min-width: 0; font-size: 15px; line-height: 20px; }
+.w-warn-top { display: flex; gap: 8px; align-items: flex-start; }
+.w-warn-top > div { flex: 1; }
+.w-ack { flex: none; min-height: 32px; padding: 0 14px; border: 0; border-radius: 16px; background: #1d1d1f; color: #fff; font-size: 13px; font-weight: 600; }
 .w-ap { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
 .w-ap > span { flex: 1; font-size: 13px; line-height: 18px; font-weight: 600; }
 .w-ap .seg { display: flex; padding: 2px; border-radius: 10px; background: var(--fill3); }

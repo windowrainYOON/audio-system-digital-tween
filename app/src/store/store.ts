@@ -10,7 +10,7 @@ export type Net = 'connecting' | 'online' | 'offline' | 'saving';
 /** added: 사용자가 추가한 케이블, removed: 삭제한 기본 케이블 id */
 export interface AddedCable { id: string; grp: string; from: string; fromDev: string; to: string; type: string; cls: 'xlr' | 'ts' | 'rca'; orig: string; note: string }
 /** ap: 바뀐 연결을 홈 배선도에 반영할지 (2026-11-18 사용자 결정, 없으면 반영) */
-export interface WiringDoc { cur: Record<string, string | null>; at: string; t: number; added?: AddedCable[]; removed?: string[]; ap?: boolean }
+export interface WiringDoc { cur: Record<string, string | null>; at: string; t: number; added?: AddedCable[]; removed?: string[]; ap?: boolean; ack?: string }
 export interface State { boards: Record<BoardId, BoardState>; wiring: WiringDoc | null; net: Net; lastSync: number; error: string }
 
 const LS = 'twin:state:v1';
@@ -55,8 +55,8 @@ export function useStore<T>(sel: (s: State) => T): T {
 
 // ── 배선 쓰기 ──
 let wPending = 0, wInflight = false;
-export function setWiring(cur: Record<string, string | null>, at: string, added: AddedCable[] = [], removed: string[] = [], ap = true) {
-  set({ wiring: { cur, at, t: Date.now(), added, removed, ap } });
+export function setWiring(cur: Record<string, string | null>, at: string, added: AddedCable[] = [], removed: string[] = [], ap = true, ack = '') {
+  set({ wiring: { cur, at, t: Date.now(), added, removed, ap, ack } });
   clearTimeout(wPending);
   wPending = window.setTimeout(() => { wPending = 0; void flushWiring(); }, 300);
 }

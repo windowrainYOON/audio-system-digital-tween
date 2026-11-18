@@ -49,7 +49,11 @@ export function Wiring() {
         <div className="w-warn" role="status">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></svg>
           <div className="w-warn-body">
-            <div><strong>{v.changeCount}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+            <div className="w-warn-top">
+              <div><strong>{v.changeCount}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+              {/* 2026-11-18 사용자 결정: 확인하면 이 알림을 지운다(새로 바꾸면 다시 뜸) */}
+              <button className="w-ack" onClick={v.ackNow} aria-label="알림 확인">확인</button>
+            </div>
             {/* 2026-11-18 사용자 결정: 홈 배선도에 반영할지 여기서 고른다 (UI_GUIDE M5) */}
             <div className="w-ap" role="group" aria-label="홈 배선도에 반영">
               <span>홈 배선도에 반영</span>
