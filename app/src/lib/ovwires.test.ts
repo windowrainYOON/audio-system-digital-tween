@@ -67,7 +67,7 @@ describe('홈 배선도', () => {
   });
   it('점검 탭 변경 목록: 원래 단자 → 지금 단자, 확인하면 비어요', () => {
     const d = doc({ c6: 'agx2' });
-    expect(changesOf(d)).toEqual([{ id: 'c6', name: 'DI BOX CH1 출력 (베이스)', from: 'Yamaha AG06 CH1 XLR', to: 'Yamaha AG06 CH2 XLR' }]);
+    expect(changesOf(d)).toEqual([{ id: 'c6', name: 'DI BOX CH1 출력', from: 'Yamaha AG06 CH1 XLR', to: 'Yamaha AG06 CH2 XLR' }]);
     expect(changesOf({ ...d, ack: sigOf(d), ackCur: { ...d.cur } })).toEqual([]);
   });
   it('신호 흐름은 DI BOX·매립형 패널을 거쳐 바뀐 연결을 따라간다', () => {

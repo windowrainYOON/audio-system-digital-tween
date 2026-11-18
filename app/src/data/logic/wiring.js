@@ -8,18 +8,18 @@ constructor(props) {
 super(props);
 const C = (id, grp, from, fromDev, to, type, cls, note) => ({ id: id, grp: grp, from: from, fromDev: fromDev, to: to, type: type, cls: cls, orig: to, note: note || '' });
 this.cables = [
-C('c1', '강대상 → DFX-12', '강대상1 구즈넥 L (CH1)', '강대상1', 'dxm1', 'XLR', 'xlr'),
-C('c2', '강대상 → DFX-12', '강대상1 구즈넥 R (CH2)', '강대상1', 'dxm2', 'XLR', 'xlr'),
+C('c1', '강대상 → DFX-12', '강대상1 구즈넥 L', '강대상1', 'dxm1', 'XLR', 'xlr'),
+C('c2', '강대상 → DFX-12', '강대상1 구즈넥 R', '강대상1', 'dxm2', 'XLR', 'xlr'),
 C('c5', '강대상 → DFX-12', '무선 마이크 수신기', '무선', 'dxm6', 'XLR', 'xlr'),
-C('c3', '매립형 → DFX-12', '매립형 XLR 패널 CH1 출력 (기도석 추정)', '매립형 패널', 'dxm3', 'XLR', 'xlr', '배선도에 어느 라인이 기도석인지 없어요. 확인 필요'),
-C('c4', '매립형 → DFX-12', '매립형 XLR 패널 CH2 출력 (아래강대상 추정)', '매립형 패널', 'dxm4', 'XLR', 'xlr', '배선도에 어느 라인이 아래강대상인지 없어요. 확인 필요'),
-C('c22', '매립형 → DFX-12', '매립형 XLR 패널 CH3 출력 (소스 없음)', '매립형 패널', 'dxm5', 'XLR', 'xlr', '배선도에는 CH5/6에도 매립형 라인이 이어져 있어요. 확인 필요'),
+C('c3', '매립형 → DFX-12', '매립형 XLR 패널 CH1 출력', '매립형 패널', 'dxm3', 'XLR', 'xlr', '배선도에 어느 라인이 기도석인지 없어요. 확인 필요'),
+C('c4', '매립형 → DFX-12', '매립형 XLR 패널 CH2 출력', '매립형 패널', 'dxm4', 'XLR', 'xlr', '배선도에 어느 라인이 아래강대상인지 없어요. 확인 필요'),
+C('c22', '매립형 → DFX-12', '매립형 XLR 패널 CH3 출력', '매립형 패널', 'dxm5', 'XLR', 'xlr', '배선도에는 CH5/6에도 매립형 라인이 이어져 있어요. 확인 필요'),
 C('c23', '마이크 → 매립형', '기도석 마이크', '기도석', 'wmi1', 'XLR', 'xlr'),
 C('c24', '마이크 → 매립형', '아래강대상 마이크', '아래강대상', 'wmi2', 'XLR', 'xlr'),
-C('c25', '악기 → DI BOX', '베이스 (HEX B100) → DI BOX CH1', '베이스', 'dii1', '5.5 TS', 'ts'),
-C('c26', '악기 → DI BOX', '통기타 → DI BOX CH2', '통기타', 'dii2', '5.5 TS', 'ts'),
-C('c6', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH1 출력 (베이스)', 'DI BOX', 'agx1', 'XLR', 'xlr'),
-C('c7', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH2 출력 (통기타)', 'DI BOX', 'agx2', 'XLR', 'xlr'),
+C('c25', '악기 → DI BOX', '베이스 (HEX B100)', '베이스', 'dii1', '5.5 TS', 'ts'),
+C('c26', '악기 → DI BOX', '통기타', '통기타', 'dii2', '5.5 TS', 'ts'),
+C('c6', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH1 출력', 'DI BOX', 'agx1', 'XLR', 'xlr'),
+C('c7', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH2 출력', 'DI BOX', 'agx2', 'XLR', 'xlr'),
 C('c8', 'DI BOX·키보드·드럼 → AG06', '키보드 L (TRS→TS 갈래)', '키보드', 'ag3l', '5.5 TS', 'ts'),
 C('c9', 'DI BOX·키보드·드럼 → AG06', '키보드 R (TRS→TS 갈래)', '키보드', 'ag3r', '5.5 TS', 'ts'),
 C('c10', 'DI BOX·키보드·드럼 → AG06', '전자 드럼 L (TS 모노→RCA)', '전자 드럼', 'ag5l', 'RCA', 'rca'),
@@ -32,9 +32,9 @@ C('c15', 'CD·PC → L4', 'PC(OBS) 왼쪽', 'PC (OBS)', 'l4tl', 'RCA', 'rca', 'A
 C('c16', 'CD·PC → L4', 'PC(OBS) 오른쪽', 'PC (OBS)', 'l4tr', 'RCA', 'rca', 'AUX→RCA'),
 C('c17', 'L4 → DFX-12', 'L4 MAIN OUT L', 'L4', 'dxtl', 'RCA', 'rca', '5.5 TS→RCA'),
 C('c18', 'L4 → DFX-12', 'L4 MAIN OUT R', 'L4', 'dxtr', 'RCA', 'rca', '5.5 TS→RCA'),
-C('c19', '앰프', 'DFX-12 MAIN OUT L → QSC', 'DFX-12', 'qsl', 'XLR', 'xlr'),
-C('c20', '앰프', 'DFX-12 MAIN OUT R → QSC', 'DFX-12', 'qsr', 'XLR', 'xlr'),
-C('c21', '앰프', 'DFX-12 PHONES → MPS1200', 'DFX-12', 'mps', '5.5 TS', 'ts')
+C('c19', '앰프', 'DFX-12 MAIN OUT L', 'DFX-12', 'qsl', 'XLR', 'xlr'),
+C('c20', '앰프', 'DFX-12 MAIN OUT R', 'DFX-12', 'qsr', 'XLR', 'xlr'),
+C('c21', '앰프', 'DFX-12 PHONES', 'DFX-12', 'mps', '5.5 TS', 'ts')
 ];
 const Jk = (id, dev, name, cls) => ({ id: id, dev: dev, name: name, cls: cls });
 this.jacks = [
