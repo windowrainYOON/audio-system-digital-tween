@@ -281,6 +281,7 @@
 - 기도석 마이크, 아래강대상 마이크 → 매립형 XLR 패널 → DFX-12 CH3, CH4, CH5/6 (3라인). 어느 라인이 어느 마이크인지는 **확인 필요**(미정).
 - 무선 마이크 리시버 → DFX-12 CH7/8 (XLR).
 - 베이스(HEX B100) → DI BOX CH1 → AG06 CH1, 통기타 → DI BOX CH2 → AG06 CH2 (악기→DI는 5.5 TS, DI→AG06은 XLR).
+- 케이블 이름은 시작 쪽 단자만 적어요(예: DI BOX CH1 출력, 베이스 (HEX B100)). 꽂힌 곳·위쪽 소스는 이름에 넣지 않고, 아래 줄에 지금 꽂힌 단자로 보여요(2026-11-18 사용자 결정).
 - **키보드(MGX-230): TRS 출력 → TS 2줄(Y케이블) → AG06 CH3/4 L/MONO·R (스테레오).**
 - **전자 드럼(Alesis Nitro Mesh): TS 모노 2줄(L·R) → RCA로 변환 → AG06 CH5/6 L·R.**
 - AG06 STEREO OUT → DFX-12 CH9/10 (5.5 TS L·R). DFX CH11/12는 비어 있음.
