@@ -1,8 +1,10 @@
 // M5 배선·케이블 편집 (시안 MobWiring / 태블릿 TabWiringP·L).
 // 케이블·단자 목록, 짝 선 추천, 어댑터 안내, 자리 교체 규칙은 시안 코드를 그대로 실행한다(lib/wiring.ts).
 // 케이블 추가(+)·삭제는 2026-11-17 사용자 결정: 같은 단자 규칙으로 고르고, 삭제는 확인 후 실행취소 가능.
+// 2026-11-17 화면 이동 정리: 칩 케이블별·소스별·단자별(믹서별 입력·출력), 어느 줄이든 탭하면 케이블 상자,
+// 이미 꽂힌 단자도 골라 대체(확인 → 원래 케이블은 뽑힘 → 5초 실행취소 알림). 시트는 아래에서 올라오고 바깥 탭으로 내려간다.
 import { useEffect, useState } from 'react';
-import { TabBar } from '../components/TabBar';
+import { PageHeader, useShut } from '../components/Common';
 import { TYPE, useWiringLogic, type Cls } from '../lib/wiring';
 
 const CHECK = <path d="M5 12.5l4.5 4.5L19 7" />;
@@ -18,30 +20,30 @@ export function Wiring() {
   useEffect(() => {
     if (!v.open && !v.jopen && !adding) return;
     const f = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      if (askDel) setAskDel(false); else if (adding) setAdding(false); else (v.open ? v.close : v.jclose)();
+      if (e.key !== 'Escape' || adding) return; // 추가 시트는 스스로 닫는다
+      if (v.askOpen) v.askNo(); else if (askDel) setAskDel(false); else (v.open ? v.close : v.jclose)();
     };
     window.addEventListener('keydown', f);
     return () => window.removeEventListener('keydown', f);
-  }, [v.open, v.jopen, adding, askDel]);
+  }, [v.open, v.jopen, v.askOpen, adding, askDel]);
+  const anim = { sheet: v.sheetAnim as string, dim: v.dimAnim as string };
+  const undoToast = () => { c.setState({ toast: '' }); v.undo(); };
   const selCable = v.open ? c.cables.find((x: { id: string }) => x.id === c.state.sel) : null;
 
   return (
     <div className="wiring">
-      <header className="w-head">
-        <h1>배선</h1>
-        <button className="w-add" aria-label="케이블 추가" onClick={() => { setNote(''); setAdding(true); }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-        </button>
-      </header>
+      <PageHeader title="배선">
+        <div className="chips" role="group" aria-label="보기">
+          {v.vchips.map((k: any) => <button key={k.label} className={'chip' + (k.on === 'true' ? ' primary' : '')} aria-pressed={k.on === 'true'} onClick={k.go}>{k.label}</button>)}
+          <button className="w-add" aria-label="케이블 추가" onClick={() => { setNote(''); setAdding(true); }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+        </div>
+      </PageHeader>
       <div className="w-save">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34c759" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{CHECK}</svg>
         <span role="status">{v.savedText}</span>
         {v.canUndo && <button className="w-undo" onClick={v.undo}>실행취소</button>}
-      </div>
-      <div className="w-seg" role="tablist" aria-label="보기">
-        <button role="tab" aria-selected={v.tabCable} onClick={v.goCable}>케이블별</button>
-        <button role="tab" aria-selected={v.tabJack} onClick={v.goJack}>단자별 소스</button>
       </div>
       {v.hasChanges && (
         <div className="w-warn" role="status">
@@ -56,14 +58,14 @@ export function Wiring() {
       <main className="w-main">
         {v.tabJack && (
           <>
-            <p className="w-intro">어느 단자에 어떤 소스가 들어오는지 보여요. 단자를 누르면 소스를 바꾸고, 추천 배선을 안내해요.</p>
+            <p className="w-intro">믹서마다 입력과 출력으로 모았어요. 줄을 누르면 꽂힌 케이블을 보여 주고, 빈 단자는 소스를 고를 수 있어요.</p>
             <div className="w-cols">
               {v.jgroups.map((g: any) => (
                 <section key={g.title} className="w-group" aria-label={g.title}>
                   <h2>{g.title}</h2>
                   <div className="w-rows">
                     {g.rows.map((r: any) => (
-                      <button key={r.name} className="w-row jack" onClick={r.pick}>
+                      <button key={r.name + r.src} className="w-row jack" onClick={r.pick}>
                         <span className="w-txt"><span>{r.name}</span><span className="sub" style={{ color: r.srcColor }}>{r.src}</span></span>
                         <Chevron />
                       </button>
@@ -73,6 +75,29 @@ export function Wiring() {
               ))}
             </div>
           </>
+        )}
+        {v.tabSrc && (
+          <div className="w-cols">
+            {v.sgroups.map((g: any) => (
+              <section key={g.title} className="w-group" aria-label={g.title}>
+                <h2>{g.title}</h2>
+                <div className="w-rows">
+                  {g.rows.map((r: any) => (
+                    <button key={r.name} className="w-row cable" onClick={r.pick}>
+                      <span className="w-dot" style={{ background: r.dot }} aria-hidden="true" />
+                      <span className="w-txt">
+                        <span className="from">{r.name}</span>
+                        <span className="to" style={{ color: r.toColor }}>→ {r.to}</span>
+                        <span className="spec">{r.chain}</span>
+                      </span>
+                      <span className="w-chip" style={{ background: r.chipBg }}>{r.chip}</span>
+                      <Chevron />
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         )}
         {v.tabCable && (
           <div className="w-cols">
@@ -99,10 +124,12 @@ export function Wiring() {
         )}
       </main>
 
-      <TabBar current="wiring" />
+      {v.toastOpen && (
+        <div className="w-toast" role="status"><span>{v.toast}</span><button onClick={undoToast}>실행취소</button></div>
+      )}
 
       {v.open && (
-        <Sheet label="케이블 편집" title="케이블 편집" onClose={v.close}>
+        <Sheet label="케이블 편집" title="케이블 편집" onClose={v.close} anim={anim}>
           <div className="w-card">
             <svg viewBox="0 0 326 120" width="100%" role="img" aria-label={v.dia.alt} style={{ display: 'block' }}>
               <rect x="2" y="30" width="118" height="60" rx="14" fill="#f5f5f7" stroke="#8e8e93" strokeWidth="1.5" />
@@ -151,7 +178,7 @@ export function Wiring() {
               <div key={o.dev} className="w-opt">
                 <div className="dev">{o.dev}</div>
                 {o.items.map((it: any) => (
-                  <button key={it.name} className="w-row opt" onClick={it.pick} aria-disabled={it.dis || undefined}
+                  <button key={it.name} className="w-row opt" onClick={it.pick}
                     aria-pressed={it.ck === 1} style={{ opacity: it.op }}>
                     <span className="w-txt"><span>{it.name}</span><span className="sub13">{it.sub}</span></span>
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ opacity: it.ck }}>{CHECK}</svg>
@@ -180,7 +207,7 @@ export function Wiring() {
       {adding && <AddSheet c={c} onClose={() => setAdding(false)} onAdded={(f) => { setAdding(false); setNote(f + ' 케이블을 추가했어요.'); }} />}
 
       {v.jopen && (
-        <Sheet label="단자 소스 변경" title={v.jt.title} onClose={v.jclose}>
+        <Sheet label="단자 소스 변경" title={v.jt.title} onClose={v.jclose} anim={anim}>
           <div className="w-card">
             <div className="w-cap">지금 들어오는 소스</div>
             <div className="w-now">{v.jt.now}</div>
@@ -190,8 +217,7 @@ export function Wiring() {
             <div className="w-group-h">이 단자에 연결할 소스</div>
             <div className="w-rows">
               {v.jopts.map((q: any) => (
-                <button key={q.name} className="w-row cable" onClick={q.pick} aria-pressed={q.ck === 1}
-                  aria-disabled={q.op < 1 || undefined} style={{ opacity: q.op }}>
+                <button key={q.name} className="w-row cable" onClick={q.pick} aria-pressed={q.ck === 1}>
                   <span className="w-txt"><span>{q.name}</span><span className="sub13">{q.sub}</span></span>
                   {q.tag === 1 && <span className="w-rectag">추천</span>}
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ opacity: q.ck }}>{CHECK}</svg>
@@ -202,15 +228,20 @@ export function Wiring() {
           {v.jt.hasInfo && <div className="w-warnbox">{v.jt.info}</div>}
         </Sheet>
       )}
+
+      {v.askOpen && (
+        <Confirm title={v.ask.title} text={v.ask.text} ok="대체" onCancel={v.askNo} onOk={v.askYes} />
+      )}
     </div>
   );
 }
 
-function Sheet({ label, title, onClose, children, left, right }: { label: string; title: string; onClose: () => void; children: React.ReactNode; left?: string; right?: React.ReactNode }) {
+/** 아래에서 올라오는 모달 시트. anim이 있으면 시안 로직의 애니메이션(closing 상태)을 그대로 쓴다. */
+function Sheet({ label, title, onClose, children, left, right, anim }: { label: string; title: string; onClose: () => void; children: React.ReactNode; left?: string; right?: React.ReactNode; anim?: { sheet: string; dim: string } }) {
   return (
     <>
-      <div className="w-dim" onClick={onClose} aria-hidden="true" />
-      <section className="w-sheet" role="dialog" aria-modal="true" aria-label={label}>
+      <div className="w-dim" onClick={onClose} aria-hidden="true" style={anim ? { animation: anim.dim } : undefined} />
+      <section className="w-sheet" role="dialog" aria-modal="true" aria-label={label} style={anim ? { animation: anim.sheet } : undefined}>
         <div className="w-sheet-top">
           <div className="grab" aria-hidden="true" />
           <div className="bar">
@@ -242,8 +273,16 @@ function Confirm({ title, text, ok, onOk, onCancel }: { title: string; text: str
   );
 }
 
-/** 케이블 추가: 종류 → 시작 쪽(장비·단자) → 도착 단자. 도착 후보는 편집 시트와 같은 규칙(같은 커넥터만, 사용 중은 이유와 함께 비활성). */
+/** 케이블 추가: 종류 → 시작 쪽(장비·단자) → 도착 단자. 도착 후보는 편집 시트와 같은 규칙(같은 커넥터만, 꽂힌 단자는 확인 후 대체). */
 function AddSheet({ c, onClose, onAdded }: { c: any; onClose: () => void; onAdded: (from: string) => void }) {
+  const { closing, close } = useShut(onClose);
+  const anim = { sheet: closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dim: closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out' };
+  const [ask, setAsk] = useState(false);
+  useEffect(() => {
+    const f = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (ask) setAsk(false); else close(); } };
+    window.addEventListener('keydown', f);
+    return () => window.removeEventListener('keydown', f);
+  }, [ask, close]);
   const [cls, setCls] = useState<Cls>('xlr');
   const [dev, setDev] = useState('');
   const [jack, setJack] = useState('');
@@ -254,9 +293,12 @@ function AddSheet({ c, onClose, onAdded }: { c: any; onClose: () => void; onAdde
   const from = (dev.trim() + (jack.trim() ? ' ' + jack.trim() : '')).trim();
   const ready = !!dev.trim() && !!to;
   const toJ = to ? c.jk(to) : null;
+  const occ = to ? user(to) : null;
+  const add = () => { c.addCable({ from, fromDev: dev.trim(), to, type: TYPE[cls], cls }); onAdded(from + (occ ? ' (' + occ.from + ' 뽑힘)' : '')); };
   return (
-    <Sheet label="케이블 추가" title="케이블 추가" onClose={onClose} left="취소"
-      right={<button className="done" disabled={!ready} onClick={() => { c.addCable({ from, fromDev: dev.trim(), to, type: TYPE[cls], cls }); onAdded(from); }}>추가</button>}>
+    <>
+    <Sheet label="케이블 추가" title="케이블 추가" onClose={close} left="취소" anim={anim}
+      right={<button className="done" disabled={!ready} onClick={() => (occ ? setAsk(true) : add())}>추가</button>}>
       <div className="w-card">
         <svg viewBox="0 0 326 120" width="100%" role="img" aria-label={(from || '시작 쪽') + '에서 ' + (toJ ? toJ.dev + ' ' + toJ.name : '도착 단자') + '로 연결'} style={{ display: 'block' }}>
           <rect x="2" y="30" width="118" height="60" rx="14" fill="#f5f5f7" stroke="#8e8e93" strokeWidth="1.5" strokeDasharray={dev.trim() ? undefined : '4 4'} />
@@ -303,9 +345,8 @@ function AddSheet({ c, onClose, onAdded }: { c: any; onClose: () => void; onAdde
             {c.jacks.filter((j: any) => j.cls === cls && j.dev === g).map((j: any) => {
               const u = user(j.id);
               return (
-                <button key={j.id} className="w-row opt" aria-disabled={!!u || undefined} aria-pressed={to === j.id}
-                  style={{ opacity: u ? 0.4 : 1 }} onClick={() => { if (!u) setTo(j.id); }}>
-                  <span className="w-txt"><span>{j.name}</span><span className="sub13">{u ? '사용 중: ' + u.from : '비어 있음'}</span></span>
+                <button key={j.id} className="w-row opt" aria-pressed={to === j.id} onClick={() => setTo(j.id)}>
+                  <span className="w-txt"><span>{j.name}</span><span className="sub13">{u ? '지금 꽂힘: ' + u.from + ' · 고르면 대체돼요' : '비어 있음'}</span></span>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ opacity: to === j.id ? 1 : 0 }}>{CHECK}</svg>
                 </button>
               );
@@ -313,9 +354,14 @@ function AddSheet({ c, onClose, onAdded }: { c: any; onClose: () => void; onAdde
           </div>
         ))}
         {!groups.some((g) => c.jacks.some((j: any) => j.cls === cls && j.dev === g && !user(j.id))) && (
-          <div className="w-warnbox">비어 있는 {TYPE[cls]} 입력이 없어요. 다른 케이블을 옮기거나 삭제한 뒤 추가해 주세요.</div>
+          <div className="w-warnbox">비어 있는 {TYPE[cls]} 입력이 없어요. 꽂힌 단자를 고르면 확인 후 그 케이블을 뽑고 대체해요.</div>
         )}
       </div>
     </Sheet>
+    {ask && occ && toJ && (
+      <Confirm title={toJ.name + '에 꽂을까요?'} text={'지금 꽂힌 ' + occ.from + '은(는) 뽑혀요. 실행취소로 되돌릴 수 있어요.'} ok="대체"
+        onCancel={() => setAsk(false)} onOk={() => { setAsk(false); add(); }} />
+    )}
+    </>
   );
 }

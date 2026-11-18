@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Overview } from './screens/Overview';
-import { FullWiring } from './screens/FullWiring';
 import { DeviceDetail } from './screens/DeviceDetail';
-import { Connection } from './screens/Connection';
-import { Placeholder } from './screens/Placeholder';
 import { Wiring } from './screens/Wiring';
+import { Checks } from './screens/Checks';
+import { Operator } from './screens/Operator';
+import { TabBar } from './components/TabBar';
 import { readHash } from './nav';
 import { startSync } from './store/store';
 
+// 하단 탭바는 모든 화면에 항상 있고, 페이지 이동은 탭바로만 한다(UI_GUIDE 0장 0-1).
 export function App() {
   const [{ route, board }, setNav] = useState(readHash);
   useEffect(() => { startSync(); }, []);
@@ -20,11 +21,11 @@ export function App() {
   return (
     <div className="app">
       {route === 'home' && <Overview />}
-      {route === 'full' && <FullWiring />}
       {route === 'panel' && <DeviceDetail board={board} />}
       {route === 'wiring' && <Wiring />}
-      {route === 'checks' && <Placeholder route="checks" title="점검" text="점검 결과는 별도 목록 없이 믹서 그림 위 배지(!)로 보여줘요. 홈에서 배지가 붙은 장비를 눌러 보세요." />}
-      {route === 'ops' && <Connection />}
+      {route === 'checks' && <Checks />}
+      {route === 'ops' && <Operator />}
+      <TabBar current={route} />
     </div>
   );
 }

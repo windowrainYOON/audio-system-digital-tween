@@ -1,66 +1,93 @@
-// M2~M4 상세 (시안 MobL4·MobDfx·MobAg06): ‹ 간략 + 장비 알약 3개, 전원 + 구역 칩, 스크롤 패널, 둥근 인스펙터.
+// M2~M4 패널 (시안 MobL4·MobDfx·MobAg06, 태블릿 Tab*P·L):
+// 머리 "패널" + 연결 상태, 믹서 드롭다운 + 전원, 구역 드롭다운(L4는 +48V). (UI_GUIDE 2.4, 4장 M2~M4)
+// 패널은 +/−·두 손가락으로 ×0.5~×3 확대, 상하좌우 자유 스크롤.
+// 인스펙터: 모바일은 컨트롤을 누르면 아래에서 올라오고 빈 곳을 탭하면 내려간다(2.3).
+// 태블릿은 오른쪽 380px 고정 상자로 늘 보인다(2026-11-17 사용자 결정, 4.T).
 import { useRef, useState } from 'react';
 import { PROFILES } from '../data';
 import type { BoardId } from '../data/types';
 import { Panel } from '../components/Panel';
-import { Inspector, InspectorHandle } from '../components/Inspector';
+import { Inspector } from '../components/Inspector';
+import { Dropdown, isBackgroundTap, PageHeader, usePinch, useShut, ZoomButtons } from '../components/Common';
 import { flowFor, pickForJack } from '../lib/flow';
 import { inspect } from '../lib/inspect';
 import { go } from '../nav';
 import { useLayout } from '../lib/layout';
-import { markSynced, setPower, setValue, useStore } from '../store/store';
+import { markSynced, setPhantom, setPower, setValue, useStore } from '../store/store';
 
-const ORDER: [BoardId, string][] = [['l4', 'L4'], ['dfx12', 'DFX-12'], ['ag06', 'AG06']];
+const ORDER: { b: BoardId; name: string; sub: string }[] = [
+  { b: 'l4', name: 'L4', sub: '서브 믹서 · CD·PC' },
+  { b: 'dfx12', name: 'DFX-12', sub: '메인 믹서' },
+  { b: 'ag06', name: 'AG06', sub: '서브 믹서 · 키보드·드럼' },
+];
+const INSP_W = 380 + 16 + 16; // 태블릿 오른쪽 인스펙터 + 여백
 
 export function DeviceDetail({ board }: { board: BoardId }) {
   const p = PROFILES[board];
   const st = useStore((s) => s.boards[board]);
   const [selBy, setSelBy] = useState<Partial<Record<BoardId, string>>>({});
+  const [secBy, setSecBy] = useState<Partial<Record<BoardId, number>>>({});
+  const [zBy, setZBy] = useState<Record<string, number>>({});
   const pan = useRef<HTMLElement>(null);
-  // 평소에는 숨겨 두고(우측 하단 버튼), 컨트롤을 누르면 뜬다
   const [open, setOpen] = useState(false);
+  const { closing, close } = useShut(() => setOpen(false));
   const d = p.controls.find((c) => c.id === selBy[board]) ?? p.controls[0];
   const v = st.vals[d.id] ?? d.def;
   const info = inspect(board, d.id, st);
   const power = st.power !== false;
   const [vx, vy, vw] = p.viewBox;
-  // 태블릿: 패널을 폭에 맞춰 키운다(최대 1.25배). 인스펙터는 늘 보이는 고정 카드(가로=오른쪽 380, 세로=아래 380).
   const lay = useLayout();
   const tablet = lay !== 'mobile';
-  const k = tablet ? Math.min(((lay === 'tabletL' ? window.innerWidth - 420 : window.innerWidth) - 24) / vw, 1.25) : p.size[0] / vw;
+  // 배율 1 = 시안 모바일 패널 크기(p.size). 태블릿 기본 배율은 인스펙터를 뺀 폭에 맞춤(0.7~1.6).
+  const z0 = tablet ? Math.max(0.7, Math.min(1.6, (window.innerWidth - 24 - INSP_W) / p.size[0])) : 1;
+  const zk = board + lay;
+  const z = zBy[zk] ?? z0;
+  const setZ = (nz: number) => setZBy({ ...zBy, [zk]: Math.max(0.5, Math.min(3, Math.round(nz * 100) / 100)) });
+  const pinch = usePinch(z, setZ, 0.5, 3);
+  const width = Math.round(p.size[0] * z);
+  const k = width / vw;
+  const sec = secBy[board] ?? 0;
+  const jump = (i: number) => {
+    const [, x, y] = p.chips[i];
+    setSecBy({ ...secBy, [board]: i });
+    pan.current?.scrollTo({ left: Math.max(0, (x - vx) * k - 12), top: Math.max(0, (y - vy) * k - 12), behavior: 'smooth' });
+  };
+  const cur = ORDER.find((o) => o.b === board)!;
   const shown = tablet || open;
-  const jump = (x: number, y: number) => pan.current?.scrollTo({ left: Math.max(0, (x - vx) * k - 12), top: Math.max(0, (y - vy) * k - 12), behavior: 'smooth' });
 
   return (
     <>
-      <header className={'hdr det ' + lay}>
-        <div className="toprow">
-          <button className="back" onClick={() => go('home')}>
-            <svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="#0066cc" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 2L3 9l6 7" /></svg>간략
-          </button>
-          {ORDER.map(([b, l]) => (
-            <button key={b} className="pill-btn" aria-current={b === board ? 'true' : undefined} onClick={() => go('panel', b)}>{l}</button>
-          ))}
-        </div>
-        <div className="chips">
+      <PageHeader title="패널" className="det">
+        <div className="ph-row">
+          <Dropdown ariaLabel="믹서 고르기" value={cur.name} sub={cur.sub} current={board} onPick={(b) => go('panel', b as BoardId)}
+            items={ORDER.map((o) => ({ key: o.b, label: o.name, sub: o.sub }))} />
           <button className="power" style={{ background: power ? '#2DD4BF' : '#5E6166', color: power ? '#0B1F1D' : '#fff' }}
             aria-pressed={power} onClick={() => setPower(board, !power)}>{power ? '전원 ON' : '전원 OFF'}</button>
-          {p.chips.map(([l, x, y]) => <button key={l} className="chip" onClick={() => jump(x, y)}>{l}</button>)}
         </div>
-      </header>
+        <div className="ph-row">
+          <Dropdown ariaLabel="패널 구역 고르기" white value={p.chips[sec][0]} sub={(sec + 1) + ' / ' + p.chips.length} current={String(sec)}
+            items={p.chips.map((c, i) => ({ key: String(i), label: c[0] }))} onPick={(i) => jump(Number(i))} />
+          {p.phantom && (
+            <button className="power" style={{ background: 'var(--fill3)', color: 'var(--label)' }} aria-pressed={!!st.phantom}
+              onClick={() => setPhantom(board, !st.phantom)}>{st.phantom ? '+48V ON' : '+48V OFF'}</button>
+          )}
+        </div>
+      </PageHeader>
       <div className={'det-body ' + lay}>
-      <main ref={pan} className="pan" aria-label={p.title + ' 믹서 패널'}>
-        <Panel profile={p} state={st} selected={d.id} flow={flowFor(p, d.id)} label={p.title + ' 믹서 패널 그림'} width={Math.round(vw * k)}
-          onPick={(id) => { setSelBy({ ...selBy, [board]: id }); setOpen(true); }}
-          onJack={(i) => setSelBy({ ...selBy, [board]: pickForJack(p, i) })} />
-        {!tablet && <div style={{ height: open ? 520 : 88 }} aria-hidden="true" />}
-      </main>
-      {shown ? (
-        <Inspector key={board + d.id} d={d} v={v} info={info} unsynced={st.synced[d.id] === false} docked={tablet} onHide={tablet ? undefined : () => setOpen(false)}
-          onChange={(nv) => setValue(board, d.id, nv)} onSynced={() => markSynced(board, d.id)} />
-      ) : (
-        <InspectorHandle name={info.name} unsynced={st.synced[d.id] === false} onOpen={() => setOpen(true)} />
-      )}
+        <div className="pan-wrap">
+          <ZoomButtons onIn={() => setZ(z + 0.5)} onOut={() => setZ(z - 0.25)} />
+          <main ref={pan} className="pan" aria-label={p.title + ' 믹서 패널'} {...pinch}
+            onClick={(e) => { if (!tablet && open && isBackgroundTap(e)) close(); }}>
+            <Panel profile={p} state={st} selected={d.id} flow={flowFor(p, d.id)} label={p.title + ' 믹서 패널 그림'} width={width}
+              onPick={(id) => { setSelBy({ ...selBy, [board]: id }); setOpen(true); }}
+              onJack={(i) => setSelBy({ ...selBy, [board]: pickForJack(p, i) })} />
+            {!tablet && <div style={{ height: open ? 520 : 100 }} aria-hidden="true" />}
+          </main>
+        </div>
+        {shown && (
+          <Inspector d={d} v={v} info={info} unsynced={st.synced[d.id] === false} docked={tablet} closing={closing}
+            onHide={tablet ? undefined : close} onChange={(nv) => setValue(board, d.id, nv)} onSynced={() => markSynced(board, d.id)} />
+        )}
       </div>
     </>
   );

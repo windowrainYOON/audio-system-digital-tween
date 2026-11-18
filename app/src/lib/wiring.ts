@@ -7,7 +7,9 @@ import { create } from '../data/logic/wiring';
 import { setWiring, useStore, type AddedCable } from '../store/store';
 
 export type Cls = 'xlr' | 'ts' | 'rca';
-interface Snap { cur: Record<string, string>; added: AddedCable[]; removed: string[] }
+/** 케이블 id → 단자 id. null = 대체되어 뽑힌 케이블(2026-11-17) */
+type Cur = Record<string, string | null>;
+interface Snap { cur: Cur; added: AddedCable[]; removed: string[] }
 
 const MONO = '모노 (언밸런스)';
 const SPEC: Record<Cls, { conn: string; g: string; sig: string; note: string }[]> = {
@@ -38,9 +40,9 @@ export function useWiringLogic() {
     x.snap = (): Snap => ({ cur: x.state.cur, added: x.added, removed: x.removed });
     x.save = () => { const at = stamp(); setWiring(x.state.cur, at, x.added, x.removed); return at; };
     x.setState = (o: object) => { Object.assign(x.state, o); bump(); };
-    x.persist = (cur: Record<string, string>) => { x.state.cur = cur; return x.save(); };
+    x.persist = (cur: Cur) => { x.state.cur = cur; return x.save(); };
     // 시안 commit과 같지만 기록에 추가·삭제까지 담는다
-    x.commit = (next: Record<string, string>, extra?: object) => {
+    x.commit = (next: Cur, extra?: object) => {
       const hist = x.state.hist.concat([x.snap()]).slice(-20);
       x.state.cur = next;
       const at = x.save();
@@ -60,7 +62,9 @@ export function useWiringLogic() {
       const hist = x.state.hist.concat([x.snap()]).slice(-20);
       x.added = x.added.concat([{ ...a, id, grp: ADDED_GROUP, orig: a.to, note: '' }]);
       x.rebuild();
-      const cur = { ...x.state.cur, [id]: a.to };
+      const cur: Cur = { ...x.state.cur, [id]: a.to };
+      // 꽂힌 단자를 고르면 원래 케이블은 뽑힌다(대체, 2026-11-17 사용자 결정)
+      for (const k of x.cables) if (k.id !== id && cur[k.id] === a.to) cur[k.id] = null;
       x.state.cur = cur;
       const at = x.save();
       x.setState({ cur, hist, savedAt: at });
@@ -86,8 +90,11 @@ export function useWiringLogic() {
     c.removed = (doc.removed || []).filter((id) => c.base.some((b: { id: string }) => b.id === id));
     c.rebuild();
     const jacks = new Set(c.jacks.map((j: { id: string }) => j.id));
-    const cur: Record<string, string> = {};
-    for (const k of c.cables) cur[k.id] = jacks.has(doc.cur[k.id]) ? doc.cur[k.id] : k.orig;
+    const cur: Cur = {};
+    for (const k of c.cables) {
+      const j = doc.cur[k.id];
+      cur[k.id] = j === null ? null : j && jacks.has(j) ? j : k.orig; // null(뽑힘)은 그대로 둔다
+    }
     const sel = c.state.sel && cur[c.state.sel] ? c.state.sel : null;
     Object.assign(c.state, { cur, sel, savedAt: doc.at || c.state.savedAt });
     bump();

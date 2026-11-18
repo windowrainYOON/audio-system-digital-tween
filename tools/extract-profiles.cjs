@@ -28,7 +28,9 @@ function staticArt(t, v) {
   let svg = t.match(/<svg id="pansvg"[\s\S]*?<\/svg>\s*(?=<div style="height)/)[0];
   const open = svg.match(/^<svg[^>]*>/)[0];
   const viewBox = open.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
-  const size = [Number(open.match(/ width="(\d+)"/)[1]), Number(open.match(/ height="(\d+)"/)[1])];
+  // 시안은 확대 배율(z)에 따라 width/height를 {{pw}}/{{ph}}로 바꾼다. 앱에는 배율 1의 크기를 넘긴다.
+  const wm = open.match(/ width="(\d+)"/), hm = open.match(/ height="(\d+)"/);
+  const size = wm && hm ? [Number(wm[1]), Number(hm[1])] : [Number(v.pw), Number(v.ph)];
   svg = svg.slice(open.length).replace(/<\/svg>\s*$/, '');
   svg = svg.replace(/<sc-for list="\{\{(knobs|faders|buttons|flowDots)\}\}"[\s\S]*?<\/sc-for>/g, '');
   svg = svg.split('\n').filter((l) => !/\{\{(flowD|flowArrow|aPh|phantomFill|phantomKnobX)\}\}/.test(l)).join('\n');
@@ -196,3 +198,5 @@ overview();
 // M5 배선 편집: 케이블·단자 목록과 편집 규칙(짝 선 추천, 어댑터 안내, 자리 교체)을 시안 코드 그대로 쓴다.
 writeLogic('wiring', fs.readFileSync(path.join(DESIGN, 'MobWiring.dc.html'), 'utf8'));
 console.log('wiring logic');
+writeLogic('operator', fs.readFileSync(path.join(DESIGN, 'Mobile.dc.html'), 'utf8'));
+console.log('operator logic');
