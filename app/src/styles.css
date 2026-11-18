@@ -262,7 +262,8 @@ button { font-family: inherit; cursor: pointer; }
 
 /* 패널 */
 .det-body { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; }
-.pan-wrap { flex: 1; min-height: 0; position: relative; display: flex; }
+.pan-wrap { flex: 1; min-height: 0; min-width: 0; position: relative; display: flex; }
+.pan-wrap .pan { min-width: 0; }
 .pan { touch-action: pan-x pan-y; }
 
 /* 점검 */
@@ -319,6 +320,7 @@ button { font-family: inherit; cursor: pointer; }
   /* 패널: 왼쪽 패널 + 오른쪽 380 고정 인스펙터(가로·세로 모두, 2026-11-17 사용자 결정) */
   .det-body { flex-direction: row; gap: 16px; padding: 0 16px calc(88px + env(safe-area-inset-bottom)) 12px; }
   .pan-wrap .pan { border-radius: 18px; }
-  .sheet.insp.docked { position: static; flex: none; width: 380px; max-height: none; margin: 0; border-radius: 22px; background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 0 0 0.5px var(--sep); padding: 20px 20px 16px; gap: 10px; overflow-y: auto; }
+  /* 2026-11-18 버그: 넓은 패널 그림이 인스펙터를 화면 밖으로 밀었다(오른쪽 잘림). 패널은 줄어들고 그 안에서 스크롤, 인스펙터는 화면 폭에 맞춰 300~380 */
+  .sheet.insp.docked { position: static; flex: none; width: clamp(300px, 34vw, 380px); max-height: none; margin: 0; border-radius: 22px; background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 0 0 0.5px var(--sep); padding: 20px 20px 16px; gap: 10px; overflow-y: auto; }
   .sheet.insp.docked .dialrow svg[viewBox="0 0 132 132"] { width: 160px; height: 160px; }
 }

@@ -20,7 +20,8 @@ const ORDER: { b: BoardId; name: string; sub: string }[] = [
   { b: 'dfx12', name: 'DFX-12', sub: '메인 믹서' },
   { b: 'ag06', name: 'AG06', sub: '서브 믹서 · 키보드·드럼' },
 ];
-const INSP_W = 380 + 16 + 16; // 태블릿 오른쪽 인스펙터 + 여백
+/** 태블릿 오른쪽 인스펙터 폭(CSS clamp(300px, 34vw, 380px)) + 여백 */
+const inspW = () => Math.max(300, Math.min(380, window.innerWidth * 0.34)) + 16 + 16;
 
 export function DeviceDetail({ board }: { board: BoardId }) {
   const p = PROFILES[board];
@@ -39,7 +40,7 @@ export function DeviceDetail({ board }: { board: BoardId }) {
   const lay = useLayout();
   const tablet = lay !== 'mobile';
   // 배율 1 = 시안 모바일 패널 크기(p.size). 태블릿 기본 배율은 인스펙터를 뺀 폭에 맞춤(0.7~1.6).
-  const z0 = tablet ? Math.max(0.7, Math.min(1.6, (window.innerWidth - 24 - INSP_W) / p.size[0])) : 1;
+  const z0 = tablet ? Math.max(0.7, Math.min(1.6, (window.innerWidth - 24 - inspW()) / p.size[0])) : 1;
   const zk = board + lay;
   const z = zBy[zk] ?? z0;
   const setZ = (nz: number) => setZBy({ ...zBy, [zk]: Math.max(0.5, Math.min(3, Math.round(nz * 100) / 100)) });
