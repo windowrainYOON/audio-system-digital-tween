@@ -10,12 +10,17 @@ export type Net = 'connecting' | 'online' | 'offline' | 'saving';
 /** added: 사용자가 추가한 케이블, removed: 삭제한 기본 케이블 id */
 export interface AddedCable { id: string; grp: string; from: string; fromDev: string; to: string; type: string; cls: 'xlr' | 'ts' | 'rca'; orig: string; note: string }
 /** ap: 바뀐 연결을 홈 배선도에 반영할지 (2026-11-18 사용자 결정, 없으면 반영) */
-export interface WiringDoc { cur: Record<string, string | null>; at: string; t: number; added?: AddedCable[]; removed?: string[]; ap?: boolean; ack?: string }
-export interface State { boards: Record<BoardId, BoardState>; wiring: WiringDoc | null; net: Net; lastSync: number; error: string }
+/** ack: 확인한 변경 묶음(sig), ackCur: 확인할 때의 배선 = 노란 선 기준 (2026-11-18 사용자 결정) */
+export interface WiringDoc { cur: Record<string, string | null>; at: string; t: number; added?: AddedCable[]; removed?: string[]; ap?: boolean; ack?: string; ackCur?: Record<string, string | null> | null }
+/** 점검 주의 사항 '확인했어요' (항목 key → 확인 시각). 공유 키 `checks` */
+export type ChecksDoc = { res: Record<string, number>; t: number };
+export interface State { boards: Record<BoardId, BoardState>; wiring: WiringDoc | null; checks: ChecksDoc | null; net: Net; lastSync: number; error: string }
 
 const LS = 'twin:state:v1';
 const LS_W = 'twin:wiring:v1';
 const WKEY = 'wiring';
+const CKEY = 'checks';
+const LS_C = 'twin:checks:v1';
 const keyOf = (b: BoardId) => 'mixer/' + b;
 
 function defaults(): Record<BoardId, BoardState> {
@@ -41,11 +46,15 @@ function loadWiring(): WiringDoc | null {
   try { return JSON.parse(localStorage.getItem(LS_W) || 'null'); } catch { return null; }
 }
 
-let state: State = { boards: loadCache(), wiring: loadWiring(), net: 'connecting', lastSync: 0, error: '' };
+function loadChecks(): ChecksDoc | null {
+  try { return JSON.parse(localStorage.getItem(LS_C) || 'null'); } catch { return null; }
+}
+
+let state: State = { boards: loadCache(), wiring: loadWiring(), checks: loadChecks(), net: 'connecting', lastSync: 0, error: '' };
 const subs = new Set<() => void>();
 function set(p: Partial<State>) {
   state = { ...state, ...p };
-  try { localStorage.setItem(LS, JSON.stringify(state.boards)); if (p.wiring) localStorage.setItem(LS_W, JSON.stringify(p.wiring)); } catch { /* 무시 */ }
+  try { localStorage.setItem(LS, JSON.stringify(state.boards)); if (p.wiring) localStorage.setItem(LS_W, JSON.stringify(p.wiring)); if (p.checks) localStorage.setItem(LS_C, JSON.stringify(p.checks)); } catch { /* 무시 */ }
   subs.forEach((f) => f());
 }
 export const getState = () => state;
@@ -55,8 +64,8 @@ export function useStore<T>(sel: (s: State) => T): T {
 
 // ── 배선 쓰기 ──
 let wPending = 0, wInflight = false;
-export function setWiring(cur: Record<string, string | null>, at: string, added: AddedCable[] = [], removed: string[] = [], ap = true, ack = '') {
-  set({ wiring: { cur, at, t: Date.now(), added, removed, ap, ack } });
+export function setWiring(cur: Record<string, string | null>, at: string, added: AddedCable[] = [], removed: string[] = [], ap = true, ack = '', ackCur: Record<string, string | null> | null = state.wiring?.ackCur ?? null) {
+  set({ wiring: { cur, at, t: Date.now(), added, removed, ap, ack, ackCur } });
   clearTimeout(wPending);
   wPending = window.setTimeout(() => { wPending = 0; void flushWiring(); }, 300);
 }
@@ -70,6 +79,34 @@ async function flushWiring() {
     set({ net: 'offline', error: String((e as Error).message || e) });
     wPending = window.setTimeout(() => { wPending = 0; void flushWiring(); }, 5000);
   } finally { wInflight = false; }
+}
+
+/** 배선 변경 확인 (점검 탭): 지금 배선을 실물에도 옮긴 것으로 보고 기준으로 삼는다 */
+export function ackWiring(sig: string) {
+  const w = state.wiring;
+  if (!w) return;
+  setWiring(w.cur, w.at, w.added || [], w.removed || [], w.ap !== false, sig, { ...w.cur });
+}
+
+// ── 점검 확인 쓰기 ──
+let cPending = 0, cInflight = false;
+export function setCheck(key: string, on: boolean) {
+  const res = { ...(state.checks?.res || {}) };
+  if (on) res[key] = Date.now(); else delete res[key];
+  set({ checks: { res, t: Date.now() } });
+  clearTimeout(cPending);
+  cPending = window.setTimeout(() => { cPending = 0; void flushChecks(); }, 300);
+}
+async function flushChecks() {
+  cInflight = true;
+  set({ net: 'saving' });
+  try {
+    await api.put(CKEY, state.checks);
+    set({ net: 'online', lastSync: Date.now(), error: '' });
+  } catch (e) {
+    set({ net: 'offline', error: String((e as Error).message || e) });
+    cPending = window.setTimeout(() => { cPending = 0; void flushChecks(); }, 5000);
+  } finally { cInflight = false; }
 }
 
 // ── 쓰기 ──
@@ -124,7 +161,9 @@ export async function pull() {
     }
     const w = r.data[WKEY]?.v as WiringDoc | null | undefined;
     const wNew = w && w.cur && !wPending && !wInflight && (w.t || 0) > (state.wiring?.t || 0) ? { wiring: w } : {};
-    set({ ...wNew, ...(changed ? { boards: next } : {}), net: state.net === 'saving' ? 'saving' : 'online', lastSync: Date.now(), error: '' });
+    const c = r.data[CKEY]?.v as ChecksDoc | null | undefined;
+    const cNew = c && c.res && !cPending && !cInflight && (c.t || 0) > (state.checks?.t || 0) ? { checks: c } : {};
+    set({ ...wNew, ...cNew, ...(changed ? { boards: next } : {}), net: state.net === 'saving' ? 'saving' : 'online', lastSync: Date.now(), error: '' });
   } catch (e) {
     set({ net: 'offline', error: String((e as Error).message || e) });
   }
@@ -143,5 +182,5 @@ export function startSync(intervalMs = 4000) {
 
 /** 데이터 내보내기 (전략 문서 5장: 처음부터 JSON 내려받기) */
 export function exportJson(): string {
-  return JSON.stringify({ exportedAt: new Date().toISOString(), boards: state.boards, wiring: state.wiring }, null, 2);
+  return JSON.stringify({ exportedAt: new Date().toISOString(), boards: state.boards, wiring: state.wiring, checks: state.checks }, null, 2);
 }

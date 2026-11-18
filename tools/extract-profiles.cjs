@@ -49,6 +49,7 @@ function staticArt(t, v) {
 function writeLogic(id, t) {
   let src = t.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1];
   src = src.replace(/\/\/ SYNC-BEGIN[\s\S]*?\/\/ SYNC-END/, '');
+  src = src.replace(/\/\/ PINCH-BEGIN[\s\S]*?\/\/ PINCH-END\n/, ''); // 핀치는 앱이 직접(usePinch)
   const out = `// 자동 생성: tools/extract-profiles.cjs (원본 design/ 시안). 손으로 고치지 마세요.
 /* eslint-disable */
 // @ts-nocheck
@@ -139,12 +140,13 @@ function overview() {
   const sbox = (key, x, y, w, h, title, sub, sub2, fill, stroke) => boxes.push({ key, x, y, w, h, title, sub: sub || '', sub2: sub2 || '', fill: fill || '#fff', stroke: stroke || '#9aa0a6' });
   // 2026-11-18: 소스·중간 장비(DI BOX, 매립형 XLR 패널) 상자. 케이블은 배선 데이터(wires)로 앱이 그린다.
   // [key, 제목, 부제, x, y, w, h, 누르면 소스 흐름]
-  [['Bs', '베이스', '', 0, -60, 30, 20, 1], ['Gt', '통기타', '', 34, -60, 30, 20, 1], ['Di', 'DI BOX', '2ch', 0, -30, 66, 22, 0],
+  // 위치는 기본 자리. 배선이 바뀌면 앱이 ovLayout(시안과 같은 tools/ovlayout.js)으로 옮긴다. chs: 상자 안 채널 칸(가운데 x 오프셋)
+  [['Bs', '베이스', '', 0, -60, 30, 20, 1], ['Gt', '통기타', '', 34, -60, 30, 20, 1], ['Di', 'DI BOX', '', 0, -30, 66, 22, 0],
     ['Kb', '키보드', 'TRS→TS×2', 66, -60, 40, 30, 1], ['Dr', '드럼', 'TS×2→RCA', 110, -60, 40, 30, 1],
     ['Cd', 'CD', 'RCA→TS ×2', 206, 0, 42, 40, 1], ['Pc', 'PC (OBS)', 'AUX→RCA', 250, 0, 52, 40, 1],
-    ['M1', '기도석', '마이크', 70, 300, 38, 24, 1], ['M2', '아래강대상', '마이크', 112, 300, 46, 24, 1], ['Wp', '매립형 XLR 패널', '입력 1·2·3 → 출력 1·2·3', 74, 336, 74, 22, 0],
+    ['M1', '기도석', '마이크', 70, 300, 38, 24, 1], ['M2', '아래강대상', '마이크', 112, 300, 46, 24, 1], ['Wp', '매립형 XLR 패널', '', 74, 336, 74, 22, 0],
     ['Gl', '구즈넥 L', '', 0, 336, 34, 22, 1], ['Gr', '구즈넥 R', '', 36, 336, 34, 22, 1], ['Wl', '무선', '', 150, 336, 28, 22, 1]]
-    .forEach(([k, t, sub, x, y, w, h, c]) => { sbox(k, x, y, w, h, t, sub, '', k === 'Dr' ? '#DDF5EE' : c ? '#fff' : '#F4F3EE', k === 'Dr' ? '#0F766E' : '#9aa0a6'); boxes[boxes.length - 1].src = !!c; });
+    .forEach(([k, t, sub, x, y, w, h, c]) => { sbox(k, x, y, w, h, t, sub, '', k === 'Dr' ? '#DDF5EE' : c ? '#fff' : '#F4F3EE', k === 'Dr' ? '#0F766E' : '#9aa0a6'); boxes[boxes.length - 1].src = !!c; if (k === 'Di') boxes[boxes.length - 1].chs = [['CH1', -16.5], ['CH2', 16.5]]; if (k === 'Wp') boxes[boxes.length - 1].chs = [['CH1', -24.8], ['CH2', 0], ['CH3', 24.8]]; });
   sbox('Qsc', 240, 760, 118, 40, 'QSC 메인 앰프', 'MAIN OUT L·R');
   sbox('Mps', 0, 760, 130, 40, 'MPS1200 서브 앰프', 'PHONES → 입력');
   ['M268 800 V830', 'M330 800 V830', 'M65 800 V830', 'M268 866 V896', 'M330 866 V896'].forEach((d) => cable('', d, '#6B7280'));
@@ -163,14 +165,19 @@ function overview() {
   const cleaned = body.replace(/const mk = [^\n]*\n/, '').replace(/const ms = [^\n]*\n/, '').replace(/const r = [^\n]*\n/, '');
   const data = new Function('s', 'self', cleaned + ';return {I, S, on, post, phones};')({}, {});
   const H = 1004;
-  // 케이블 좌표·원래 경로는 시안 MobOverview의 J·WR·ORIG를 그대로 가져온다
-  const wsrc = src.slice(src.indexOf('const J = {'), src.indexOf('// 바뀐 연결의 경로'));
-  const wm = new Function(wsrc + ';return {J, WR, ORIG};')();
-  const ov = { width: 358, height: H, top: -64, boards, jacks: wm.J, wires: wm.WR.map((w) => ({ id: w[0], key: w[1], color: w[2], dash: w[3], sx: w[4], sy: w[5], d: w[6], orig: wm.ORIG[w[0]] })), cables: cables.map((c) => ({ ...c, d: c.d.replace(/(\d+\.\d{3,})/g, (m) => String(num(+m))) })), boxes, badges, names, devices: data.I, sources: data.S, highlight: data.on, post: data.post, phones: data.phones };
+  // 원래 연결은 시안 MobOverview의 ORIG. 케이블 경로·상자 위치는 앱이 ovLayout으로 계산한다(data/logic/ovlayout.js)
+  const ORIG = new Function(src.match(/const ORIG = \{[^\n]*\};/)[0] + ';return ORIG;')();
+  const ov = { width: 358, height: H, top: -64, boards, wires: Object.keys(ORIG).map((id) => ({ id, orig: ORIG[id] })), cables: cables.map((c) => ({ ...c, d: c.d.replace(/(\d+\.\d{3,})/g, (m) => String(num(+m))) })), boxes, badges, names, devices: data.I, sources: data.S, highlight: data.on, post: data.post, phones: data.phones };
   fs.writeFileSync(path.join(OUT, 'overview.json'), JSON.stringify(ov, null, 1));
   console.log('overview cables', cables.length, 'boxes', boxes.length, 'sources', Object.keys(data.S).length);
 }
 overview();
+// 홈 배치 계산(2026-11-18): tools/ovlayout.js를 시안과 앱이 함께 쓴다
+{
+  const lay = fs.readFileSync(path.join(ROOT, 'tools', 'ovlayout.js'), 'utf8');
+  fs.writeFileSync(path.join(OUT, 'logic', 'ovlayout.js'), '// 자동 생성: tools/extract-profiles.cjs (원본 tools/ovlayout.js). 손으로 고치지 마세요.\n/* eslint-disable */\n// @ts-nocheck\n' + lay.replace('function ovLayout(', 'export function ovLayout(') + '\n');
+  console.log('ovlayout');
+}
 // M5 배선 편집: 케이블·단자 목록과 편집 규칙(짝 선 추천, 어댑터 안내, 자리 교체)을 시안 코드 그대로 쓴다.
 writeLogic('wiring', fs.readFileSync(path.join(DESIGN, 'MobWiring.dc.html'), 'utf8'));
 console.log('wiring logic');
