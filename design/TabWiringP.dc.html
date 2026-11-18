@@ -36,7 +36,17 @@ button{font-family:inherit}
   <sc-if value="{{hasChanges}}" hint-placeholder-val="{{ false }}">
     <div style="margin:8px 16px 0;padding:12px 16px;border-radius:18px;background:#ff8d2829;display:flex;gap:12px;align-items:center">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>
-      <div style="flex:1;font-size:15px;line-height:20px"><strong>{{changeCount}}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15px;line-height:20px"><strong>{{changeCount}}개 케이블이 바뀌었어요.</strong> 실물 케이블도 같은 단자로 옮겨 주세요.</div>
+        <div role="group" aria-label="홈 배선도에 반영" style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <span style="flex:1;font-size:13px;line-height:18px;font-weight:600">홈 배선도에 반영</span>
+          <div style="display:flex;padding:2px;border-radius:10px;background:#7676801f">
+            <button onClick="{{apOn}}" aria-pressed="{{apOnP}}" style="min-height:32px;padding:0 12px;border:0;border-radius:8px;font-size:13px;font-weight:600;background:{{apOnBg}};color:var(--label);box-shadow:{{apOnSh}}">반영</button>
+            <button onClick="{{apOff}}" aria-pressed="{{apOffP}}" style="min-height:32px;padding:0 12px;border:0;border-radius:8px;font-size:13px;font-weight:600;background:{{apOffBg}};color:var(--label);box-shadow:{{apOffSh}}">반영 안 함</button>
+          </div>
+        </div>
+        <div style="margin-top:6px;font-size:13px;line-height:18px;color:var(--label2)">{{apText}}</div>
+      </div>
     </div>
   </sc-if>
 
@@ -336,15 +346,15 @@ this.cables.forEach((c) => { cur[c.id] = c.to; });
 this.pairC = { c8: 'c9', c9: 'c8', c10: 'c27', c27: 'c10', c11: 'c12', c12: 'c11', c13: 'c14', c14: 'c13', c15: 'c16', c16: 'c15', c17: 'c18', c18: 'c17', c19: 'c20', c20: 'c19' };
 this.pairJ = { dx9l: 'dx9r', dx9r: 'dx9l', dx11l: 'dx11r', dx11r: 'dx11l', ag3l: 'ag3r', ag3r: 'ag3l', l4c1: 'l4c2', l4c2: 'l4c1', l4tl: 'l4tr', l4tr: 'l4tl', dxtl: 'dxtr', dxtr: 'dxtl', qsl: 'qsr', qsr: 'qsl', ag5l: 'ag5r', ag5r: 'ag5l' };
 this.advice = { 'rca>ts': 'RCA 암→5.5 TS 수 어댑터가 필요해요.', 'ts>rca': '5.5 TS 수→RCA 수 변환 케이블이 필요해요.', 'xlr>ts': 'XLR→5.5 TS 변환 케이블이 필요해요. 밸런스가 언밸런스로 바뀌어요.', 'ts>xlr': '언밸런스 신호를 XLR로 받으려면 DI BOX를 쓰는 게 안전해요.', 'rca>xlr': 'DI BOX를 거쳐서 연결하는 게 안전해요.', 'xlr>rca': '변환 케이블이 필요해요. 권장하지 않아요.' };
-let hist0 = [], savedAt = '';
-try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && this.jacks.filter((j) => j.id === o.cur[k]).length) cur[k] = o.cur[k]; }); savedAt = o.at || ''; } } catch (e) {}
-this.state = { cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt, ask: null, toast: '' };
+let hist0 = [], savedAt = '', ap0 = true;
+try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && (o.cur[k] === null || this.jacks.filter((j) => j.id === o.cur[k]).length)) cur[k] = o.cur[k]; }); if (o.ap === false) ap0 = false;; savedAt = o.at || ''; } } catch (e) {}
+this.state = { ap: ap0, cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt, ask: null, toast: '' };
 }
 jk(id) { return this.jacks.filter((j) => j.id === id)[0] || { id: null, dev: '', name: '연결 안 됨', cls: '' }; }
-persist(cur) {
+persist(cur, ap) {
 const d = new Date();
 const at = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
-try { window.localStorage.setItem('twin.wiring.v2', JSON.stringify({ cur: cur, at: at })); } catch (e) {}
+try { window.localStorage.setItem('twin.wiring.v2', JSON.stringify({ cur: cur, at: at, ap: ap === undefined ? this.state.ap !== false : ap })); } catch (e) {}
 return at;
 }
 commit(next, extra) {
@@ -510,7 +520,13 @@ savedText: s.savedAt ? '자동 저장됨 · ' + s.savedAt : '변경하면 바로
 canUndo: s.hist.length > 0,
 undo: () => { self.setState({ toast: '' }); const h = self.state.hist.slice(); const prev = h.pop(); const at = self.persist(prev); self.setState({ cur: prev, hist: h, savedAt: at, draft: self.state.sel ? prev[self.state.sel] : null }); },
 jclose: () => shut({ jsel: null }), sheetAnim: s.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: s.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out',
-ends: ends, groups: groups, hasChanges: changeCount > 0, changeCount: changeCount, open: open, dia: dia, opts: opts,
+ends: ends, groups: groups, hasChanges: changeCount > 0,
+// 2026-11-18 사용자 결정: 바뀐 연결을 홈 배선도에 실제로 반영할지 배선 탭에서 고른다 (저장 키 twin.wiring.v2의 ap)
+apOn: () => { self.setState({ ap: true }); self.setState({ savedAt: self.persist(self.state.cur, true) }); }, apOff: () => { self.setState({ ap: false }); self.setState({ savedAt: self.persist(self.state.cur, false) }); },
+apOnP: s.ap !== false ? 'true' : 'false', apOffP: s.ap === false ? 'true' : 'false',
+apOnBg: s.ap !== false ? '#fff' : 'transparent', apOffBg: s.ap === false ? '#fff' : 'transparent',
+apOnSh: s.ap !== false ? '0 1px 3px rgba(0,0,0,0.15)' : 'none', apOffSh: s.ap === false ? '0 1px 3px rgba(0,0,0,0.15)' : 'none',
+apText: s.ap !== false ? '홈 배선도도 바뀐 연결로 그려요.' : '홈 배선도는 원래 연결로 그려요. 실물을 옮긴 뒤 반영을 눌러 주세요.', changeCount: changeCount, open: open, dia: dia, opts: opts,
 close: () => shut({ sel: null, draft: null }),
 apply: () => { const cur = Object.assign({}, self.state.cur); cur[self.state.sel] = self.state.draft; self.setState({ cur: cur, sel: null, draft: null }); },
 revert: () => { const c = self.cables.filter((x) => x.id === self.state.sel)[0]; self.commit(self.move(c.id, c.orig, false), { draft: c.orig }); }
