@@ -11,15 +11,15 @@ this.cables = [
 C('c1', '강대상 → DFX-12', '강대상1 구즈넥 L (CH1)', '강대상1', 'dxm1', 'XLR', 'xlr'),
 C('c2', '강대상 → DFX-12', '강대상1 구즈넥 R (CH2)', '강대상1', 'dxm2', 'XLR', 'xlr'),
 C('c5', '강대상 → DFX-12', '무선 마이크 수신기', '무선', 'dxm6', 'XLR', 'xlr'),
-C('c3', '매립형 → DFX-12', '매립형 XLR 라인 1 (기도석 추정)', '매립형 패널', 'dxm3', 'XLR', 'xlr', '배선도에 어느 라인이 기도석인지 없어요. 확인 필요'),
-C('c4', '매립형 → DFX-12', '매립형 XLR 라인 2 (아래강대상 추정)', '매립형 패널', 'dxm4', 'XLR', 'xlr', '배선도에 어느 라인이 아래강대상인지 없어요. 확인 필요'),
-C('c22', '매립형 → DFX-12', '매립형 XLR 라인 3 (소스 없음)', '매립형 패널', 'dxm5', 'XLR', 'xlr', '배선도에는 CH5/6에도 매립형 라인이 이어져 있어요. 확인 필요'),
+C('c3', '매립형 → DFX-12', '매립형 XLR 패널 CH1 출력 (기도석 추정)', '매립형 패널', 'dxm3', 'XLR', 'xlr', '배선도에 어느 라인이 기도석인지 없어요. 확인 필요'),
+C('c4', '매립형 → DFX-12', '매립형 XLR 패널 CH2 출력 (아래강대상 추정)', '매립형 패널', 'dxm4', 'XLR', 'xlr', '배선도에 어느 라인이 아래강대상인지 없어요. 확인 필요'),
+C('c22', '매립형 → DFX-12', '매립형 XLR 패널 CH3 출력 (소스 없음)', '매립형 패널', 'dxm5', 'XLR', 'xlr', '배선도에는 CH5/6에도 매립형 라인이 이어져 있어요. 확인 필요'),
 C('c23', '마이크 → 매립형', '기도석 마이크', '기도석', 'wmi1', 'XLR', 'xlr'),
 C('c24', '마이크 → 매립형', '아래강대상 마이크', '아래강대상', 'wmi2', 'XLR', 'xlr'),
 C('c25', '악기 → DI BOX', '베이스 (HEX B100) → DI BOX CH1', '베이스', 'dii1', '5.5 TS', 'ts'),
 C('c26', '악기 → DI BOX', '통기타 → DI BOX CH2', '통기타', 'dii2', '5.5 TS', 'ts'),
-C('c6', 'DI BOX·키보드·드럼 → AG06', 'DI BOX 출력 1 (베이스)', 'DI BOX', 'agx1', 'XLR', 'xlr'),
-C('c7', 'DI BOX·키보드·드럼 → AG06', 'DI BOX 출력 2 (통기타)', 'DI BOX', 'agx2', 'XLR', 'xlr'),
+C('c6', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH1 출력 (베이스)', 'DI BOX', 'agx1', 'XLR', 'xlr'),
+C('c7', 'DI BOX·키보드·드럼 → AG06', 'DI BOX CH2 출력 (통기타)', 'DI BOX', 'agx2', 'XLR', 'xlr'),
 C('c8', 'DI BOX·키보드·드럼 → AG06', '키보드 L (TRS→TS 갈래)', '키보드', 'ag3l', '5.5 TS', 'ts'),
 C('c9', 'DI BOX·키보드·드럼 → AG06', '키보드 R (TRS→TS 갈래)', '키보드', 'ag3r', '5.5 TS', 'ts'),
 C('c10', 'DI BOX·키보드·드럼 → AG06', '전자 드럼 L (TS 모노→RCA)', '전자 드럼', 'ag5l', 'RCA', 'rca'),
@@ -39,8 +39,8 @@ C('c21', '앰프', 'DFX-12 PHONES → MPS1200', 'DFX-12', 'mps', '5.5 TS', 'ts')
 const Jk = (id, dev, name, cls) => ({ id: id, dev: dev, name: name, cls: cls });
 this.jacks = [
 Jk('dxm1', 'Mackie DFX-12', 'CH1 MIC', 'xlr'), Jk('dxm2', 'Mackie DFX-12', 'CH2 MIC', 'xlr'), Jk('dxm3', 'Mackie DFX-12', 'CH3 MIC', 'xlr'), Jk('dxm4', 'Mackie DFX-12', 'CH4 MIC', 'xlr'), Jk('dxm5', 'Mackie DFX-12', 'CH5/6 MIC', 'xlr'), Jk('dxm6', 'Mackie DFX-12', 'CH7/8 MIC', 'xlr'),
-Jk('wmi1', '매립형 XLR 패널', '입력 1', 'xlr'), Jk('wmi2', '매립형 XLR 패널', '입력 2', 'xlr'), Jk('wmi3', '매립형 XLR 패널', '입력 3', 'xlr'),
-Jk('dii1', 'DI BOX (2ch)', '입력 1 (베이스)', 'ts'), Jk('dii2', 'DI BOX (2ch)', '입력 2 (통기타)', 'ts'),
+Jk('wmi1', '매립형 XLR 패널', 'CH1 입력', 'xlr'), Jk('wmi2', '매립형 XLR 패널', 'CH2 입력', 'xlr'), Jk('wmi3', '매립형 XLR 패널', 'CH3 입력', 'xlr'),
+Jk('dii1', 'DI BOX', 'CH1 입력', 'ts'), Jk('dii2', 'DI BOX', 'CH2 입력', 'ts'),
 Jk('agx1', 'Yamaha AG06', 'CH1 XLR', 'xlr'), Jk('agx2', 'Yamaha AG06', 'CH2 XLR', 'xlr'),
 Jk('l4x1', 'MiCWL L4', 'CH1 XLR', 'xlr'), Jk('l4x2', 'MiCWL L4', 'CH2 XLR', 'xlr'),
 Jk('qsl', 'QSC 앰프', '입력 L (XLR)', 'xlr'), Jk('qsr', 'QSC 앰프', '입력 R (XLR)', 'xlr'),
@@ -79,15 +79,15 @@ this.cables.forEach((c) => { cur[c.id] = c.to; });
 this.pairC = { c8: 'c9', c9: 'c8', c10: 'c27', c27: 'c10', c11: 'c12', c12: 'c11', c13: 'c14', c14: 'c13', c15: 'c16', c16: 'c15', c17: 'c18', c18: 'c17', c19: 'c20', c20: 'c19' };
 this.pairJ = { dx9l: 'dx9r', dx9r: 'dx9l', dx11l: 'dx11r', dx11r: 'dx11l', ag3l: 'ag3r', ag3r: 'ag3l', l4c1: 'l4c2', l4c2: 'l4c1', l4tl: 'l4tr', l4tr: 'l4tl', dxtl: 'dxtr', dxtr: 'dxtl', qsl: 'qsr', qsr: 'qsl', ag5l: 'ag5r', ag5r: 'ag5l' };
 this.advice = { 'rca>ts': 'RCA 암→5.5 TS 수 어댑터가 필요해요.', 'ts>rca': '5.5 TS 수→RCA 수 변환 케이블이 필요해요.', 'xlr>ts': 'XLR→5.5 TS 변환 케이블이 필요해요. 밸런스가 언밸런스로 바뀌어요.', 'ts>xlr': '언밸런스 신호를 XLR로 받으려면 DI BOX를 쓰는 게 안전해요.', 'rca>xlr': 'DI BOX를 거쳐서 연결하는 게 안전해요.', 'xlr>rca': '변환 케이블이 필요해요. 권장하지 않아요.' };
-let hist0 = [], savedAt = '', ap0 = true, ack0 = '';
-try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && (o.cur[k] === null || this.jacks.filter((j) => j.id === o.cur[k]).length)) cur[k] = o.cur[k]; }); if (o.ap === false) ap0 = false; if (typeof o.ack === 'string') ack0 = o.ack;; savedAt = o.at || ''; } } catch (e) {}
-this.state = { ack: ack0, ap: ap0, cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt, ask: null, toast: '' };
+let hist0 = [], savedAt = '', ap0 = true, ack0 = '', ackCur0 = null;
+try { const raw = window.localStorage.getItem('twin.wiring.v2'); if (raw) { const o = JSON.parse(raw); Object.keys(o.cur || {}).forEach((k) => { if (cur[k] !== undefined && (o.cur[k] === null || this.jacks.filter((j) => j.id === o.cur[k]).length)) cur[k] = o.cur[k]; }); if (o.ap === false) ap0 = false; if (typeof o.ack === 'string') ack0 = o.ack; if (o.ackCur) ackCur0 = o.ackCur; savedAt = o.at || ''; } } catch (e) {}
+this.state = { ack: ack0, ackCur: ackCur0, ap: ap0, cur: cur, sel: null, draft: null, tab: 'cable', jsel: null, hist: hist0, savedAt: savedAt, ask: null, toast: '' };
 }
 jk(id) { return this.jacks.filter((j) => j.id === id)[0] || { id: null, dev: '', name: '연결 안 됨', cls: '' }; }
 persist(cur, ap) {
 const d = new Date();
 const at = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
-try { window.localStorage.setItem('twin.wiring.v2', JSON.stringify({ cur: cur, at: at, ap: ap === undefined ? this.state.ap !== false : ap, ack: this.state.ack || '' })); } catch (e) {}
+try { window.localStorage.setItem('twin.wiring.v2', JSON.stringify({ cur: cur, at: at, ap: ap === undefined ? this.state.ap !== false : ap, ack: this.state.ack || '', ackCur: this.state.ackCur || null, chg: this.chgList(cur), sig: this.changeSig(cur) })); } catch (e) {}
 return at;
 }
 commit(next, extra) {
@@ -122,6 +122,9 @@ next[cid] = mine;
 if (pc) next[pc] = other;
 return next;
 }
+// 2026-11-18 사용자 결정: 확인(점검 탭 또는 이 카드)하면 실물에도 똑같이 옮긴 것으로 보고 그때 배선(ackCur)을 기준으로 삼는다.
+// chgList: 기준과 다른 케이블 목록(점검 탭 '배선 변경' 항목이 그대로 보여 준다)
+chgList(cur) { const b = this.state && this.state.ackCur; return this.cables.filter((c) => cur[c.id] !== (b && b[c.id] !== undefined ? b[c.id] : c.orig)).map((c) => { const f = b && b[c.id] !== undefined ? b[c.id] : c.orig; const a = this.jk(f), z = this.jk(cur[c.id]); return { id: c.id, name: c.from, from: f ? a.dev + ' ' + a.name : '연결 안 됨', to: cur[c.id] ? z.dev + ' ' + z.name : '연결 안 됨' }; }); }
 changeSig(cur) { return this.cables.filter((c) => cur[c.id] !== c.orig).map((c) => c.id + '=' + cur[c.id]).join(','); }
 lab(id) { if (!id) return '뽑혀 있음 (연결 안 됨)'; const j = this.jk(id); return j.dev + ' ' + j.name; }
 renderVals() {
@@ -256,7 +259,7 @@ undo: () => { self.setState({ toast: '' }); const h = self.state.hist.slice(); c
 jclose: () => shut({ jsel: null }), sheetAnim: s.closing ? 'sheetDown .22s ease-in forwards' : 'sheetUp .28s cubic-bezier(.2,.8,.2,1)', dimAnim: s.closing ? 'dimOut .22s ease-in forwards' : 'dimIn .2s ease-out',
 ends: ends, groups: groups, // 2026-11-18 사용자 결정: 노란 변경 알림에 '확인' 버튼. 확인한 변경 묶음(sig)은 다시 알리지 않고, 새로 바꾸면 다시 뜬다
 hasChanges: changeCount > 0 && self.changeSig(s.cur) !== s.ack,
-ackNow: () => { self.setState({ ack: self.changeSig(self.state.cur) }); self.setState({ savedAt: self.persist(self.state.cur) }); },
+ackNow: () => { self.setState({ ack: self.changeSig(self.state.cur), ackCur: Object.assign({}, self.state.cur) }); self.setState({ savedAt: self.persist(self.state.cur) }); },
 // 2026-11-18 사용자 결정: 바뀐 연결을 홈 배선도에 실제로 반영할지 배선 탭에서 고른다 (저장 키 twin.wiring.v2의 ap)
 apOn: () => { self.setState({ ap: true }); self.setState({ savedAt: self.persist(self.state.cur, true) }); }, apOff: () => { self.setState({ ap: false }); self.setState({ savedAt: self.persist(self.state.cur, false) }); },
 apOnP: s.ap !== false ? 'true' : 'false', apOffP: s.ap === false ? 'true' : 'false',

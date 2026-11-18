@@ -3,12 +3,12 @@
 // 패널은 +/−·두 손가락으로 ×0.5~×3 확대, 상하좌우 자유 스크롤.
 // 인스펙터: 모바일은 컨트롤을 누르면 아래에서 올라오고 빈 곳을 탭하면 내려간다(2.3).
 // 태블릿은 오른쪽 380px 고정 상자로 늘 보인다(2026-11-17 사용자 결정, 4.T).
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { PROFILES } from '../data';
 import type { BoardId } from '../data/types';
 import { Panel } from '../components/Panel';
 import { Inspector } from '../components/Inspector';
-import { Dropdown, isBackgroundTap, PageHeader, usePinch, useShut, ZoomButtons } from '../components/Common';
+import { Dropdown, isBackgroundTap, PageHeader, usePinch, useShut } from '../components/Common';
 import { flowFor, pickForJack } from '../lib/flow';
 import { inspect } from '../lib/inspect';
 import { go } from '../nav';
@@ -28,7 +28,7 @@ export function DeviceDetail({ board }: { board: BoardId }) {
   const [selBy, setSelBy] = useState<Partial<Record<BoardId, string>>>({});
   const [secBy, setSecBy] = useState<Partial<Record<BoardId, number>>>({});
   const [zBy, setZBy] = useState<Record<string, number>>({});
-  const pan = useRef<HTMLElement>(null);
+  const pan = useRef<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const { closing, close } = useShut(() => setOpen(false));
   const d = p.controls.find((c) => c.id === selBy[board]) ?? p.controls[0];
@@ -44,6 +44,8 @@ export function DeviceDetail({ board }: { board: BoardId }) {
   const z = zBy[zk] ?? z0;
   const setZ = (nz: number) => setZBy({ ...zBy, [zk]: Math.max(0.5, Math.min(3, Math.round(nz * 100) / 100)) });
   const pinch = usePinch(z, setZ, 0.5, 3);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const panRef = useCallback((n: HTMLElement | null) => { pan.current = n; pinch(n); }, [pinch]);
   const width = Math.round(p.size[0] * z);
   const k = width / vw;
   const sec = secBy[board] ?? 0;
@@ -75,8 +77,7 @@ export function DeviceDetail({ board }: { board: BoardId }) {
       </PageHeader>
       <div className={'det-body ' + lay}>
         <div className="pan-wrap">
-          <ZoomButtons onIn={() => setZ(z + 0.5)} onOut={() => setZ(z - 0.25)} />
-          <main ref={pan} className="pan" aria-label={p.title + ' 믹서 패널'} {...pinch}
+          <main ref={panRef} className="pan" aria-label={p.title + ' 믹서 패널'}
             onClick={(e) => { if (!tablet && open && isBackgroundTap(e)) close(); }}>
             <Panel profile={p} state={st} selected={d.id} flow={flowFor(p, d.id)} label={p.title + ' 믹서 패널 그림'} width={width}
               onPick={(id) => { setSelBy({ ...selBy, [board]: id }); setOpen(true); }}

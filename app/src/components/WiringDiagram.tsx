@@ -1,10 +1,11 @@
 // 믹서 3대 + 소스·중간 장비(DI BOX·매립형 패널)·앰프·스피커 + 케이블 (홈 M1).
-// 케이블은 배선 데이터로 그린다: 바뀐 연결은 주황 테두리, 뽑힌 케이블은 소스 아래 빨간 ✕ (2026-11-18 사용자 결정).
+// 케이블은 배선 데이터로 그린다(2026-11-18 사용자 결정): 배선이 바뀌면 상자를 꽂힌 단자 위로 다시 배열하고(ovLayout),
+// 확인 안 한 변경은 노란 밑선, 뽑힌 케이블은 소스 아래 빨간 ✕. DI BOX·매립형 패널은 채널 칸(CH1·CH2 / CH1~3).
 import { DEV_BOARD, OVERVIEW as OV, PROFILES } from '../data';
 import { PanelLayer } from './Panel';
 import { flowAt, SOURCE_FLOWS } from '../lib/flow';
 import { useStore } from '../store/store';
-import { wiresFor } from '../lib/ovwires';
+import { layoutFor } from '../lib/ovwires';
 
 const BADGE = { warn: '#ff9500', info: '#0a84ff', error: '#ff3b30' } as const;
 const DEVICE_KEYS = new Set(['Qsc', 'Mps']);
@@ -13,6 +14,8 @@ const key = (f: () => void) => (e: React.KeyboardEvent) => { if (e.key === 'Ente
 interface Props {
   /** 그릴 연결 (케이블 id → 단자 id, null = 뽑힘) */
   cur: (id: string) => string | null;
+  /** 노란 선 기준(마지막으로 확인한 배선). 없으면 cur와 같음 = 노란 선 없음 */
+  base?: (id: string) => string | null;
   /** 연결이 바뀐 소스는 믹서 안 흐름 표시(원래 연결 기준)를 끈다 */
   noFlow?: boolean;
   src?: string; sel?: string; labels?: boolean;
@@ -20,10 +23,10 @@ interface Props {
 }
 
 /** 좌표계: 0 OV.top 358 OV.height. 바깥 <svg>로 감싸서 쓴다. */
-export function WiringDiagram({ cur, noFlow, src = '', sel = '', labels = false, onSource, onDevice }: Props) {
+export function WiringDiagram({ cur, base, noFlow, src = '', sel = '', labels = false, onSource, onDevice }: Props) {
   const boards = useStore((s) => s.boards);
   const on = src ? OV.highlight[src] : null;
-  const { wires, cut } = wiresFor(cur);
+  const { wires, cut, boxes: pos } = layoutFor(cur, base || cur);
   const op = (k: string) => (!on || !k || k === 'Dfx' || on.includes(k) ? 1 : 0.2);
   const btn = (label: string, f?: () => void) =>
     f ? { role: 'button', tabIndex: 0, 'aria-label': label, onClick: f, onKeyDown: key(f), style: { cursor: 'pointer' } } : {};
@@ -50,9 +53,9 @@ export function WiringDiagram({ cur, noFlow, src = '', sel = '', labels = false,
         );
       })}
       {wires.map((c) => (
-        <g key={c.id} opacity={op(c.key)} pointerEvents="none" data-wire={c.id} data-changed={c.changed ? '1' : undefined}>
-          <path d={c.d} fill="none" stroke={c.changed ? '#ff9500' : '#fff'} strokeWidth={c.changed ? 5.6 : 4.6} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
-          <path d={c.d} fill="none" stroke={c.color} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={c.dash} />
+        <g key={c.id} opacity={op(c.key)} pointerEvents="none" data-wire={c.id} data-changed={c.ch ? '1' : undefined}>
+          <path d={c.d} fill="none" stroke={c.ch ? '#FFD60A' : '#fff'} strokeWidth={c.ch ? 6.4 : 4.6} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
+          <path d={c.d} fill="none" stroke={c.color} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={c.dash || undefined} />
           <circle cx={c.jx} cy={c.jy} r={2.6} fill={c.color} stroke="#fff" strokeWidth={1} />
         </g>
       ))}
@@ -63,8 +66,20 @@ export function WiringDiagram({ cur, noFlow, src = '', sel = '', labels = false,
         const ring = isSrc ? src === x.key : isDev ? !src && sel === x.key : false;
         const small = x.h < 30;
         const two = !!x.sub && small;
+        const dx = pos[x.key]?.dx || 0;
+        if (x.chs) {
+          const cx = x.x + x.w / 2;
+          return (
+            <g key={i} transform={`translate(${dx},0)`} opacity={op(x.key)} role="img" aria-label={x.title + ' ' + x.chs.map((c) => c[0]).join('·')}>
+              <rect x={x.x} y={x.y} width={x.w} height={x.h} rx={6} fill={x.fill} stroke={x.stroke} strokeWidth={1} />
+              <text x={cx} y={x.y + 6.8} fontSize={5.6} fontWeight={700} fill="#1d1d1f" textAnchor="middle">{x.title}</text>
+              {x.chs.slice(1).map((c, k) => { const m = cx + (x.chs![k][1] + c[1]) / 2; return <path key={k} d={`M${m} ${x.y + 9} V${x.y + x.h - 2}`} stroke="#9aa0a6" strokeWidth={0.8} />; })}
+              {x.chs.map((c) => <text key={c[0]} x={cx + c[1]} y={x.y + x.h - 4.5} fontSize={6.6} fontWeight={700} fill="#1d1d1f" textAnchor="middle">{c[0]}</text>)}
+            </g>
+          );
+        }
         return (
-          <g key={i} opacity={op(isSrc || x.key === 'Di' || x.key === 'Wp' ? x.key : '')} {...btn(x.title, go)}>
+          <g key={i} transform={dx ? `translate(${dx},0)` : undefined} opacity={op(isSrc || x.key === 'Di' || x.key === 'Wp' ? x.key : '')} {...btn(x.title, go)}>
             <rect x={x.x} y={x.y} width={x.w} height={x.h} rx={6} fill={x.fill} stroke={x.stroke} strokeWidth={1} />
             <text x={x.x + x.w / 2} y={x.y + (two ? x.h / 2 - 1 : small ? x.h / 2 + 3 : 14)} fontSize={small ? (x.title.length > 5 ? 6.6 : 7.8) : x.title.length > 7 ? 7.5 : 8.5} fontWeight={700} fill="#1d1d1f" textAnchor="middle">{x.title}</text>
             {x.sub && <text x={x.x + x.w / 2} y={x.y + (two ? x.h / 2 + 7 : 24)} fontSize={x.sub.length > 10 ? 5.4 : 6.2} fill="#555" textAnchor="middle">{x.sub}</text>}

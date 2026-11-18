@@ -126,26 +126,39 @@ export function Dropdown({ ariaLabel, value, sub, items, current, onPick, white,
 }
 
 /** 확대·축소 버튼 (홈·패널 공통, 오른쪽 위에 떠 있음) */
-export function ZoomButtons({ onIn, onOut, className = '' }: { onIn: () => void; onOut: () => void; className?: string }) {
-  return (
-    <div className={'zgroup ' + className}>
-      <button aria-label="확대" onClick={onIn}>+</button>
-      <button aria-label="축소" onClick={onOut}>−</button>
-    </div>
-  );
-}
 
 /** 두 손가락 벌리기·오므리기로 배율을 바꾼다(브라우저 화면 확대 대신). 한 손가락은 원래대로 스크롤. */
+/** 두 손가락 핀치(트랙패드는 ctrl+휠)로 확대·축소 (2026-11-18 사용자 결정: +/− 버튼 없음).
+ * 스크롤 상자에 ref를 단다. 손가락 가운데가 제자리에 머물게 스크롤을 맞춘다. 시안 tools/pinch.js와 같은 규칙. */
 export function usePinch(z: number, setZ: (z: number) => void, min: number, max: number) {
-  const base = useRef<{ d: number; z: number } | null>(null);
-  const dist = (t: React.TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1;
-  return {
-    onTouchStart: (e: React.TouchEvent) => { if (e.touches.length === 2) base.current = { d: dist(e.touches), z }; },
-    onTouchMove: (e: React.TouchEvent) => {
-      if (e.touches.length !== 2 || !base.current) return;
-      const nz = Math.max(min, Math.min(max, (base.current.z * dist(e.touches)) / base.current.d));
-      setZ(Math.round(nz * 100) / 100);
-    },
-    onTouchEnd: (e: React.TouchEvent) => { if (e.touches.length < 2) base.current = null; },
-  };
+  const zr = useRef(z); zr.current = z;
+  const fr = useRef(setZ); fr.current = setZ;
+  const el = useRef<HTMLElement | null>(null);
+  const off = useRef<(() => void) | null>(null);
+  return useCallback((node: HTMLElement | null) => {
+    off.current?.(); off.current = null; el.current = node;
+    if (!node) return;
+    let d0 = 0, z0 = 1;
+    const dist = (t: TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1;
+    const zoomTo = (nz: number, cx: number, cy: number) => {
+      const zp = zr.current; nz = Math.round(Math.max(min, Math.min(max, nz)) * 100) / 100;
+      if (Math.abs(nz - zp) < 0.005) return;
+      const r = node.getBoundingClientRect(); const px = cx - r.left, py = cy - r.top;
+      const sx = ((node.scrollLeft + px) * nz) / zp - px, sy = ((node.scrollTop + py) * nz) / zp - py;
+      zr.current = nz; fr.current(nz);
+      requestAnimationFrame(() => { node.scrollLeft = sx; node.scrollTop = sy; });
+    };
+    const ts = (e: TouchEvent) => { if (e.touches.length === 2) { d0 = dist(e.touches); z0 = zr.current; } };
+    const tm = (e: TouchEvent) => { if (!d0 || e.touches.length !== 2) return; e.preventDefault(); const t = e.touches; zoomTo((z0 * dist(t)) / d0, (t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2); };
+    const te = (e: TouchEvent) => { if (e.touches.length < 2) d0 = 0; };
+    const wh = (e: WheelEvent) => { if (!e.ctrlKey) return; e.preventDefault(); zoomTo(zr.current * Math.exp(-e.deltaY / 150), e.clientX, e.clientY); };
+    // iOS 사파리 제스처(화면 전체 확대) 막기
+    const gs = (e: Event) => e.preventDefault();
+    node.addEventListener('touchstart', ts, { passive: true });
+    node.addEventListener('touchmove', tm, { passive: false });
+    node.addEventListener('touchend', te, { passive: true });
+    node.addEventListener('wheel', wh, { passive: false });
+    node.addEventListener('gesturestart', gs as EventListener, { passive: false } as AddEventListenerOptions);
+    off.current = () => { node.removeEventListener('touchstart', ts); node.removeEventListener('touchmove', tm); node.removeEventListener('touchend', te); node.removeEventListener('wheel', wh); node.removeEventListener('gesturestart', gs as EventListener); };
+  }, [min, max]);
 }

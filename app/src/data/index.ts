@@ -16,13 +16,11 @@ export interface DeviceInfo { title: string; badge: string; bg: string; l1: stri
 export interface SourceInfo { title: string; badge: string; bg: string; steps: Step[]; l1: string; l2: string; go: string; dev: string }
 export interface Overview {
   width: number; height: number; top: number;
-  /** 단자 id → [x, y, 들어가는 통로 y] (그림 좌표) */
-  jacks: Record<string, [number, number, number]>;
-  /** 케이블별 원래 경로·시작점 (시안 MobOverview WR) */
-  wires: { id: string; key: string; color: string; dash: string; sx: number; sy: number; d: string; orig: string }[];
+  /** 케이블별 원래 단자 (시안 MobOverview ORIG). 경로·상자 위치는 data/logic/ovlayout.js가 계산 */
+  wires: { id: string; orig: string }[];
   boards: { key: string; board: BoardId; x: number; y: number; scale: number; crop: [number, number, number, number] }[];
   cables: { key: string; d: string; color: string; dash: string; label: string; lx?: number; ly?: number }[];
-  boxes: { src?: boolean; key: string; x: number; y: number; w: number; h: number; title: string; sub: string; sub2: string; fill: string; stroke: string }[];
+  boxes: { src?: boolean; chs?: [string, number][]; key: string; x: number; y: number; w: number; h: number; title: string; sub: string; sub2: string; fill: string; stroke: string }[];
   badges: { x: number; y: number; level: 'warn' | 'info' | 'error'; t: string }[];
   names: { x: number; y: number; t: string }[];
   devices: Record<string, DeviceInfo>;
