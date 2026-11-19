@@ -264,7 +264,17 @@
    "sub2": "",
    "fill": "#DDF5EE",
    "stroke": "#0F766E",
-   "src": true
+   "src": true,
+   "chs": [
+    [
+     "L",
+     -10
+    ],
+    [
+     "R",
+     10
+    ]
+   ]
   },
   {
    "key": "Cd",
@@ -277,7 +287,17 @@
    "sub2": "",
    "fill": "#fff",
    "stroke": "#9aa0a6",
-   "src": true
+   "src": true,
+   "chs": [
+    [
+     "L",
+     -10.5
+    ],
+    [
+     "R",
+     10.5
+    ]
+   ]
   },
   {
    "key": "Pc",
