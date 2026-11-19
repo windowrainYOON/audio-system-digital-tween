@@ -140,13 +140,13 @@ function overview() {
   const sbox = (key, x, y, w, h, title, sub, sub2, fill, stroke) => boxes.push({ key, x, y, w, h, title, sub: sub || '', sub2: sub2 || '', fill: fill || '#fff', stroke: stroke || '#9aa0a6' });
   // 2026-11-18: 소스·중간 장비(DI BOX, 매립형 XLR 패널) 상자. 케이블은 배선 데이터(wires)로 앱이 그린다.
   // [key, 제목, 부제, x, y, w, h, 누르면 소스 흐름]
-  // 위치는 기본 자리. 배선이 바뀌면 앱이 ovLayout(시안과 같은 tools/ovlayout.js)으로 옮긴다. chs: 상자 안 채널 칸(가운데 x 오프셋)
+  // 위치는 기본 자리. 배선이 바뀌면 앱이 ovLayout(시안과 같은 tools/ovlayout.js)으로 옮긴다. chs: 상자 안 채널 칸(가운데 x 오프셋). 스테레오 출력이 L·R 단자로 따로인 소스(드럼, CD)도 L·R 칸(2026-11-19)
   [['Bs', '베이스', '', 0, -60, 30, 20, 1], ['Gt', '통기타', '', 34, -60, 30, 20, 1], ['Di', 'DI BOX', '', 0, -30, 66, 22, 0],
     ['Kb', '키보드', 'TRS→TS×2', 66, -60, 40, 30, 1], ['Dr', '드럼', 'TS×2→RCA', 110, -60, 40, 30, 1],
     ['Cd', 'CD', 'RCA→TS ×2', 206, 0, 42, 40, 1], ['Pc', 'PC (OBS)', 'AUX→RCA', 250, 0, 52, 40, 1],
     ['M1', '기도석', '마이크', 70, 300, 38, 24, 1], ['M2', '아래강대상', '마이크', 112, 300, 46, 24, 1], ['Wp', '매립형 XLR 패널', '', 74, 336, 74, 22, 0],
     ['Gl', '구즈넥 L', '', 0, 336, 34, 22, 1], ['Gr', '구즈넥 R', '', 36, 336, 34, 22, 1], ['Wl', '무선', '', 150, 336, 28, 22, 1]]
-    .forEach(([k, t, sub, x, y, w, h, c]) => { sbox(k, x, y, w, h, t, sub, '', k === 'Dr' ? '#DDF5EE' : c ? '#fff' : '#F4F3EE', k === 'Dr' ? '#0F766E' : '#9aa0a6'); boxes[boxes.length - 1].src = !!c; if (k === 'Di') boxes[boxes.length - 1].chs = [['CH1', -16.5], ['CH2', 16.5]]; if (k === 'Wp') boxes[boxes.length - 1].chs = [['CH1', -24.8], ['CH2', 0], ['CH3', 24.8]]; });
+    .forEach(([k, t, sub, x, y, w, h, c]) => { sbox(k, x, y, w, h, t, sub, '', k === 'Dr' ? '#DDF5EE' : c ? '#fff' : '#F4F3EE', k === 'Dr' ? '#0F766E' : '#9aa0a6'); boxes[boxes.length - 1].src = !!c; if (k === 'Di') boxes[boxes.length - 1].chs = [['CH1', -16.5], ['CH2', 16.5]]; if (k === 'Wp') boxes[boxes.length - 1].chs = [['CH1', -24.8], ['CH2', 0], ['CH3', 24.8]]; if (k === 'Dr' || k === 'Cd') boxes[boxes.length - 1].chs = [['L', -w / 4], ['R', w / 4]]; });
   sbox('Qsc', 240, 760, 118, 40, 'QSC 메인 앰프', 'MAIN OUT L·R');
   sbox('Mps', 0, 760, 130, 40, 'MPS1200 서브 앰프', 'PHONES → 입력');
   ['M268 800 V830', 'M330 800 V830', 'M65 800 V830', 'M268 866 V896', 'M330 866 V896'].forEach((d) => cable('', d, '#6B7280'));

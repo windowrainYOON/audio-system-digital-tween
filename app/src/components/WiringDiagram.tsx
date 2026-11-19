@@ -67,6 +67,21 @@ export function WiringDiagram({ cur, base, noFlow, src = '', sel = '', labels = 
         const small = x.h < 30;
         const two = !!x.sub && small;
         const dx = pos[x.key]?.dx || 0;
+        if (x.chs && isSrc) {
+          // 스테레오 출력 단자가 L·R 따로인 소스(드럼, CD): 제목·부제 아래 L·R 칸 (시안 MobOverview)
+          const cx = x.x + x.w / 2;
+          const big = x.h >= 36;
+          return (
+            <g key={i} transform={dx ? `translate(${dx},0)` : undefined} opacity={op(x.key)} {...btn(x.title + ' (출력 L·R)', go)}>
+              <rect x={x.x} y={x.y} width={x.w} height={x.h} rx={6} fill={x.fill} stroke={x.stroke} strokeWidth={1} />
+              <text x={cx} y={x.y + (big ? 11.5 : 8.5)} fontSize={big ? 7.8 : 7.4} fontWeight={700} fill="#1d1d1f" textAnchor="middle">{x.title}</text>
+              {x.sub && <text x={cx} y={x.y + (big ? 19.5 : 15)} fontSize={big ? 6.2 : 5.2} fill="#555" textAnchor="middle">{x.sub}</text>}
+              <path d={`M${cx} ${x.y + (big ? 24 : 18)} V${x.y + x.h - 2}`} stroke={x.stroke} strokeWidth={0.8} opacity={big ? 1 : 0.6} />
+              {x.chs.map((c) => <text key={c[0]} x={cx + c[1]} y={x.y + x.h - (big ? 5.5 : 4.5)} fontSize={6.6} fontWeight={700} fill="#1d1d1f" textAnchor="middle">{c[0]}</text>)}
+              <rect x={x.x - 3} y={x.y - 3} width={x.w + 6} height={x.h + 6} rx={9} fill="none" stroke="#0066cc" strokeWidth={2.5} opacity={ring ? 1 : 0} />
+            </g>
+          );
+        }
         if (x.chs) {
           const cx = x.x + x.w / 2;
           return (

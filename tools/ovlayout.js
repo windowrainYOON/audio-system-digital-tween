@@ -52,7 +52,9 @@ function ovLayout(cur, base) {
   // DI BOX 두 채널, 매립형 패널 세 입력은 상자 안 자리(가운데 기준 오프셋)
   const DI_SLOT = [-16.5, 16.5], WP_SLOT = [-24.8, 0, 24.8];
   const IN = { dii1: ['Di', 0, 'di'], dii2: ['Di', 1, 'di'], wmi1: ['Wp', 0, 'wp'], wmi2: ['Wp', 1, 'wp'], wmi3: ['Wp', 2, 'wp'] };
-  const slotX = (k, i, cx) => cx + (k === 'Di' ? DI_SLOT[i] : k === 'Wp' ? WP_SLOT[i] : (i - (B[k][7] - 1) / 2) * Math.min(13, B[k][4] / (B[k][7] + 1)));
+  // 스테레오 출력 단자가 L·R 따로인 소스(드럼, CD)는 상자 안 L·R 칸 가운데(폭의 1/4)에서 선이 나온다 (2026-11-19 사용자 결정)
+  const LR = { Dr: 1, Cd: 1 };
+  const slotX = (k, i, cx) => cx + (k === 'Di' ? DI_SLOT[i] : k === 'Wp' ? WP_SLOT[i] : LR[k] ? (i ? 1 : -1) * B[k][4] / 4 : (i - (B[k][7] - 1) / 2) * Math.min(13, B[k][4] / (B[k][7] + 1)));
   const fixedX = (jid) => (J[jid] ? J[jid][0] : null);
   const mean = (a) => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
   const want = (k, zone) => {
